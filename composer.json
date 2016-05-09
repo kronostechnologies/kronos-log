@@ -1,5 +1,5 @@
 {
-	"name": "kronos-log",
+	"name": "kronos/log",
 	"type": "library",
 	"description": "PSR-3 compliant logging component",
 	"homepage": "https://github.com/kronostechnologies/kronos-log",
