@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit backupGlobals="false"
+	backupStaticAttributes="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	syntaxCheck="false"
+bootstrap="./tests/bootstrap.php"
+verbose="true"
+>
+<testsuites>
+	<testsuite name="Kronos-Log">
+		<directory>./tests/Kronos/Tests/Log</directory>
+	</testsuite>
+</testsuites>
+
+</phpunit>
