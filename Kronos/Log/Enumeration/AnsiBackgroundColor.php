@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Enumeration;
 
-use Kronos\Enumeration;
+use Kronos\Log\Enumeration;
 
 class AnsiBackgroundColor extends Enumeration {
 	const BLACK = '40';
