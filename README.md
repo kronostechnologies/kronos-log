@@ -31,7 +31,7 @@ It's possible to use multiple writer accepting only some log levels.
 use Kronos\Log;
 
 $logger = new Log\Logger();
-$logger->addContext('user', $current_user);_
+$logger->addContext('user', $current_user);
 
 $debug = new Log\Writer\File('/var/log/debug.log');
 $debug->setMaxLevel(\Psr\Log\LogLevel::WARNING);
