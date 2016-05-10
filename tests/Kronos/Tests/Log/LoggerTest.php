@@ -7,6 +7,7 @@ use Psr\Log\LogLevel;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase {
 
+	
 	const ANY_LOG_LEVEL = LogLevel::INFO;
 	const A_MESSAGE = 'some messge';
 	const A_CONTEXT_KEY = 'key';
