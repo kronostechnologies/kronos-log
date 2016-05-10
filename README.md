@@ -45,7 +45,7 @@ $logger->addWriter($syslog);
 
 try {
     $logger->debug('Trying something with {value}', ['value' => $some_variable]);
-    _
+    
     // Something
 }
 catch(\Exception $e) {
