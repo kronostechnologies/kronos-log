@@ -9,6 +9,7 @@ class TTY {
 
 	const ESCAPE_SEQUENCE = "\033[";
 	const NO_COLOR = "\033[0m";
+	const END_SEQUENCE = "m";
 
 	private $ressource;
 
@@ -72,19 +73,19 @@ class TTY {
 		if($this->canUseColor()) {
 			if(AnsiTextColor::isValidValue($text_color)) {
 				$is_colored = true;
-				$colored_line .= self::ESCAPE_SEQUENCE . $text_color;
+				$colored_line .= self::ESCAPE_SEQUENCE . $text_color.self::END_SEQUENCE;
 			}
 
 			if(AnsiBackgroundColor::isValidValue($background_color)) {
 				$is_colored = true;
-				$colored_line .= self::ESCAPE_SEQUENCE . $background_color;
+				$colored_line .= self::ESCAPE_SEQUENCE . $background_color.self::END_SEQUENCE;
 			}
 		}
 
 		$colored_line .= $line;
 
 		if($is_colored) {
-			$colored_line .= self::END_SEQUENCE;
+			$colored_line .= self::NO_COLOR;
 		}
 
 		return $colored_line;
