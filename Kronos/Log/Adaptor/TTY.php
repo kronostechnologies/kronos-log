@@ -12,8 +12,8 @@ class TTY {
 
 	private $ressource;
 
-	private $force_ansi_support = false;
-	private $force_no_ansi_support = false;
+	private $force_ansi_color_support = false;
+	private $force_no_ansi_color_support = false;
 	
 
 	public function __construct($filename) {
@@ -25,19 +25,19 @@ class TTY {
 		}
 	}
 
-	public function setForceAnsiSupport($force = true) {
-		$this->force_ansi_support = $force;
+	public function setForceAnsiColorSupport($force = true) {
+		$this->force_ansi_color_support = $force;
 	}
 
-	public function setForceNoAnsiSupport($force = true) {
-		$this->force_no_ansi_support = $force;
+	public function setForceNoAnsiColorSupport($force = true) {
+		$this->force_no_ansi_color_support = $force;
 	}
 
 	private function canUseColor() {
-		if($this->force_ansi_support) {
+		if($this->force_ansi_color_support) {
 			return true;
 		}
-		else if($this->force_no_ansi_support) {
+		else if($this->force_no_ansi_color_support) {
 			return false;
 		}
 		else {

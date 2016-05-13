@@ -46,6 +46,16 @@ class Console extends \Kronos\Log\AbstractWriter {
 		}
 	}
 
+	public function setForceAnsiColorSupport($force = true) {
+		$this->stdout->setForceAnsiColorSupport($force);
+		$this->stderr->setForceAnsiColorSupport($force);
+	}
+
+	public function setForceNoAnsiColorSupport($force = true) {
+		$this->stdout->setForceNoAnsiColorSupport($force);
+		$this->stderr->setForceNoAnsiColorSupport($force);
+	}
+
 	private function getLevelTextColor($level) {
 		return ($level == LogLevel::WARNING ? AnsiTextColor::YELLOW : NULL);
 	}

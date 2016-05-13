@@ -79,6 +79,24 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 		$this->writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
 	}
 
+	public function test_Console_SetForceAnsiColorSupport_ShouldCallSetForceAnsiColorSupportOnStdoutAndStdError() {
+		$this->givenFactoryReturnFileAdaptors();
+		$this->expectsSetForceAnsiColorSupportToBeCalled($this->stdout, true);
+		$this->expectsSetForceAnsiColorSupportToBeCalled($this->stderr, true);
+		$this->writer = new Console($this->factory);
+
+		$this->writer->setForceAnsiColorSupport();
+	}
+
+	public function test_Console_SetForceNoAnsiColorSupport_ShouldCallSetForceNoAnsiColorSupportOnStdoutAndStdError() {
+		$this->givenFactoryReturnFileAdaptors();
+		$this->expectsSetForceNoAnsiColorSupportToBeCalled($this->stdout, true);
+		$this->expectsSetForceNoAnsiColorSupportToBeCalled($this->stderr, true);
+		$this->writer = new Console($this->factory);
+
+		$this->writer->setForceNoAnsiColorSupport();
+	}
+
 	private function givenFactoryReturnFileAdaptors() {
 		$this->stdout = $this->getMockBuilder(TTY::class)->disableOriginalConstructor()->getMock();
 		$this->stderr = $this->getMockBuilder(TTY::class)->disableOriginalConstructor()->getMock();
@@ -93,5 +111,13 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 
 	private function expectsWriteToBeCalled($file, $message, $text_color = null, $background_color = null) {
 		$file->expects($this->once())->method('write')->with($message, $text_color, $background_color);
+	}
+
+	private function expectsSetForceAnsiColorSupportToBeCalled($file, $with) {
+		$file->expects($this->once())->method('setForceAnsiColorSupport')->with($with);
+	}
+
+	private function expectsSetForceNoAnsiColorSupportToBeCalled($file, $with) {
+		$file->expects($this->once())->method('setForceNoAnsiColorSupport')->with($with);
 	}
 }
