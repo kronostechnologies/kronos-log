@@ -55,12 +55,15 @@ class Syslog extends AbstractWriter {
 	}
 
 	public function log($level, $message, array $context = []) {
+		$interpolated_message = $this->interpolate($message, $context);
+		$prepended_message = $this->prependContext($interpolated_message, $context);
+
 		$this->syslog_adaptor->log(
 			$this->application,
 			$this->option,
 			$this->facility,
 			$this->getSyslogPriorityForLogLevel($level),
-			$this->interpolate($message, $context)
+			$prepended_message
 		);
 	}
 
