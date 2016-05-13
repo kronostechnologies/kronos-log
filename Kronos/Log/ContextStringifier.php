@@ -3,12 +3,17 @@
 namespace Kronos\Log;
 
 class ContextStringifier {
+
+	private $excluded_keys = [];
+
 	public function stringify(array $context) {
 		$string = '';
 
 		$key_count = 0;
 		foreach($context as $key => $value) {
-			$string .= ($key_count++ > 0 ? PHP_EOL : '') . $key . ': ' . $this->stringifyValue($value);
+			if(!in_array($key, $this->excluded_keys)) {
+				$string .= ($key_count++ > 0 ? PHP_EOL : '') . $key . ': ' . $this->stringifyValue($value);
+			}
 		}
 
 		return $string;
@@ -33,5 +38,9 @@ class ContextStringifier {
 		else {
 			return print_r($value, true);
 		}
+	}
+
+	public function excludeKey($key) {
+		$this->excluded_keys[] = $key;
 	}
 }

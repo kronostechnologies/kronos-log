@@ -36,6 +36,7 @@ class File extends \Kronos\Log\AbstractWriter {
 	 */
 	public function setContextStringifier($context_stringifier) {
 		$this->context_stringifier = $context_stringifier;
+		$this->context_stringifier->excludeKey(Logger::EXCEPTION_CONTEXT);
 	}
 
 	public function log($level, $message, array $context = []) {

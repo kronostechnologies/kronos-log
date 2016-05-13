@@ -87,6 +87,18 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
 	}
+	
+	public function test_Writer_SetContextStringify_ShouldExcludeExceptionKey() {
+		$this->givenFactoryReturnAdaptor();
+		$context_stringifier = $this->getMock(ContextStringifier::class);
+		$context_stringifier
+			->expects($this->once())
+			->method('excludeKey')
+			->with(Logger::EXCEPTION_CONTEXT);
+		$writer = new File(self::A_FILENAME, $this->factory);
+
+		$writer->setContextStringifier($context_stringifier);
+	}
 
 	public function test_WriterWithContextStringifier_Log_ShouldWriteStringifiedVersionOfContext() {
 		$this->givenFactoryReturnAdaptor();

@@ -80,6 +80,19 @@ class ContextStringifierTest extends \PHPUnit_Framework_TestCase {
 		$expected_string = self::FIRST_KEY.': '.self::FIRST_VALUE.PHP_EOL.self::SECOND_KEY.': '.self::SECOND_VALUE;
 		$this->assertEquals($expected_string, $stringified_context);
 	}
+
+	public function test_ExcludeKey_Stringify_ShouldNotStringifyContextKey() {
+		$context = [
+			self::FIRST_KEY => self::FIRST_VALUE,
+			self::SECOND_KEY => self::SECOND_VALUE
+		];
+		$this->context_stringifier->excludeKey(self::FIRST_KEY);
+
+		$stringified_context = $this->context_stringifier->stringify($context);
+
+		$expected_string = self::SECOND_KEY.': '.self::SECOND_VALUE;
+		$this->assertEquals($expected_string, $stringified_context);
+	}
 }
 
 class ObjectWithoutToString {
