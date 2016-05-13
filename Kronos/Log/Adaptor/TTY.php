@@ -17,12 +17,7 @@ class TTY {
 	
 
 	public function __construct($filename) {
-		if(!file_exists($filename)) {
-			throw new \Exception('File does not exists : '.$filename);
-		}
-		else {
-			$this->open($filename);
-		}
+		$this->open($filename);
 	}
 
 	public function setForceAnsiColorSupport($force = true) {
