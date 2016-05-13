@@ -2,10 +2,13 @@
 
 namespace Kronos\Log\Writer;
 
-use \Kronos\Log\AbstractWriter,
-	\Psr\Log\LogLevel;
+use Kronos\Log\AbstractWriter,
+	Psr\Log\LogLevel,
+	Kronos\Log\Traits\PrependContext;
 
 class Syslog extends AbstractWriter {
+
+	use PrependContext;
 
 	private $log_level_map = [
 		LogLevel::EMERGENCY => LOG_EMERG,
