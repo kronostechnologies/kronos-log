@@ -28,8 +28,8 @@ class WriterFactory {
 	 */
 	public function createFileWriter($filename) {
 		$writer = new Writer\File($filename, $this->getFileFactory());
-		$writer->prependDatetime();
-		$writer->prependLogLevel();
+		$writer->setPrependDatetime();
+		$writer->setPrependLogLevel();
 		$writer->setContextStringifier($this->getContextStringifier());
 
 		return $writer;
