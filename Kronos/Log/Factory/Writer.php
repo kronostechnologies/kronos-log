@@ -1,11 +1,14 @@
 <?php
 
-namespace Kronos\Log;
+namespace Kronos\Log\Factory;
 
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Adaptor\Syslog As SyslogAdaptor;
+use Kronos\Log\Writer\File;
+use Kronos\Log\Writer\Syslog;
+use Kronos\Log\Writer\Console;
 
-class WriterFactory {
+class Writer {
 
 	/**
 	 * @var SyslogAdaptor;
@@ -24,10 +27,10 @@ class WriterFactory {
 
 	/**
 	 * @param $filename
-	 * @return Writer\File
+	 * @return File
 	 */
 	public function createFileWriter($filename) {
-		$writer = new Writer\File($filename, $this->getFileFactory());
+		$writer = new File($filename, $this->getFileFactory());
 		$writer->setPrependDatetime();
 		$writer->setPrependLogLevel();
 		$writer->setContextStringifier($this->getContextStringifier());
@@ -39,17 +42,17 @@ class WriterFactory {
 	 * @param $application
 	 * @param int $option
 	 * @param int $facility
-	 * @return Writer\Syslog
+	 * @return Syslog
 	 */
 	public function createSyslogWriter($application, $option= LOG_ODELAY, $facility = LOG_LOCAL0) {
-		return new Writer\Syslog($this->getSyslogAdaptor(), $application, $option, $facility);
+		return new Syslog($this->getSyslogAdaptor(), $application, $option, $facility);
 	}
 
 	/**
-	 * @return Writer\Console
+	 * @return Console
 	 */
 	public function createConsoleWriter() {
-		return new Writer\Console($this->getFileFactory());
+		return new Console($this->getFileFactory());
 	}
 
 	/**
