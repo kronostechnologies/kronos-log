@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\Adaptor\File;
+use Kronos\Log\Adaptor\File as FileAdaptor;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
@@ -19,12 +19,12 @@ class Console extends \Kronos\Log\AbstractWriter {
 	const STDERR = 'php://stderr';
 
 	/**
-	 * @var File
+	 * @var FileAdaptor
 	 */
 	private $stdout;
 
 	/**
-	 * @var File
+	 * @var FileAdaptor
 	 */
 	private $stderr;
 
