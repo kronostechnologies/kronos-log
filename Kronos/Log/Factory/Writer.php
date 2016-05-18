@@ -4,6 +4,7 @@ namespace Kronos\Log\Factory;
 
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Adaptor\Syslog As SyslogAdaptor;
+use Kronos\Log\ContextStringifier;
 use Kronos\Log\Writer\File;
 use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
