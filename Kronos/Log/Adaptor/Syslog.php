@@ -75,13 +75,13 @@ class Syslog {
 
 	private function checkFacility($facility) {
 		if(!in_array($facility, self::$facilities)) {
-			throw new Exception('Invalid syslog facility');
+			throw new \Exception('Invalid syslog facility');
 		}
 	}
 
 	private function checkPriority($priority) {
 		if(!in_array($priority, self::$priorities)) {
-			throw new Exception('Invalid syslog priority');
+			throw new \Exception('Invalid syslog priority');
 		}
 	}
 }
