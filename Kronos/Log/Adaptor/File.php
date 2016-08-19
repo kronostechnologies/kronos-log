@@ -7,11 +7,11 @@ class File {
 	private $ressource;
 
 	public function __construct($filename) {
-		if(!file_exists($filename)) {
-			throw new \Exception('File does not exists : '.$filename);
+		if((file_exists($filename) && is_writeable($filename)) || (is_dir(dirname($filename)) && is_writeable(dirname($filename)))) {
+			$this->open($filename);
 		}
 		else {
-			$this->open($filename);
+			throw new \Exception('File is not writeable : '.$filename);
 		}
 	}
 
