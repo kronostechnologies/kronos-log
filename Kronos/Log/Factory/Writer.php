@@ -32,7 +32,7 @@ class Writer {
 	 */
 	public function createFileWriter($filename) {
 		$writer = new File($filename, $this->getFileFactory());
-		$writer->setPrependDatetime();
+		$writer->setPrependDateTime();
 		$writer->setPrependLogLevel();
 		$writer->setContextStringifier($this->getContextStringifier());
 

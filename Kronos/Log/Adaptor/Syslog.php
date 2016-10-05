@@ -40,12 +40,13 @@ class Syslog {
 	private static $current_ident = NULL;
 	private static $current_facility = NULL;
 
+
 	/**
-	 * @param $ident string openlog ident parameter
-	 * @param $options integer openlog option parameter
-	 * @param $facility integer openlog facility parameter
-	 * @param $priority integer syslog prioriry parameter
-	 * @param $message string syslog message parameter
+	 * @param string $ident openlog ident parameter
+	 * @param int $option openlog option parameter
+	 * @param int $facility openlog facility parameter
+	 * @param int $priority syslog prioriry parameter
+	 * @param string $message syslog message parameter
 	 */
 	public function log($ident, $option, $facility, $priority, $message) {
 		$this->checkFacility($facility);

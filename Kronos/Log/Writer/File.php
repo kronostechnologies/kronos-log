@@ -5,13 +5,15 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\ContextStringifier;
 use Kronos\Log\Logger;
+use Exception;
 
 class File extends \Kronos\Log\AbstractWriter {
 
 	use \Kronos\Log\Traits\PrependDateTime;
 	use \Kronos\Log\Traits\PrependLogLevel;
 
-	const EXCEPTION_TITLE_LINE = 'Exception:';
+	const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
+	const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
 	const CONTEXT_TITLE_LINE = 'Context:';
 
 	/**
@@ -25,7 +27,8 @@ class File extends \Kronos\Log\AbstractWriter {
 	private $context_stringifier = NULL;
 
 	/**
-	 * @param \Kronos\Log\Adaptor\File $file_adaptor
+	 * @param string $filename
+	 * @param FileFactory $factory
 	 */
 	public function __construct($filename, FileFactory $factory) {
 		$this->file_adaptor = $factory->createFileAdaptor($filename);
@@ -60,13 +63,35 @@ class File extends \Kronos\Log\AbstractWriter {
 	}
 
 	private function writeExceptionIfGiven($context) {
-		if(isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof \Exception) {
+		if(isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof Exception) {
+			/** @var Exception $exception */
 			$exception = $context[Logger::EXCEPTION_CONTEXT];
-			$this->file_adaptor->write(self::EXCEPTION_TITLE_LINE);
-			$this->file_adaptor->write($exception->getMessage());
+			$title = strtr(self::EXCEPTION_TITLE_LINE, [
+				'{message}' => $exception->getMessage(),
+				'{file}' => $exception->getFile(),
+				'{line}' => $exception->getLine()
+			]);
+			$this->file_adaptor->write($title);
 			$this->file_adaptor->write($exception->getTraceAsString());
+
+			$previous = $exception->getPrevious();
+			if($previous instanceof Exception) {
+				$this->_writePreviousException($previous);
+			}
 		}
 	}
 
-
+	private function _writePreviousException(Exception $exception){
+		$title = strtr(self::PREVIOUS_EXCEPTION_TITLE_LINE, [
+			'{message}' => $exception->getMessage(),
+			'{file}' => $exception->getFile(),
+			'{line}' => $exception->getLine()
+		]);
+		$this->file_adaptor->write($title);
+		$this->file_adaptor->write($exception->getTraceAsString());
+		$previous = $exception->getPrevious();
+		if($previous instanceof Exception) {
+			$this->_writePreviousException($previous);
+		}
+	}
 }

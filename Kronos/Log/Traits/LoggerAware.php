@@ -2,6 +2,8 @@
 
 namespace Kronos\Log\Traits;
 
+use  Kronos\Log\Logger;
+
 trait LoggerAware {
 	use \Psr\Log\LoggerAwareTrait;
 
@@ -117,6 +119,20 @@ trait LoggerAware {
 	protected function logDebug($message, array $context = array()) {
 		if($this->logger) {
 			$this->logger->debug($message, $context);
+		}
+	}
+
+
+	/**
+	 * Log Error with exception context
+	 * @param $message
+	 * @param \Exception $exception
+	 * @param array $context
+	 */
+	protected function logException($message, \Exception $exception, array $context = array()) {
+		if($this->logger) {
+			$context[Logger::EXCEPTION_CONTEXT] = $exception;
+			$this->logger->error($message, $context);
 		}
 	}
 }
