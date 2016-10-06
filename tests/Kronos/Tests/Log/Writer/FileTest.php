@@ -19,7 +19,13 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 	const DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
 
 	const EXCEPTION_MESSAGE = 'Some exception message';
-	const EXCEPTION_STACKTRACE = "A few lines\nOf stacktrace";
+	const EXCEPTION_FILE = '/tmp/some/file.php';
+	const EXCEPTION_LINE = 2;
+	const EXCEPTION_TITLE_LINE_FORMAT = "Exception: 'Some exception message' in '%s' at line %i";
+	const PREVIOUS_EXCEPTION_MESSAGE = 'Previous exception message';
+	const PREVIOUS_EXCEPTION_FILE = '/tmp/some/other/file.php';
+	const PREVIOUS_EXCEPTION_LINE = 3;
+	const PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT = "Previous exception: 'Previous exception message' in '%s' at line %i";
 
 	const STRINGIFIED_CONTEXT = 'stringified context';
 
@@ -59,12 +65,23 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
 	}
 
+	public function test_ContextWithFakeException_Log_ShouldNotWriteException() {
+		$this->givenFactoryReturnAdaptor();
+		$this->expectsWriteToByCalledOnceWith(self::INTERPOLATED_MESSAGE);
+		$writer = new File(self::A_FILENAME, $this->factory);
+		$context = [
+			self::CONTEXT_KEY => self::CONTEXT_VALUE,
+			Logger::EXCEPTION_CONTEXT => self::CONTEXT_VALUE
+		];
+
+		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
+	}
+
 	public function test_ContextContainingException_Log_ShouldWriteExceptionMessageAndStacktrace() {
 		$this->givenFactoryReturnAdaptor();
 		$this->expectsWriteToBeCalledWithConsecutive([
 			[self::INTERPOLATED_MESSAGE],
-			[File::EXCEPTION_TITLE_LINE],
-			[self::EXCEPTION_MESSAGE],
+			[$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
 			[$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
 		]);
 		$writer = new File(self::A_FILENAME, $this->factory);
@@ -76,13 +93,21 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
 	}
 
-	public function test_ContextWithFakeException_Log_ShouldNotWriteException() {
+	public function test_ContextContainingExceptionWithPreviousException_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException() {
 		$this->givenFactoryReturnAdaptor();
-		$this->expectsWriteToByCalledOnceWith(self::INTERPOLATED_MESSAGE);
+		$this->expectsWriteToBeCalledWithConsecutive([
+			[self::INTERPOLATED_MESSAGE],
+			[$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+			[$this->anything()], // Because we can't mock exceptions, can't be sure it's really the stacktrace...,
+			[$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+			[$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...,
+		]);
 		$writer = new File(self::A_FILENAME, $this->factory);
+		$previous_exception =  new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
+		$exception =  new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
 		$context = [
 			self::CONTEXT_KEY => self::CONTEXT_VALUE,
-			Logger::EXCEPTION_CONTEXT => self::CONTEXT_VALUE
+			Logger::EXCEPTION_CONTEXT => $exception
 		];
 
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);

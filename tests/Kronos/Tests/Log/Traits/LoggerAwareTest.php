@@ -10,6 +10,7 @@ class LoggerAwareTest extends \PHPUnit_Framework_TestCase {
 	const A_MESSAGE = 'a message';
 	const CONTEXT_KEY = 'key';
 	const CONTEXT_VALUE = 'value';
+	const EXCEPTION_MESSAGE = 'Some exception message';
 
 	private $logger;
 
@@ -125,6 +126,19 @@ class LoggerAwareTest extends \PHPUnit_Framework_TestCase {
 		$this->trait->callLogMethod('logDebug', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
 	}
 
+	public function test_TraitWithLogger_logException_ShouldCallError() {
+		$exception = new \Exception(self::EXCEPTION_MESSAGE);
+		$this->trait->setLogger($this->logger);
+		$this->loggerExpectsMethodToBeCalledOnceWith('error', self::A_MESSAGE, [
+			self::CONTEXT_KEY => self::CONTEXT_VALUE,
+			Logger::EXCEPTION_CONTEXT => $exception
+		]);
+
+		$this->trait->callLogException(self::A_MESSAGE, $exception, [
+			self::CONTEXT_KEY => self::CONTEXT_VALUE
+		]);
+	}
+
 	private function loggerExpectsMethodToBeCalledOnceWith($method, $message, $context) {
 		$this->logger
 			->expects($this->once())
@@ -144,5 +158,9 @@ class TestableLoggerAware {
 
 	public function callLogMethod($method, $message, $context) {
 		$this->$method($message, $context);
+	}
+
+	public function callLogException($message, $exception, $context){
+		$this->logException($message, $exception, $context);
 	}
 }
