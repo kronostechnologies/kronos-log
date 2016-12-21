@@ -14,7 +14,7 @@ use Kronos\Log;
 
 $logger = new Log\Logger();
 
-$debug = new Log\Writer\File('/var/log/debug.log');
+$debug = new Log\Writer\File('/var/log/debug.log', new Kronos\Log\Adaptor\FileFactory());
 $logger->addWriter($debug);
 
 ...
