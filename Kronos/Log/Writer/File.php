@@ -5,6 +5,7 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\ContextStringifier;
 use Kronos\Log\Logger;
+use Psr\Log\LogLevel;
 use Exception;
 
 class File extends \Kronos\Log\AbstractWriter {
@@ -42,56 +43,72 @@ class File extends \Kronos\Log\AbstractWriter {
 		$this->context_stringifier->excludeKey(Logger::EXCEPTION_CONTEXT);
 	}
 
+	/**
+	 * @param string $level
+	 * @param string $message
+	 * @param array $context
+	 */
 	public function log($level, $message, array $context = []) {
 		$this->writeMessage($level, $message, $context);
-		$this->writeExceptionIfGiven($context);
+		$this->writeExceptionIfGiven($level, $context);
 		$this->writeContextIfStringifierGiven($context);
 	}
 
-	private function writeMessage($level, $message, $context) {
+	/**
+	 * @param string $level
+	 * @param string $message
+	 * @param array $context
+	 */
+	private function writeMessage($level, $message, array $context = []) {
 		$interpolated_message = $this->interpolate($message, $context);
 		$message_with_loglevel = $this->prependLogLevel($level, $interpolated_message);
 		$message_with_datetime = $this->prependDateTime($message_with_loglevel);
 		$this->file_adaptor->write($message_with_datetime);
 	}
 
-	private function writeContextIfStringifierGiven($context) {
+	/**
+	 * @param array $context
+	 */
+	private function writeContextIfStringifierGiven(array $context = []) {
 		if($this->context_stringifier) {
 			$this->file_adaptor->write(self::CONTEXT_TITLE_LINE);
 			$this->file_adaptor->write($this->context_stringifier->stringify($context));
 		}
 	}
 
-	private function writeExceptionIfGiven($context) {
+	/**
+	 * @param string $level
+	 * @param array $context
+	 */
+	private function writeExceptionIfGiven($level, array $context) {
 		if(isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof Exception) {
 			/** @var Exception $exception */
 			$exception = $context[Logger::EXCEPTION_CONTEXT];
-			$title = strtr(self::EXCEPTION_TITLE_LINE, [
-				'{message}' => $exception->getMessage(),
-				'{file}' => $exception->getFile(),
-				'{line}' => $exception->getLine()
-			]);
-			$this->file_adaptor->write($title);
-			$this->file_adaptor->write($exception->getTraceAsString());
-
-			$previous = $exception->getPrevious();
-			if($previous instanceof Exception) {
-				$this->_writePreviousException($previous);
-			}
+			$this->writeException($level, $exception);
 		}
 	}
 
-	private function _writePreviousException(Exception $exception){
-		$title = strtr(self::PREVIOUS_EXCEPTION_TITLE_LINE, [
+	/**
+	 * @param string $level
+	 * @param Exception $exception
+	 * @param int $depth
+	 */
+	private function writeException($level, Exception $exception, $depth=0){
+		$title = ($depth === 0 ? self::EXCEPTION_TITLE_LINE : self::PREVIOUS_EXCEPTION_TITLE_LINE);
+		$title = strtr($title, [
 			'{message}' => $exception->getMessage(),
 			'{file}' => $exception->getFile(),
 			'{line}' => $exception->getLine()
 		]);
 		$this->file_adaptor->write($title);
-		$this->file_adaptor->write($exception->getTraceAsString());
+
+		if(! $this->isLevelLower(LogLevel::ERROR, $level)) {
+			$this->file_adaptor->write($exception->getTraceAsString());
+		}
+
 		$previous = $exception->getPrevious();
 		if($previous instanceof Exception) {
-			$this->_writePreviousException($previous);
+			$this->writeException($level, $previous, $depth+1);
 		}
 	}
 }

@@ -11,6 +11,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 
 	const A_FILENAME = '/path/to/file';
 	const ANY_LOG_LEVEL = LogLevel::INFO;
+	const LOGLEVEL_BELOW_ERROR = LogLevel::INFO;
 	const A_MESSAGE = 'a message {key}';
 	const CONTEXT_KEY = 'key';
 	const CONTEXT_VALUE = 'value';
@@ -77,7 +78,22 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
 	}
 
-	public function test_ContextContainingException_Log_ShouldWriteExceptionMessageAndStacktrace() {
+	public function test_ContextContainingExceptionAndLogLevelLowerThanError_Log_ShouldWriteExceptionWithoutStackTrace() {
+		$this->givenFactoryReturnAdaptor();
+		$this->expectsWriteToBeCalledWithConsecutive([
+			[self::INTERPOLATED_MESSAGE],
+			[$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
+		]);
+		$writer = new File(self::A_FILENAME, $this->factory);
+		$context = [
+			self::CONTEXT_KEY => self::CONTEXT_VALUE,
+			Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
+		];
+
+		$writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
+	}
+
+	public function test_ContextContainingExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStackTrace() {
 		$this->givenFactoryReturnAdaptor();
 		$this->expectsWriteToBeCalledWithConsecutive([
 			[self::INTERPOLATED_MESSAGE],
@@ -90,10 +106,10 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 			Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
 		];
 
-		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
+		$writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
 	}
 
-	public function test_ContextContainingExceptionWithPreviousException_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException() {
+	public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException() {
 		$this->givenFactoryReturnAdaptor();
 		$this->expectsWriteToBeCalledWithConsecutive([
 			[self::INTERPOLATED_MESSAGE],
@@ -110,7 +126,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 			Logger::EXCEPTION_CONTEXT => $exception
 		];
 
-		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
+		$writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
 	}
 	
 	public function test_Writer_SetContextStringify_ShouldExcludeExceptionKey() {

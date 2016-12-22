@@ -122,7 +122,24 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 		$this->writer->setForceNoAnsiColorSupport();
 	}
 
-	public function test_ContextContainingException_LogError_ShouldWriteExceptionMessageAndStacktrace() {
+	public function test_ContextContainingExceptionAndLogLevelLowerThanError_Log_ShouldWriteExceptionWithoutStackTrace() {
+		$this->givenFactoryReturnFileAdaptors();
+		$this->expectsWriteToBeCalledWithConsecutive($this->stdout, [
+			[self::INTERPOLATED_MESSAGE],
+		]);
+		$this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
+			[$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
+		]);
+		$writer = new Console($this->factory);
+		$context = [
+			self::CONTEXT_KEY => self::CONTEXT_VALUE,
+			Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
+		];
+
+		$writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
+	}
+
+	public function test_ContextContainingExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStackTrace() {
 		$this->givenFactoryReturnFileAdaptors();
 		$this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
 			[self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
@@ -139,7 +156,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
 	}
 
-	public function test_ContextContainingException_LogError_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException() {
+	public function test_ContextContainingExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException() {
 		$this->givenFactoryReturnFileAdaptors();
 		$this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
 			[self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
