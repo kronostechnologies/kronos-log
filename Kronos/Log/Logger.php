@@ -21,22 +21,6 @@ class Logger extends \Psr\Log\AbstractLogger {
 	}
 
 	/**
-	 * @param string $class
-	 * @return WriterInterface
-	 * @throws \Exception
-	 */
-	public function getWriterByClass($class) {
-
-		foreach($this->writers as $writer) {
-			if ($writer instanceof $class) {
-				return $writer;
-			}
-		}
-
-		throw new \Exception("Writer does not exist for class {$class}.");
-	}
-
-	/**
 	 * @param $key String
 	 * @param $value Mixed
 	 */

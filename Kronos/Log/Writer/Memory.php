@@ -19,7 +19,8 @@ class Memory extends \Kronos\Log\AbstractWriter {
 	 */
 	public function log($level, $message, array $context = []) {
 
-		$this->_content[] = strtoupper($level) . ': ' . $message;
+		$interpolated_message = $this->interpolate($message, $context);
+		$this->_content[] = strtoupper($level) . ': ' . $interpolated_message;
 	}
 
 	/**
