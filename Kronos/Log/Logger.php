@@ -13,8 +13,27 @@ class Logger extends \Psr\Log\AbstractLogger {
 	 */
 	private $writers = [];
 
+	/**
+	 * @param WriterInterface $writer
+	 */
 	public function addWriter(WriterInterface $writer) {
 		$this->writers[] = $writer;
+	}
+
+	/**
+	 * @param string $class
+	 * @return WriterInterface
+	 * @throws \Exception
+	 */
+	public function getWriterByClass($class) {
+
+		foreach($this->writers as $writer) {
+			if ($writer instanceof $class) {
+				return $writer;
+			}
+		}
+
+		throw new \Exception("Writer does not exist for class {$class}.");
 	}
 
 	/**
