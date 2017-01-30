@@ -16,7 +16,6 @@ class Memory extends \Kronos\Log\AbstractWriter {
 	 * Memory constructor.
 	 */
 	public function __construct() {
-
 		$this->setPrependLogLevel();
 	}
 
@@ -27,9 +26,7 @@ class Memory extends \Kronos\Log\AbstractWriter {
 	 * @param array $context
 	 */
 	public function log($level, $message, array $context = []) {
-
 		$interpolated_message = $this->interpolate($message, $context);
-
 		$this->_content[] = $this->prependLogLevel($level, $interpolated_message);
 	}
 
@@ -38,7 +35,6 @@ class Memory extends \Kronos\Log\AbstractWriter {
 	 * @return array
 	 */
 	public function getContent() {
-
 		return $this->_content;
 	}
 }
