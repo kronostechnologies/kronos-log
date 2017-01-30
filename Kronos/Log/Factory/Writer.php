@@ -8,6 +8,7 @@ use Kronos\Log\ContextStringifier;
 use Kronos\Log\Writer\File;
 use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
+use Kronos\Log\Writer\Memory;
 
 class Writer {
 
@@ -54,6 +55,13 @@ class Writer {
 	 */
 	public function createConsoleWriter() {
 		return new Console($this->getFileFactory());
+	}
+
+	/**
+	 * @return Memory
+	 */
+	public function createMemoryWriter() {
+		return new Memory();
 	}
 
 	/**

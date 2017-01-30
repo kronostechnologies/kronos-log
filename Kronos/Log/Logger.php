@@ -13,6 +13,9 @@ class Logger extends \Psr\Log\AbstractLogger {
 	 */
 	private $writers = [];
 
+	/**
+	 * @param WriterInterface $writer
+	 */
 	public function addWriter(WriterInterface $writer) {
 		$this->writers[] = $writer;
 	}
