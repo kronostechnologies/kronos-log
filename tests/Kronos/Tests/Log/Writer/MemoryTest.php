@@ -2,11 +2,8 @@
 
 namespace Kronos\Tests\Log\Writer;
 
-use Kronos\Log\ContextStringifier;
-use Kronos\Log\Writer\File;
 use Kronos\Log\Writer\Memory;
 use Psr\Log\LogLevel;
-use \Kronos\Log\Logger;
 
 class MemoryTest extends \PHPUnit_Framework_TestCase {
 
