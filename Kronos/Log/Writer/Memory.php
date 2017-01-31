@@ -10,7 +10,7 @@ class Memory extends \Kronos\Log\AbstractWriter {
 	 * Contains all logged messages.
 	 * @var array
 	 */
-	private $_content = [];
+	private $_logs = [];
 
 	/**
 	 * Memory constructor.
@@ -27,14 +27,14 @@ class Memory extends \Kronos\Log\AbstractWriter {
 	 */
 	public function log($level, $message, array $context = []) {
 		$interpolated_message = $this->interpolate($message, $context);
-		$this->_content[] = $this->prependLogLevel($level, $interpolated_message);
+		$this->_logs[] = $this->prependLogLevel($level, $interpolated_message);
 	}
 
 	/**
 	 * Returns all logged messages.
 	 * @return array
 	 */
-	public function getContent() {
-		return $this->_content;
+	public function getLogs() {
+		return $this->_logs;
 	}
 }
