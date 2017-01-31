@@ -11,7 +11,6 @@ class MemoryTest extends \PHPUnit_Framework_TestCase {
 	const A_MESSAGE = 'a message {key}';
 	const CONTEXT_KEY = 'key';
 	const CONTEXT_VALUE = 'value';
-	const INTERPOLATED_MESSAGE = 'a message value';
 	const INTERPOLATED_MESSAGE_WITH_LOG_LEVEL = 'INFO : a message value';
 
 
@@ -29,6 +28,6 @@ class MemoryTest extends \PHPUnit_Framework_TestCase {
 
 		$this->writer->log(self::INFO_LOG_LEVEL, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
 
-		$this->assertTrue(in_array(self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL, $this->writer->getContent()));
+		$this->assertContains(self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL, $this->writer->getContent());
 	}
 }
