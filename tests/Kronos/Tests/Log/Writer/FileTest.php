@@ -154,11 +154,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$context = [
 			self::CONTEXT_KEY => self::CONTEXT_VALUE
 		];
-		$this->expectsWriteToBeCalledWithConsecutive([
-			[self::INTERPOLATED_MESSAGE],
-			[File::CONTEXT_TITLE_LINE],
-			[self::STRINGIFIED_CONTEXT]
-		]);
+		$this->expectsContextToBeIncludedInWriter();
 		$context_stringifier = $this->getMock(ContextStringifier::class);
 		$context_stringifier
 			->expects($this->once())
@@ -171,7 +167,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
 	}
 
-	public function test_EmptyArrayContextWithStringifier_writeContextIfStringifierGiven_WontWriteAnything() {
+	public function test_EmptyArrayContextWithStringifier_Log_WontWriteAnything() {
 		$this->givenFactoryReturnAdaptor();
 		$given_context = [];
 		$given_stringifier = $this->getMock(ContextStringifier::class);
@@ -184,12 +180,19 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
 	}
 
-	public function test_PopulatedContextWithStringifier_writeContextIfStringifierGiven_WillWrite() {
+	public function test_PopulatedContextWithStringifier_Log_WillWrite() {
 		$this->givenFactoryReturnAdaptor();
-		$given_context = ['a' => 'b'];
+		$given_context = [
+			self::CONTEXT_KEY => self::CONTEXT_VALUE
+		];
 		$given_stringifier = $this->getMock(ContextStringifier::class);
+		$given_stringifier
+			->expects($this->once())
+			->method('stringify')
+			->with($given_context)
+			->willReturn(self::STRINGIFIED_CONTEXT);
 
-		$this->expectsWriteToBeCalledXTimes(3);
+		$this->expectsContextToBeIncludedInWriter();
 
 		$writer = new File(null, $this->factory);
 		$writer->setContextStringifier($given_stringifier);
@@ -207,10 +210,12 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 			->method('write');
 	}
 
-	private function expectsWriteToBeCalledXTimes($times) {
-		$this->adaptor
-			->expects($this->exactly($times))
-			->method('write');
+	private function expectsContextToBeIncludedInWriter() {
+		$this->expectsWriteToBeCalledWithConsecutive([
+			[self::INTERPOLATED_MESSAGE],
+			[File::CONTEXT_TITLE_LINE],
+			[self::STRINGIFIED_CONTEXT]
+		]);
 	}
 
 	private function expectsWriteToByCalledOnceWith($line) {
