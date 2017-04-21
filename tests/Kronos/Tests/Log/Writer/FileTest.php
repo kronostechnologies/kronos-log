@@ -2,6 +2,7 @@
 
 namespace Kronos\Tests\Log\Writer;
 
+use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\ContextStringifier;
 use Kronos\Log\Writer\File;
 use Psr\Log\LogLevel;
@@ -30,7 +31,14 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 
 	const STRINGIFIED_CONTEXT = 'stringified context';
 
+	/**
+	 * @var File|\PHPUnit_Framework_MockObject_MockObject
+	 */
 	private $adaptor;
+
+	/**
+	 * @var FileFactory|\PHPUnit_Framework_MockObject_MockObject
+	 */
 	private $factory;
 
 	public function setUp() {
@@ -163,8 +171,46 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
 	}
 
+	public function test_EmptyArrayContextWithStringifier_writeContextIfStringifierGiven_WontWriteAnything() {
+		$this->givenFactoryReturnAdaptor();
+		$given_context = [];
+		$given_stringifier = $this->getMock(ContextStringifier::class);
+
+		$this->expectsWriteToBeCalledOnce();
+
+		$writer = new File(null, $this->factory);
+		$writer->setContextStringifier($given_stringifier);
+
+		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
+	}
+
+	public function test_PopulatedContextWithStringifier_writeContextIfStringifierGiven_WillWrite() {
+		$this->givenFactoryReturnAdaptor();
+		$given_context = ['a' => 'b'];
+		$given_stringifier = $this->getMock(ContextStringifier::class);
+
+		$this->expectsWriteToBeCalledXTimes(3);
+
+		$writer = new File(null, $this->factory);
+		$writer->setContextStringifier($given_stringifier);
+
+		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
+	}
+
 	private function givenFactoryReturnAdaptor() {
 		$this->factory->method('createFileAdaptor')->willReturn($this->adaptor);
+	}
+
+	private function expectsWriteToBeCalledOnce() {
+		$this->adaptor
+			->expects($this->once())
+			->method('write');
+	}
+
+	private function expectsWriteToBeCalledXTimes($times) {
+		$this->adaptor
+			->expects($this->exactly($times))
+			->method('write');
 	}
 
 	private function expectsWriteToByCalledOnceWith($line) {
