@@ -70,7 +70,7 @@ class File extends \Kronos\Log\AbstractWriter {
 	 * @param array $context
 	 */
 	private function writeContextIfStringifierGiven(array $context = []) {
-		if($this->context_stringifier) {
+		if($this->context_stringifier && !empty($context)) {
 			$this->file_adaptor->write(self::CONTEXT_TITLE_LINE);
 			$this->file_adaptor->write($this->context_stringifier->stringify($context));
 		}

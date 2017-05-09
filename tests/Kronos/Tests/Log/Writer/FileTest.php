@@ -2,6 +2,7 @@
 
 namespace Kronos\Tests\Log\Writer;
 
+use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\ContextStringifier;
 use Kronos\Log\Writer\File;
 use Psr\Log\LogLevel;
@@ -30,7 +31,14 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 
 	const STRINGIFIED_CONTEXT = 'stringified context';
 
+	/**
+	 * @var File|\PHPUnit_Framework_MockObject_MockObject
+	 */
 	private $adaptor;
+
+	/**
+	 * @var FileFactory|\PHPUnit_Framework_MockObject_MockObject
+	 */
 	private $factory;
 
 	public function setUp() {
@@ -146,11 +154,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$context = [
 			self::CONTEXT_KEY => self::CONTEXT_VALUE
 		];
-		$this->expectsWriteToBeCalledWithConsecutive([
-			[self::INTERPOLATED_MESSAGE],
-			[File::CONTEXT_TITLE_LINE],
-			[self::STRINGIFIED_CONTEXT]
-		]);
+		$this->expectsContextToBeIncludedInWriter();
 		$context_stringifier = $this->getMock(ContextStringifier::class);
 		$context_stringifier
 			->expects($this->once())
@@ -163,8 +167,55 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
 	}
 
+	public function test_EmptyArrayContextWithStringifier_Log_WontWriteAnything() {
+		$this->givenFactoryReturnAdaptor();
+		$given_context = [];
+		$given_stringifier = $this->getMock(ContextStringifier::class);
+
+		$this->expectsWriteToBeCalledOnce();
+
+		$writer = new File(null, $this->factory);
+		$writer->setContextStringifier($given_stringifier);
+
+		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
+	}
+
+	public function test_PopulatedContextWithStringifier_Log_WillWrite() {
+		$this->givenFactoryReturnAdaptor();
+		$given_context = [
+			self::CONTEXT_KEY => self::CONTEXT_VALUE
+		];
+		$given_stringifier = $this->getMock(ContextStringifier::class);
+		$given_stringifier
+			->expects($this->once())
+			->method('stringify')
+			->with($given_context)
+			->willReturn(self::STRINGIFIED_CONTEXT);
+
+		$this->expectsContextToBeIncludedInWriter();
+
+		$writer = new File(null, $this->factory);
+		$writer->setContextStringifier($given_stringifier);
+
+		$writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
+	}
+
 	private function givenFactoryReturnAdaptor() {
 		$this->factory->method('createFileAdaptor')->willReturn($this->adaptor);
+	}
+
+	private function expectsWriteToBeCalledOnce() {
+		$this->adaptor
+			->expects($this->once())
+			->method('write');
+	}
+
+	private function expectsContextToBeIncludedInWriter() {
+		$this->expectsWriteToBeCalledWithConsecutive([
+			[self::INTERPOLATED_MESSAGE],
+			[File::CONTEXT_TITLE_LINE],
+			[self::STRINGIFIED_CONTEXT]
+		]);
 	}
 
 	private function expectsWriteToByCalledOnceWith($line) {
