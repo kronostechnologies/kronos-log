@@ -4,10 +4,12 @@ namespace Kronos\Log\Writer;
 
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Factory;
+use Psr\Log\LogLevel;
 
 class LogDNA extends AbstractWriter {
 
-	const INGEST_URL = 'https://logs.logdna.com/logs/ingest';
+	const LOGDNA_URL = 'https://logs.logdna.com/';
+	const INGEST_URI = 'logs/ingest';
 
 	/**
 	 * @var string
@@ -17,7 +19,7 @@ class LogDNA extends AbstractWriter {
 	/**
 	 * @var string
 	 */
-	private $ingestionKey;
+	private $application;
 
 	/**
 	 * @var string
@@ -30,9 +32,9 @@ class LogDNA extends AbstractWriter {
 	private $mac;
 
 	/**
-	 * @var Factory\Guzzle
+	 * @var \GuzzleHttp\Client
 	 */
-	private $guzzleFactory;
+	private $guzzleClient;
 
 	/**
 	 * LogDNA constructor.
@@ -40,10 +42,18 @@ class LogDNA extends AbstractWriter {
 	 * @param string $ingestionKey
 	 * @param GuzzleFactory $guzzleFactory
 	 */
-	public function __construct($hostname, $ingestionKey, Factory\Guzzle $guzzleFactory = null) {
+	public function __construct($hostname, $application, $ingestionKey, Factory\Guzzle $guzzleFactory = null) {
 		$this->hostname = $hostname;
-		$this->ingestionKey = $ingestionKey;
-		$this->guzzleFactory = $guzzleFactory ?: new Factory\Guzzle();
+		$this->application = $application;
+
+		$factory = $guzzleFactory ?: new Factory\Guzzle();
+		$this->guzzleClient = $factory->createClient([
+			'headers' => [
+				'Content-Type' => 'application/json',
+				'apikey' => $ingestionKey
+			],
+			'base_uri' => self::LOGDNA_URL
+		]);
 	}
 
 	/**
@@ -61,9 +71,31 @@ class LogDNA extends AbstractWriter {
 	}
 
 
-
+	/**
+	 * @param $level LogLevel valid string
+	 * @param $message
+	 * @param array $context
+	 */
 	public function log($level, $message, array $context = []) {
-
+		$this->guzzleClient->post($this->buildUri(), [ 'json' => ['lines' => [
+			[
+				'line' => $this->interpolate($message, $context),
+				'app' => $this->application,
+				'level' => $level,
+				'meta' => $context
+			]
+		]]]);
 	}
 
+	private function buildUri() {
+		$uri = self::INGEST_URI.'?hostname='.urlencode($this->hostname).'&now='.time();
+		if($this->ip) {
+			$uri .= '&ip='.urlencode($this->ip);
+		}
+		if($this->mac) {
+			$uri .= '&mac='.urlencode($this->mac);
+		}
+
+		return $uri;
+	}
 }
