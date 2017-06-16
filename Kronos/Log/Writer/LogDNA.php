@@ -77,14 +77,21 @@ class LogDNA extends AbstractWriter {
 	 * @param array $context
 	 */
 	public function log($level, $message, array $context = []) {
-		$this->guzzleClient->post($this->buildUri(), [ 'json' => ['lines' => [
-			[
-				'line' => $this->interpolate($message, $context),
-				'app' => $this->application,
-				'level' => $level,
-				'meta' => $context
-			]
-		]]]);
+		try {
+			$this->guzzleClient->post($this->buildUri(), ['json' =>
+				['lines' => [
+					[
+						'line' => $this->interpolate($message, $context),
+						'app' => $this->application,
+						'level' => $level,
+						'meta' => $this->processContext($context)
+					]
+				]
+			]]);
+		}
+		catch(\Exception $exception) {
+			// A logger should never be the reason why the app crashed.
+		}
 	}
 
 	private function buildUri() {
@@ -97,5 +104,24 @@ class LogDNA extends AbstractWriter {
 		}
 
 		return $uri;
+	}
+
+	private function processContext($context) {
+		return $this->replaceException($context);
+	}
+
+	/**
+	 * @param $context
+	 * @return mixed
+	 */
+	private function replaceException($context) {
+		if(isset($context['exception'])) {
+			$exception = $context['exception'];
+			unset($context['exception']);
+
+			$context['exception'] = $exception->getMessage();
+			$context['stacktrace'] = $exception->getTraceAsString();
+		}
+		return $context;
 	}
 }

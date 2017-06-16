@@ -134,6 +134,42 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
 	}
 
+	public function test_ExceptionInContext_log_ShouldReplaceExceptionWithMessageAndAddStacktrace() {
+		$exception = new \Exception('exception message');
+		$this->client
+			->expects(self::once())
+			->method('post')
+			->with(
+				$this->matchesRegularExpression($this->buildUriRegex(LogDNA::INGEST_URI.'?hostname='.urlencode(self::HOSTNAME).'&now=\d+')),
+				['json' => [
+					'lines' => [
+						[
+							'line' => self::MESSAGE,
+							'app' => self::APPLICATION,
+							'level' => self::ANY_LOG_LEVEL,
+							'meta' => [
+								'exception' => $exception->getMessage(),
+								'stacktrace' => $exception->getTraceAsString()
+							]
+						]
+					]
+				]]
+			);
+		$this->givenWriter();
+
+		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
+	}
+
+	public function test_GuzzleClientThrowException_log_ShouldDoNothing() {
+		$this->client
+			->method('post')
+			->willThrowException(new \Exception());
+		$this->givenWriter();
+
+		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
+
+	}
+
 	private function givenWriter() {
 		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $this->factory);
 	}
