@@ -108,7 +108,7 @@ class LogDNA extends AbstractWriter {
 	 * @return mixed
 	 */
 	private function replaceException($context) {
-		if(isset($context['exception'])) {
+		if(isset($context['exception']) && $context['exception'] instanceof \Exception) {
 			$exception = $context['exception'];
 			unset($context['exception']);
 

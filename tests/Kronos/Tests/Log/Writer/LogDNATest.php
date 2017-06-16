@@ -21,6 +21,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 
 	const IP_ADDRESS = '10.0.1.101';
 	const MAC_ADDRESS = 'C0:FF:EE:C0:FF:EE';
+	const SOME_TEXT = 'some text';
 
 	/**
 	 * @var LogDNA
@@ -140,7 +141,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 			->expects(self::once())
 			->method('post')
 			->with(
-				$this->matchesRegularExpression($this->buildUriRegex(LogDNA::INGEST_URI.'?hostname='.urlencode(self::HOSTNAME).'&now=\d+')),
+				$this->anything(),
 				['json' => [
 					'lines' => [
 						[
@@ -158,6 +159,30 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$this->givenWriter();
 
 		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
+	}
+
+	public function test_ExceptionStringInContext_log_ShouldKeepExceptionText() {
+		$this->client
+			->expects(self::once())
+			->method('post')
+			->with(
+				$this->anything(),
+				['json' => [
+					'lines' => [
+						[
+							'line' => self::MESSAGE,
+							'app' => self::APPLICATION,
+							'level' => self::ANY_LOG_LEVEL,
+							'meta' => [
+								'exception' => self::SOME_TEXT,
+							]
+						]
+					]
+				]]
+			);
+		$this->givenWriter();
+
+		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => self::SOME_TEXT]);
 	}
 
 	public function test_GuzzleClientThrowException_log_ShouldDoNothing() {
