@@ -46,14 +46,7 @@ class LogDNA extends AbstractWriter {
 		$this->hostname = $hostname;
 		$this->application = $application;
 
-		$factory = $guzzleFactory ?: new Factory\Guzzle();
-		$this->guzzleClient = $factory->createClient([
-			'headers' => [
-				'Content-Type' => 'application/json',
-				'apikey' => $ingestionKey
-			],
-			'base_uri' => self::LOGDNA_URL
-		]);
+		$this->createGuzzleClient($ingestionKey, $guzzleFactory);
 	}
 
 	/**
@@ -123,5 +116,20 @@ class LogDNA extends AbstractWriter {
 			$context['stacktrace'] = $exception->getTraceAsString();
 		}
 		return $context;
+	}
+
+	/**
+	 * @param $ingestionKey
+	 * @param Factory\Guzzle $guzzleFactory
+	 */
+	private function createGuzzleClient($ingestionKey, Factory\Guzzle $guzzleFactory = null) {
+		$factory = $guzzleFactory ?: new Factory\Guzzle();
+		$this->guzzleClient = $factory->createClient([
+			'headers' => [
+				'Content-Type' => 'application/json',
+				'apikey' => $ingestionKey
+			],
+			'base_uri' => self::LOGDNA_URL
+		]);
 	}
 }
