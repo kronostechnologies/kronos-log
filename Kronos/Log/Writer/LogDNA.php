@@ -39,6 +39,7 @@ class LogDNA extends AbstractWriter {
 	/**
 	 * LogDNA constructor.
 	 * @param string $hostname
+	 * @param string $application
 	 * @param string $ingestionKey
 	 * @param GuzzleFactory $guzzleFactory
 	 */
@@ -65,8 +66,8 @@ class LogDNA extends AbstractWriter {
 
 
 	/**
-	 * @param $level LogLevel valid string
-	 * @param $message
+	 * @param string $level LogLevel valid string
+	 * @param string $message
 	 * @param array $context
 	 */
 	public function log($level, $message, array $context = []) {
@@ -87,6 +88,9 @@ class LogDNA extends AbstractWriter {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	private function buildUri() {
 		$uri = self::INGEST_URI.'?hostname='.urlencode($this->hostname).'&now='.time();
 		if($this->ip) {
@@ -99,12 +103,16 @@ class LogDNA extends AbstractWriter {
 		return $uri;
 	}
 
+	/**
+	 * @param mixed $context
+	 * @return mixed whatever $context is
+	 */
 	private function processContext($context) {
 		return $this->replaceException($context);
 	}
 
 	/**
-	 * @param $context
+	 * @param array $context
 	 * @return mixed
 	 */
 	private function replaceException($context) {
@@ -119,7 +127,7 @@ class LogDNA extends AbstractWriter {
 	}
 
 	/**
-	 * @param $ingestionKey
+	 * @param string $ingestionKey
 	 * @param Factory\Guzzle $guzzleFactory
 	 */
 	private function createGuzzleClient($ingestionKey, Factory\Guzzle $guzzleFactory = null) {
