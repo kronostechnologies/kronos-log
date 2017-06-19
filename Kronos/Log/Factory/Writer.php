@@ -6,6 +6,8 @@ use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Adaptor\Syslog As SyslogAdaptor;
 use Kronos\Log\ContextStringifier;
 use Kronos\Log\Writer\File;
+use Kronos\Log\Writer\LogDNA;
+use Kronos\Log\Writer\Sentry;
 use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
 use Kronos\Log\Writer\Memory;
@@ -62,6 +64,24 @@ class Writer {
 	 */
 	public function createMemoryWriter() {
 		return new Memory();
+	}
+
+	/**
+	 * @param \Raven_Client $client
+	 * @return Sentry
+	 */
+	public function createSentryWriter(\Raven_Client $client) {
+		return new Sentry($client);
+	}
+
+	/**
+	 * @param $hostname
+	 * @param $application
+	 * @param $ingestionKey
+	 * @return LogDNA
+	 */
+	public function createLogDDNAWriter($hostname, $application, $ingestionKey) {
+		return new LogDNA($hostname, $application, $ingestionKey);
 	}
 
 	/**
