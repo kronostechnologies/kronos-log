@@ -3,7 +3,7 @@
 namespace Kronos\Log;
 
 use Kronos\Log\Factory\Logger as LoggerFactory,
-	Kronos\Log\Factory\Writer as WriterFactory;
+	Kronos\Log\Factory\Strategy as StrategyFactory;
 
 class Builder {
 
@@ -13,11 +13,22 @@ class Builder {
 	private $loggerFactory;
 
 	/**
-	 * @var WriterFactory
+	 * @var StrategyFactory
 	 */
-	private $writerFactory;
+	private $strategyFactory;
+
+	/**
+	 * Builder constructor.
+	 * @param LoggerFactory $loggerFactory
+	 * @param StrategyFactory $strategyFactory
+	 */
+	public function __construct(LoggerFactory $loggerFactory = null, StrategyFactory $strategyFactory = null) {
+		$this->loggerFactory = $loggerFactory ?: new LoggerFactory();
+		$this->strategyFactory = $strategyFactory ?: new StrategyFactory();
+	}
+
 
 	public function buildFromArray(array $settings) {
-
+		$this->loggerFactory->createLogger();
 	}
 }
