@@ -12,7 +12,12 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Kronos\\Log\\": "Kronos/Log"
+			"Kronos\\Log\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Kronos\\Tests\\Log\\": "tests/"
 		}
 	},
 	"require": {
