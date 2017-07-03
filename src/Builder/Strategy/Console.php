@@ -5,7 +5,10 @@ namespace Kronos\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Factory\Writer As WriterFactory;
 
-class Console implements Strategy {
+class Console extends AbstractWriter {
+
+	const FORCE_ANSI_COLOR = 'forceAnsiColor';
+	const FORCE_NO_ANSI_COLOR = 'forceNoAnsiColor';
 
 	/**
 	 * @var WriterFactory
@@ -21,6 +24,17 @@ class Console implements Strategy {
 	 * @return \Kronos\Log\Writer\Console
 	 */
 	public function buildFromArray(array $settings) {
-		// TODO: Implement buildFromArray() method.
+		$writer = $this->factory->createConsoleWriter();
+
+		$this->setCommonSettings($writer, $settings);
+
+		if(isset($settings['forceAnsiColor']) && $settings['forceAnsiColor']) {
+			$writer->setForceAnsiColorSupport();
+		}
+		if(isset($settings['forceNoAnsiColor']) && $settings['forceNoAnsiColor']) {
+			$writer->setForceNoAnsiColorSupport();
+		}
+
+		return $writer;
 	}
 }
