@@ -2,26 +2,54 @@
 
 namespace Kronos\Log\Factory;
 
+use Kronos\Log\Builder\Strategy\Console;
+use Kronos\Log\Builder\Strategy\File;
+use Kronos\Log\Builder\Strategy\LogDNA;
+use Kronos\Log\Builder\Strategy\Memory;
+use Kronos\Log\Builder\Strategy\Sentry;
+use Kronos\Log\Builder\Strategy\Syslog;
+
 class Strategy {
 
 	/**
-	 * @var Writer
+	 * @return Console
 	 */
-	private $writerFactory;
-
-	/**
-	 * Strategy constructor.
-	 * @param Writer $writerFactory
-	 */
-	public function __construct(Writer $writerFactory) {
-		$this->writerFactory = $writerFactory;
+	public function createConsoleStrategy() {
+		return new Console();
 	}
 
 	/**
-	 * @param string $type
-	 * @return \Kronos\Log\Builder\Strategy
+	 * @return File
 	 */
-	public function createStrategyForType($type) {
+	public function createFileStrategy() {
+		return new File();
+	}
 
+	/**
+	 * @return LogDNA
+	 */
+	public function createLogDNAStrategy() {
+		return new LogDNA();
+	}
+
+	/**
+	 * @return Memory
+	 */
+	public function createMemoryStrategy() {
+		return new Memory();
+	}
+
+	/**
+	 * @return Sentry
+	 */
+	public function createSentryStrategy() {
+		return new Sentry();
+	}
+
+	/**
+	 * @return Syslog
+	 */
+	public function createSyslogStrategy() {
+		return new Syslog();
 	}
 }
