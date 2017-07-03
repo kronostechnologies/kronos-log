@@ -2,6 +2,7 @@
 
 namespace Kronos\Log;
 
+use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\Logger as LoggerFactory,
 	Kronos\Log\Factory\Strategy as StrategyFactory;
 
@@ -29,6 +30,18 @@ class Builder {
 
 
 	public function buildFromArray(array $settings) {
-		$this->loggerFactory->createLogger();
+		$logger = $this->loggerFactory->createLogger();
+
+		if(empty($settings)) {
+			throw new NoWriter('Logger should have at least one writer');
+		}
+
+		foreach($settings as $writerSetting) {
+			$strategy = $this->strategyFactory->createStrategyForType($writerSetting['type']);
+			$writer = $strategy->buildFromArray($writerSetting['settings']);
+			$logger->addWriter($writer);
+		}
+
+		return $logger;
 	}
 }
