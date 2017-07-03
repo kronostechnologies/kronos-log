@@ -6,7 +6,6 @@ use Kronos\Log\AbstractWriter;
 use Kronos\Log\Builder;
 use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\Logger as LoggerFactory;
-use Kronos\Log\Factory\Strategy as StrategyFactory;
 use Kronos\Log\Logger;
 
 class BuilderTest extends \PHPUnit_Framework_TestCase {
@@ -27,7 +26,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @var \PHPUnit_Framework_MockObject_MockObject
 	 */
-	private $strategyFactory;
+	private $selector;
 
 	/**
 	 * @var \PHPUnit_Framework_MockObject_MockObject
@@ -50,13 +49,13 @@ class BuilderTest extends \PHPUnit_Framework_TestCase {
 		$this->loggerFactory->method('createLogger')->willReturn($this->logger);
 
 		$this->strategy = self::getMock(Builder\Strategy::class);
-		$this->strategyFactory = self::getMockWithoutInvokingTheOriginalConstructor(StrategyFactory::class);
-		$this->strategyFactory->method('createStrategyForType')->willReturn($this->strategy);
+		$this->selector = self::getMockWithoutInvokingTheOriginalConstructor(Builder\Strategy\Selector::class);
+		$this->selector->method('getStrategyForType')->willReturn($this->strategy);
 
 		$this->writer = $this->getMock(AbstractWriter::class);
 		$this->strategy->method('buildFromArray')->willReturn($this->writer);
 
-		$this->builder = new Builder($this->loggerFactory, $this->strategyFactory);
+		$this->builder = new Builder($this->loggerFactory, $this->selector);
 	}
 
 	public function test_buildFromArray_ShouldCreateLogger() {
@@ -68,9 +67,9 @@ class BuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function test_SettingsForWriter_buildFromArray_ShouldCreateStrategy() {
-		$this->strategyFactory
+		$this->selector
 			->expects(self::once())
-			->method('createStrategyForType')
+			->method('getStrategyForType')
 			->with(self::ANY_WRITER_TYPE);
 
 		$this->builder->buildFromArray([['type' => self::ANY_WRITER_TYPE, 'settings' => []]]);
