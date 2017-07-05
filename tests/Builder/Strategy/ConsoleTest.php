@@ -32,7 +32,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 		$this->strategy = new Console($this->factory);
 	}
 
-	public function test_buildFromArray_ShouldCreateConsoleWriterWithFilename() {
+	public function test_buildFromArray_ShouldCreateConsoleWriter() {
 		$this->factory
 			->expects(self::once())
 			->method('createConsoleWriter');

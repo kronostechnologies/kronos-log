@@ -3,9 +3,12 @@
 namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy;
+use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
 
-class File implements Strategy {
+class File extends AbstractWriter {
+
+	const FILENAME = 'filename';
 
 	/**
 	 * @var WriterFactory
@@ -18,9 +21,17 @@ class File implements Strategy {
 
 	/**
 	 * @param array $settings
-	 * @return \Kronos\Log\Writer\Console
+	 * @return \Kronos\Log\Writer\File
 	 */
 	public function buildFromArray(array $settings) {
-		// TODO: Implement buildFromArray() method.
+		if(!isset($settings[self::FILENAME])) {
+			throw new RequiredSetting(self::FILENAME.' setting is required');
+		}
+
+		$writer = $this->factory->createFileWriter($settings[self::FILENAME]);
+
+		$this->setCommonSettings($writer, $settings);
+
+		return $writer;
 	}
 }
