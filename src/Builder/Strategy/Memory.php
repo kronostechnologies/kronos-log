@@ -5,7 +5,7 @@ namespace Kronos\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Factory\Writer As WriterFactory;
 
-class Memory implements Strategy {
+class Memory extends AbstractWriter {
 
 	/**
 	 * @var WriterFactory
@@ -18,9 +18,13 @@ class Memory implements Strategy {
 
 	/**
 	 * @param array $settings
-	 * @return \Kronos\Log\Writer\Console
+	 * @return \Kronos\Log\Writer\Memory
 	 */
 	public function buildFromArray(array $settings) {
-		// TODO: Implement buildFromArray() method.
+		$writer = $this->factory->createMemoryWriter();
+
+		$this->setCommonSettings($writer, $settings);
+
+		return $writer;
 	}
 }
