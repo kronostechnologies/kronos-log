@@ -3,6 +3,7 @@
 namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy;
+use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
 
 class LogDNA extends AbstractWriter {
@@ -28,6 +29,8 @@ class LogDNA extends AbstractWriter {
 	 * @return \Kronos\Log\Writer\LogDNA
 	 */
 	public function buildFromArray(array $settings) {
+		$this->checkRequiredSettings($settings);
+
 		$writer = $this->factory->createLogDNAWriter($settings[self::HOSTNAME], $settings[self::APPLICATION], $settings[self::INGESTION_KEY]);
 
 		$this->setCommonSettings($writer, $settings);
@@ -41,5 +44,17 @@ class LogDNA extends AbstractWriter {
 		}
 
 		return $writer;
+	}
+
+	private function checkRequiredSettings(array $settings) {
+		$this->throwIfMissing($settings, self::HOSTNAME);
+		$this->throwIfMissing($settings, self::APPLICATION);
+		$this->throwIfMissing($settings, self::INGESTION_KEY);
+	}
+
+	private function throwIfMissing($settings, $index) {
+		if(!isset($settings[$index])) {
+			throw new RequiredSetting($index.' setting is required');
+		}
 	}
 }

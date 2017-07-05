@@ -3,6 +3,7 @@
 namespace Kronos\Tests\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy\LogDNA;
+use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
 
 class LogDNATest extends \PHPUnit_Framework_TestCase {
@@ -97,6 +98,39 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$actualWriter = $this->strategy->buildFromArray($settings);
 
 		$this->assertSame($this->writer, $actualWriter);
+	}
+
+	public function test_MissingHostnameSetting_buildFromArray_ShouldThrowRequiredSettingException() {
+		$this->expectException(RequiredSetting::class);
+		$this->expectExceptionMessage(LogDNA::HOSTNAME.' setting is required');
+		$settings = [
+			LogDNA::APPLICATION => self::APPLICATION_VALUE,
+			LogDNA::INGESTION_KEY => self::INGESTION_KEY_VALUE
+		];
+
+		$this->strategy->buildFromArray($settings);
+	}
+
+	public function test_MissingApplicationSetting_buildFromArray_ShouldThrowRequiredSettingException() {
+		$this->expectException(RequiredSetting::class);
+		$this->expectExceptionMessage(LogDNA::APPLICATION.' setting is required');
+		$settings = [
+			LogDNA::HOSTNAME => self::HOSTNAME_VALUE,
+			LogDNA::INGESTION_KEY => self::INGESTION_KEY_VALUE
+		];
+
+		$this->strategy->buildFromArray($settings);
+	}
+
+	public function test_MissingIngestionKeySetting_buildFromArray_ShouldThrowRequiredSettingException() {
+		$this->expectException(RequiredSetting::class);
+		$this->expectExceptionMessage(LogDNA::INGESTION_KEY.' setting is required');
+		$settings = [
+			LogDNA::HOSTNAME => self::HOSTNAME_VALUE,
+			LogDNA::APPLICATION => self::APPLICATION_VALUE
+		];
+
+		$this->strategy->buildFromArray($settings);
 	}
 
 	private function givenRequiredSettings() {
