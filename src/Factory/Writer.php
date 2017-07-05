@@ -80,7 +80,7 @@ class Writer {
 	 * @param $ingestionKey
 	 * @return LogDNA
 	 */
-	public function createLogDDNAWriter($hostname, $application, $ingestionKey) {
+	public function createLogDNAWriter($hostname, $application, $ingestionKey) {
 		return new LogDNA($hostname, $application, $ingestionKey);
 	}
 

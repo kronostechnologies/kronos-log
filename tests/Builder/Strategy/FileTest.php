@@ -34,7 +34,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 		$this->strategy = new File($this->factory);
 	}
 
-	public function test_Filename_buildFromArray_ShouldCreateConsoleWriterWithFilename() {
+	public function test_Filename_buildFromArray_ShouldCreateFileWriterWithFilename() {
 		$this->factory
 			->expects(self::once())
 			->method('createFileWriter')
