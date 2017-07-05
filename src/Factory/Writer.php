@@ -48,7 +48,7 @@ class Writer {
 	 * @param int $facility
 	 * @return Syslog
 	 */
-	public function createSyslogWriter($application, $option= LOG_ODELAY, $facility = LOG_LOCAL0) {
+	public function createSyslogWriter($application, $option = LOG_ODELAY, $facility = LOG_LOCAL0) {
 		return new Syslog($this->getSyslogAdaptor(), $application, $option, $facility);
 	}
 

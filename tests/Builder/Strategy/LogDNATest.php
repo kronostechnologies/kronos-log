@@ -16,7 +16,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	const MAC_ADDRESS = '01:23:45:67:89:ab';
 
 	/**
-	 * @var File
+	 * @var LogDNA
 	 */
 	private $strategy;
 
