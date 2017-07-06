@@ -75,6 +75,18 @@ class Writer {
 	}
 
 	/**
+	 * @param string $key
+	 * @param string $secret
+	 * @param string $projectId
+	 * @param array $options
+	 * @return Sentry
+	 */
+	public function createSentryWriterAndRavenClient($key, $secret, $projectId, $options = []) {
+		$ravenClient = new \Raven_Client('https://' . $key . ':' . $secret . '@app.getsentry.com/' . $projectId, $options);
+		return new Sentry($ravenClient);
+	}
+
+	/**
 	 * @param $hostname
 	 * @param $application
 	 * @param $ingestionKey
