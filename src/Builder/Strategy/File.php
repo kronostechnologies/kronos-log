@@ -22,6 +22,7 @@ class File extends AbstractWriter {
 	/**
 	 * @param array $settings
 	 * @return \Kronos\Log\Writer\File
+	 * @throws RequiredSetting
 	 */
 	public function buildFromArray(array $settings) {
 		if(!isset($settings[self::FILENAME])) {

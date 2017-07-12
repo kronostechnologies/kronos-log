@@ -27,6 +27,7 @@ class LogDNA extends AbstractWriter {
 	/**
 	 * @param array $settings
 	 * @return \Kronos\Log\Writer\LogDNA
+	 * @throws RequiredSetting
 	 */
 	public function buildFromArray(array $settings) {
 		$this->checkRequiredSettings($settings);
@@ -46,12 +47,21 @@ class LogDNA extends AbstractWriter {
 		return $writer;
 	}
 
+	/**
+	 * @param array $settings
+	 * @throws RequiredSetting
+	 */
 	private function checkRequiredSettings(array $settings) {
 		$this->throwIfMissing($settings, self::HOSTNAME);
 		$this->throwIfMissing($settings, self::APPLICATION);
 		$this->throwIfMissing($settings, self::INGESTION_KEY);
 	}
 
+	/**
+	 * @param $settings
+	 * @param $index
+	 * @throws RequiredSetting
+	 */
 	private function throwIfMissing($settings, $index) {
 		if(!isset($settings[$index])) {
 			throw new RequiredSetting($index.' setting is required');

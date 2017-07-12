@@ -9,6 +9,10 @@ abstract class AbstractWriter implements Strategy {
 	const MIN_LEVEL = 'minLevel';
 	const MAX_LEVEL = 'maxLevel';
 
+	/**
+	 * @param \Kronos\Log\AbstractWriter $writer
+	 * @param array $settings Writer settings
+	 */
 	protected function setCommonSettings(\Kronos\Log\AbstractWriter $writer, array $settings) {
 		if(isset($settings[self::MIN_LEVEL])) {
 			$writer->setMinLevel($settings[self::MIN_LEVEL]);

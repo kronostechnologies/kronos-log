@@ -29,6 +29,11 @@ class Builder {
 	}
 
 
+	/**
+	 * @param array $settings
+	 * @return Logger
+	 * @throws NoWriter
+	 */
 	public function buildFromArray(array $settings) {
 		$logger = $this->loggerFactory->createLogger();
 

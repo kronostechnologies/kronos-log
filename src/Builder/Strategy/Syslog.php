@@ -24,6 +24,7 @@ class Syslog extends AbstractWriter {
 	/**
 	 * @param array $settings
 	 * @return \Kronos\Log\Writer\Syslog
+	 * @throws RequiredSetting
 	 */
 	public function buildFromArray(array $settings) {
 		if(!isset($settings[self::APPLICATION])) {
@@ -41,10 +42,18 @@ class Syslog extends AbstractWriter {
 		return $writer;
 	}
 
+	/**
+	 * @param array $settings
+	 * @return int
+	 */
 	private function getOption(array $settings) {
 		return isset($settings[self::OPTION]) ? $settings[self::OPTION] : \Kronos\Log\Writer\Syslog::DEFAULT_OPTION;
 	}
 
+	/**
+	 * @param array $settings
+	 * @return int
+	 */
 	private function getFacility(array $settings) {
 		return isset($settings[self::FACILITY]) ? $settings[self::FACILITY] : \Kronos\Log\Writer\Syslog::DEFAULT_FACILITY;
 	}

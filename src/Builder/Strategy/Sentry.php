@@ -28,7 +28,9 @@ class Sentry extends AbstractWriter {
 
 	/**
 	 * @param array $settings
-	 * @return \Kronos\Log\Writer\Console
+	 * @return \Kronos\Log\Writer\Sentry
+	 * @throws InvalidSetting
+	 * @throws RequiredSetting
 	 */
 	public function buildFromArray(array $settings) {
 		if(isset($settings[self::CLIENT]) && $settings[self::CLIENT]) {
@@ -59,7 +61,11 @@ class Sentry extends AbstractWriter {
 		return $writer;
 	}
 
-	private function getOptions($settings) {
+	/**
+	 * @param array $settings
+	 * @return array
+	 */
+	private function getOptions(array $settings) {
 		return isset($settings[self::OPTIONS]) ? $settings[self::OPTIONS] : [];
 	}
 }
