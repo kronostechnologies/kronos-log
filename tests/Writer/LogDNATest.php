@@ -22,6 +22,10 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	const IP_ADDRESS = '10.0.1.101';
 	const MAC_ADDRESS = 'C0:FF:EE:C0:FF:EE';
 	const SOME_TEXT = 'some text';
+	const CUSTOM_HEADER_VALUE = ['Bar', 'Baz'];
+	const CUSTOM_HEADER = 'X-Foo';
+	const PROXY = 'tcp://localhost:8125';
+	const TIMEOUT = 3.14;
 
 	/**
 	 * @var LogDNA
@@ -60,7 +64,34 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 				'base_uri' => LogDNA::LOGDNA_URL
 			]);
 
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory);
+	}
+
+	public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions() {
+		$this->factory
+			->expects(self::once())
+			->method('createClient')
+			->with([
+				'headers' => [
+					'Content-Type' => 'application/json',
+					'apikey' => self::INGESTION_KEY,
+					self::CUSTOM_HEADER => self::CUSTOM_HEADER_VALUE
+				],
+				'base_uri' => LogDNA::LOGDNA_URL,
+				'proxy' => self::PROXY,
+				'timeout' => self::TIMEOUT
+			]);
+		$guzzleOptions = [
+			'headers' => [
+				'Content-Type' => 'not-application/json',
+				'apikey' => 'not the ingestion key',
+				self::CUSTOM_HEADER => self::CUSTOM_HEADER_VALUE
+			],
+			'proxy' => self::PROXY,
+			'timeout' => self::TIMEOUT
+		];
+
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions, $this->factory);
 	}
 
 	public function test_Writer_log_ShouldPostMessage() {
@@ -196,7 +227,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	}
 
 	private function givenWriter() {
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory);
 	}
 
 	private function buildUriRegex($uri) {

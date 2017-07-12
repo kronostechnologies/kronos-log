@@ -41,13 +41,14 @@ class LogDNA extends AbstractWriter {
 	 * @param string $hostname
 	 * @param string $application
 	 * @param string $ingestionKey
+	 * @param array $guzzleOptions
 	 * @param GuzzleFactory $guzzleFactory
 	 */
-	public function __construct($hostname, $application, $ingestionKey, Factory\Guzzle $guzzleFactory = null) {
+	public function __construct($hostname, $application, $ingestionKey, $guzzleOptions = [], Factory\Guzzle $guzzleFactory = null) {
 		$this->hostname = $hostname;
 		$this->application = $application;
 
-		$this->createGuzzleClient($ingestionKey, $guzzleFactory);
+		$this->createGuzzleClient($ingestionKey, $guzzleOptions, $guzzleFactory);
 	}
 
 	/**
@@ -130,14 +131,45 @@ class LogDNA extends AbstractWriter {
 	 * @param string $ingestionKey
 	 * @param Factory\Guzzle $guzzleFactory
 	 */
-	private function createGuzzleClient($ingestionKey, Factory\Guzzle $guzzleFactory = null) {
+	private function createGuzzleClient($ingestionKey, $guzzleOptions, Factory\Guzzle $guzzleFactory = null) {
 		$factory = $guzzleFactory ?: new Factory\Guzzle();
-		$this->guzzleClient = $factory->createClient([
+
+		$baseOptions = [
 			'headers' => [
 				'Content-Type' => 'application/json',
 				'apikey' => $ingestionKey
 			],
 			'base_uri' => self::LOGDNA_URL
-		]);
+		];
+
+		$options = $this->recursiveMerge($baseOptions, $guzzleOptions);
+
+		$this->guzzleClient = $factory->createClient($options);
+	}
+
+	private function recursiveMerge($base, $addition) {
+		$result = [];
+
+		foreach($base as $index => $value) {
+			if(isset($addition[$index])) {
+				if(is_array($value) && is_array($addition[$index])) {
+					$result[$index] = $this->recursiveMerge($value, $addition[$index]);
+				}
+				else {
+					$result[$index] = $value;
+				}
+			}
+			else {
+				$result[$index] = $value;
+			}
+		}
+
+		foreach($addition as $index => $value) {
+			if(!isset($base[$index])) {
+				$result[$index] = $value;
+			}
+		}
+
+		return $result;
 	}
 }
