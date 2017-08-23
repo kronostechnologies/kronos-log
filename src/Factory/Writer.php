@@ -48,7 +48,7 @@ class Writer {
 	 * @param int $facility
 	 * @return Syslog
 	 */
-	public function createSyslogWriter($application, $option= LOG_ODELAY, $facility = LOG_LOCAL0) {
+	public function createSyslogWriter($application, $option = LOG_ODELAY, $facility = LOG_LOCAL0) {
 		return new Syslog($this->getSyslogAdaptor(), $application, $option, $facility);
 	}
 
@@ -75,12 +75,24 @@ class Writer {
 	}
 
 	/**
+	 * @param string $key
+	 * @param string $secret
+	 * @param string $projectId
+	 * @param array $options
+	 * @return Sentry
+	 */
+	public function createSentryWriterAndRavenClient($key, $secret, $projectId, $options = []) {
+		$ravenClient = new \Raven_Client('https://' . $key . ':' . $secret . '@app.getsentry.com/' . $projectId, $options);
+		return new Sentry($ravenClient);
+	}
+
+	/**
 	 * @param $hostname
 	 * @param $application
 	 * @param $ingestionKey
 	 * @return LogDNA
 	 */
-	public function createLogDDNAWriter($hostname, $application, $ingestionKey) {
+	public function createLogDNAWriter($hostname, $application, $ingestionKey) {
 		return new LogDNA($hostname, $application, $ingestionKey);
 	}
 

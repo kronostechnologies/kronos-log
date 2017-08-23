@@ -54,3 +54,42 @@ catch(\Exception $e) {
 ```
 
 Here the info will be writen in `/var/log/debug.log` while the error will be sent to syslog.
+
+Using the builder
+-----
+
+You can use the builder to quickly create a fully configured logger.
+
+```php
+
+$settings = [
+	[
+		'type' => \Kronos\Log\Enumeration\WriterTypes::FILE,
+		'settings' => [
+			'filename' => '/var/log/debug.log'
+		]
+	],
+	[
+		'type' => \Kronos\Log\Enumeration\WriterTypes::SENTRY,
+		'settings' => [
+			'minLevel' => \Psr\Log\LogLevel::ERROR,
+			'key' => 'kronos',
+			'secret' => 'supersecrethash',
+			'projectId' => 12345
+		]
+	],
+	[
+		'type' => \Kronos\Log\Enumeration\WriterTypes::LOGDNA,
+		'settings' => [
+			'minLevel' => \Psr\Log\LogLevel::INFO,
+			'hostname' => gethostname(),
+			'application' => 'app-name',
+			'ingestionKey' => 'anothersecrethash'
+		]
+	]
+];
+
+$builder = new \Kronos\Log\Builder();
+$logger = $builder->buildFromArray($settings);
+
+```

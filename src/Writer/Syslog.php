@@ -21,6 +21,9 @@ class Syslog extends AbstractWriter {
 		LogLevel::DEBUG => LOG_DEBUG
 	];
 
+	const DEFAULT_OPTION = LOG_ODELAY;
+	const DEFAULT_FACILITY = LOG_LOCAL0;
+
 	/**
 	 * @var \Kronos\Log\Adaptor\Syslog
 	 */
@@ -37,7 +40,7 @@ class Syslog extends AbstractWriter {
 	 * @param $option
 	 * @param $facility
 	 */
-	public function __construct(\Kronos\Log\Adaptor\Syslog $syslog_adaptor, $application, $option = LOG_ODELAY, $facility = LOG_LOCAL0) {
+	public function __construct(\Kronos\Log\Adaptor\Syslog $syslog_adaptor, $application, $option = self::DEFAULT_OPTION, $facility = self::DEFAULT_FACILITY) {
 		$this->syslog_adaptor = $syslog_adaptor;
 		$this->application = $application;
 		$this->option = $option;
