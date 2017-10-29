@@ -6,6 +6,7 @@ use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\ContextStringifier;
 use Kronos\Log\Logger;
 use Psr\Log\LogLevel;
+use Kronos\Log\Exception\ExceptionTraceBuilder;
 use Exception;
 
 class File extends \Kronos\Log\AbstractWriter {
@@ -28,12 +29,20 @@ class File extends \Kronos\Log\AbstractWriter {
 	private $context_stringifier = NULL;
 
 	/**
-	 * @param string $filename
-	 * @param FileFactory $factory
-	 */
-	public function __construct($filename, FileFactory $factory) {
-		$this->file_adaptor = $factory->createFileAdaptor($filename);
-	}
+     * @var ExceptionTraceBuilder
+     */
+	private $trace_builder;
+
+    /**
+     * File constructor.
+     * @param $filename
+     * @param FileFactory $factory
+     * @param ExceptionTraceBuilder|null $trace_builder
+     */
+    public function __construct($filename, FileFactory $factory, ExceptionTraceBuilder $trace_builder = null) {
+        $this->file_adaptor = $factory->createFileAdaptor($filename);
+        $this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
+    }
 
 	/**
 	 * @param ContextStringifier $context_stringifier
@@ -93,7 +102,7 @@ class File extends \Kronos\Log\AbstractWriter {
 	 * @param Exception $exception
 	 * @param int $depth
 	 */
-	private function writeException($level, Exception $exception, $depth=0){
+	private function writeException($level, Exception $exception, $depth=0, $include_args = false){
 		$title = ($depth === 0 ? self::EXCEPTION_TITLE_LINE : self::PREVIOUS_EXCEPTION_TITLE_LINE);
 		$title = strtr($title, [
 			'{message}' => $exception->getMessage(),
@@ -103,7 +112,8 @@ class File extends \Kronos\Log\AbstractWriter {
 		$this->file_adaptor->write($title);
 
 		if(! $this->isLevelLower(LogLevel::ERROR, $level)) {
-			$this->file_adaptor->write($exception->getTraceAsString());
+		    $ex_trace = $this->trace_builder->getTraceAsString($exception, $include_args);
+		    $this->file_adaptor->write($ex_trace);
 		}
 
 		$previous = $exception->getPrevious();
