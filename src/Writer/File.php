@@ -102,7 +102,7 @@ class File extends \Kronos\Log\AbstractWriter {
 	 * @param Exception $exception
 	 * @param int $depth
 	 */
-	private function writeException($level, Exception $exception, $depth=0, $include_args = false){
+	private function writeException($level, Exception $exception, $depth=0){
 		$title = ($depth === 0 ? self::EXCEPTION_TITLE_LINE : self::PREVIOUS_EXCEPTION_TITLE_LINE);
 		$title = strtr($title, [
 			'{message}' => $exception->getMessage(),
@@ -112,7 +112,7 @@ class File extends \Kronos\Log\AbstractWriter {
 		$this->file_adaptor->write($title);
 
 		if(! $this->isLevelLower(LogLevel::ERROR, $level)) {
-		    $ex_trace = $this->trace_builder->getTraceAsString($exception, $include_args);
+		    $ex_trace = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
 		    $this->file_adaptor->write($ex_trace);
 		}
 
