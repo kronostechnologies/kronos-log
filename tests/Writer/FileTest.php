@@ -41,10 +41,17 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $factory;
 
+	/**
+	 * @var ExceptionTraceBuilder|\PHPUnit_Framework_MockObject_MockObject
+	 */
+	private $trace_builder;
+
 	public function setUp() {
 		$this->adaptor = $this->getMockBuilder(\Kronos\Log\Adaptor\File::class)->disableOriginalConstructor()->getMock();
 
 		$this->factory = $this->getMock(\Kronos\Log\Adaptor\FileFactory::class);
+
+		$this->trace_builder = $this->getMockBuilder(\Kronos\Log\Exception\ExceptionTraceBuilder::class)->disableOriginalConstructor()->getMock();
 	}
 
 	public function test_NewWriter_Constructor_ShouldCreateNewFile() {
@@ -108,7 +115,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 			[$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
 			[$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
 		]);
-		$writer = new File(self::A_FILENAME, $this->factory);
+		$writer = new File(self::A_FILENAME, $this->factory, $this->trace_builder);
 		$context = [
 			self::CONTEXT_KEY => self::CONTEXT_VALUE,
 			Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
@@ -126,13 +133,16 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 			[$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
 			[$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...,
 		]);
-		$writer = new File(self::A_FILENAME, $this->factory);
+		$writer = new File(self::A_FILENAME, $this->factory, $this->trace_builder);
 		$previous_exception =  new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
 		$exception =  new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
 		$context = [
 			self::CONTEXT_KEY => self::CONTEXT_VALUE,
 			Logger::EXCEPTION_CONTEXT => $exception
 		];
+
+		$this->trace_builder->expects($this->at(0))->method('getTraceAsString')->with($exception, false);
+		$this->trace_builder->expects($this->at(1))->method('getTraceAsString')->with($previous_exception, false);
 
 		$writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
 	}
