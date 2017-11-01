@@ -48,6 +48,8 @@ class LineBuilder {
      */
     public $ex_line = "";
 
+    const ARRAY_TYPE = 'Array';
+
     /**
      * @param String $line_nb
      */
@@ -129,7 +131,13 @@ class LineBuilder {
         }
 
         if(!empty($this->args)) {
-            $this->ex_line .= implode(',', $this->args) . ')';
+        	$arg_array = [];
+
+        	foreach ($this->args as $arg){
+				$arg_array[] = (is_array($arg) ? self::ARRAY_TYPE : $arg;
+			}
+
+            $this->ex_line .= implode(',', $arg_array) . ')';
         }
         else{
             $this->ex_line .= ')';
