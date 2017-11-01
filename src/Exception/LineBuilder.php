@@ -134,7 +134,7 @@ class LineBuilder {
         	$arg_array = [];
 
         	foreach ($this->args as $arg){
-				$arg_array[] = (is_array($arg) ? self::ARRAY_TYPE : $arg;
+				$arg_array[] = is_array($arg) ? self::ARRAY_TYPE : $arg;
 			}
 
             $this->ex_line .= implode(',', $arg_array) . ')';
