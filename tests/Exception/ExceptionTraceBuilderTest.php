@@ -3,8 +3,6 @@
 namespace Kronos\Tests\Log;
 
 use Kronos\Log\Exception\ExceptionTraceBuilder;
-use Kronos\Log\Exception\LineBuilder;
-use Prophecy\Exception\Exception;
 
 class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase {
 
@@ -41,7 +39,7 @@ class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase {
 #2 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(197): Kronos\Common\Tool->run()
 #3 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(59): Kronos\Common\CLI->runTool()
 #4 /srv/kronos/crm/script/tool.php(35): Kronos\Common\CLI->run()
-#5 /srv/kronos/crm/script/tool(4): Kronos\Common\CLI->include()
+#5 /srv/kronos/crm/script/tool(4): include()
 ';
 	}
 
@@ -51,7 +49,7 @@ class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase {
 #2 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(197): Kronos\Common\Tool->run()
 #3 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(59): Kronos\Common\CLI->runTool()
 #4 /srv/kronos/crm/script/tool.php(35): Kronos\Common\CLI->run()
-#5 /srv/kronos/crm/script/tool(4): Kronos\Common\CLI->include(/srv/kronos/crm/script/tool.php)
+#5 /srv/kronos/crm/script/tool(4): include(/srv/kronos/crm/script/tool.php)
 ';
 	}
 }

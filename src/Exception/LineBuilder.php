@@ -126,21 +126,22 @@ class LineBuilder {
             $this->ex_line .= $this->type;
         }
 
+        // Function and arguments parts always together
         if(!empty($this->function)) {
             $this->ex_line .= $this->function . '(';
-        }
 
-        if(!empty($this->args)) {
-        	$arg_array = [];
+			if(!empty($this->args)) {
+				$arg_array = [];
 
-        	foreach ($this->args as $arg){
-				$arg_array[] = is_array($arg) ? self::ARRAY_TYPE : $arg;
+				foreach ($this->args as $arg){
+					$arg_array[] = is_array($arg) ? self::ARRAY_TYPE : $arg;
+				}
+
+				$this->ex_line .= implode(',', $arg_array) . ')';
 			}
-
-            $this->ex_line .= implode(',', $arg_array) . ')';
-        }
-        else{
-            $this->ex_line .= ')';
+			else{
+				$this->ex_line .= ')';
+			}
         }
 
         return $this->ex_line;
@@ -150,6 +151,14 @@ class LineBuilder {
      * Clears the current line so that it can be written over
      */
     public function clearLine(){
+		$this->line_nb = "";
+		$this->file = "";
+		$this->line = "";
+		$this->class = "";
+		$this->type = "";
+		$this->function = "";
+		$this->args = [];
+
         $this->ex_line = "";
     }
 }
