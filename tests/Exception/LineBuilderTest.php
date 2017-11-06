@@ -5,9 +5,9 @@ namespace Kronos\Tests\Log;
 class LineBuilderTest extends \PHPUnit_Framework_TestCase {
 
 	const A_LINE_NB = 0;
-	const A_FILE_PATH = '/srv/kronos/crm/modules/Core/Tool/Testerino.php';
+	const A_FILE_PATH = '/path/to/file/Testerino.php';
 	const A_LINE = 20;
-	const A_CLASS = 'Core__Tool_Testerino';
+	const A_CLASS = 'Testerino';
 	const A_TYPE = '->';
 	const A_FUNCTION = 'a';
 	const SOME_ARGS = [1,2,['test']];
@@ -118,23 +118,23 @@ class LineBuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function thenAFormattedLineWithAllElementsAndArguments(){
-		return '#0 /srv/kronos/crm/modules/Core/Tool/Testerino.php(20): Core__Tool_Testerino->a(1,2,Array)';
+		return '#0 /path/to/file/Testerino.php(20): Testerino->a(1,2,Array)';
 	}
 
 	public function thenAFormattedLineWithAllElementsAndNoArguments(){
-		return '#0 /srv/kronos/crm/modules/Core/Tool/Testerino.php(20): Core__Tool_Testerino->a()';
+		return '#0 /path/to/file/Testerino.php(20): Testerino->a()';
 	}
 
 	public function thenAFormattedLineWithAllElementsAndNoFunctionOrType(){
-		return '#0 /srv/kronos/crm/modules/Core/Tool/Testerino.php(20): Core__Tool_Testerino';
+		return '#0 /path/to/file/Testerino.php(20): Testerino';
 	}
 
 	public function thenAFormattedLineWithAllElementsAndNoClass(){
-		return '#0 /srv/kronos/crm/modules/Core/Tool/Testerino.php(20): ';
+		return '#0 /path/to/file/Testerino.php(20): ';
 	}
 
 	public function thenAFormattedLineWithAllElementsAndNoLineNb(){
-		return '#0 /srv/kronos/crm/modules/Core/Tool/Testerino.php';
+		return '#0 /path/to/file/Testerino.php';
 	}
 
 	public function thenAFormattedLineWithAllElementsAndNoFile(){

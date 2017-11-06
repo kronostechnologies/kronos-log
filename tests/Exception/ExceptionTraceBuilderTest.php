@@ -34,22 +34,22 @@ class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function thenAFormattedStackAsTraceWithoutArguments(){
-		return '#0 /srv/kronos/crm/modules/Core/Tool/Testerino.php(20): Core__Tool_Testerino->a()
-#1 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/Tool.php(478): Core__Tool_Testerino->runTool()
-#2 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(197): Kronos\Common\Tool->run()
-#3 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(59): Kronos\Common\CLI->runTool()
-#4 /srv/kronos/crm/script/tool.php(35): Kronos\Common\CLI->run()
-#5 /srv/kronos/crm/script/tool(4): include()
+		return '#0 /path/to/file/Testerino.php(20): Testerino->a()
+#1 /path/to/file/Tool.php(478): Testerino->runTool()
+#2 /path/to/file/CLI.php(197): Tool->run()
+#3 /path/to/file/CLI.php(59): CLI->runTool()
+#4 /path/to/file/tool.php(35): CLI->run()
+#5 /path/to/file/tool(4): includeTest()
 ';
 	}
 
 	public function thenAFormattedStackAsTraceWithArguments(){
-		return '#0 /srv/kronos/crm/modules/Core/Tool/Testerino.php(20): Core__Tool_Testerino->a(1,2,Array)
-#1 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/Tool.php(478): Core__Tool_Testerino->runTool()
-#2 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(197): Kronos\Common\Tool->run()
-#3 /srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php(59): Kronos\Common\CLI->runTool()
-#4 /srv/kronos/crm/script/tool.php(35): Kronos\Common\CLI->run()
-#5 /srv/kronos/crm/script/tool(4): include(/srv/kronos/crm/script/tool.php)
+		return '#0 /path/to/file/Testerino.php(20): Testerino->a(1,2,Array)
+#1 /path/to/file/Tool.php(478): Testerino->runTool()
+#2 /path/to/file/CLI.php(197): Tool->run()
+#3 /path/to/file/CLI.php(59): CLI->runTool()
+#4 /path/to/file/tool.php(35): CLI->run()
+#5 /path/to/file/tool(4): includeTest(/path/to/file/tool.php)
 ';
 	}
 }
@@ -59,10 +59,10 @@ class TestableException {
 	public function getTrace(){
 		return [
 			0 => [
-				'file' => '/srv/kronos/crm/modules/Core/Tool/Testerino.php',
+				'file' => '/path/to/file/Testerino.php',
 				'line' => 20,
 				'function' => 'a',
-				'class' => 'Core__Tool_Testerino',
+				'class' => 'Testerino',
 				'type' => '->',
 				'args' => [
 					0 => 1,
@@ -73,43 +73,43 @@ class TestableException {
 				],
 			],
 			1 => [
-				'file' => '/srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/Tool.php',
+				'file' => '/path/to/file/Tool.php',
 				'line' => 478,
 				'function' => 'runTool',
-				'class' => 'Core__Tool_Testerino',
+				'class' => 'Testerino',
 				'type' => '->',
 				'args' => [],
 			],
 			2 => [
-				'file' => '/srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php',
+				'file' => '/path/to/file/CLI.php',
 				'line' => 197,
 				'function' => 'run',
-				'class' => 'Kronos\Common\Tool',
+				'class' => 'Tool',
 				'type' => '->',
 				'args' => [],
 			],
 			3 => [
-				'file' => '/srv/kronos/crm/vendor/kronostechnologies/kronos-lib/Kronos/Common/CLI.php',
+				'file' => '/path/to/file/CLI.php',
 				'line' => 59,
 				'function' => 'runTool',
-				'class' => 'Kronos\Common\CLI',
+				'class' => 'CLI',
 				'type' => '->',
 				'args' => [],
 			],
 			4 => [
-				'file' => '/srv/kronos/crm/script/tool.php',
+				'file' => '/path/to/file/tool.php',
 				'line' => 35,
 				'function' => 'run',
-				'class' => 'Kronos\Common\CLI',
+				'class' => 'CLI',
 				'type' => '->',
 				'args' => [],
 			],
 			5 => [
-				'file' => '/srv/kronos/crm/script/tool',
+				'file' => '/path/to/file/tool',
 				'line' => 4,
-				'function' => 'include',
+				'function' => 'includeTest',
 				'args' => [
-					0 => '/srv/kronos/crm/script/tool.php'
+					0 => '/path/to/file/tool.php'
 				],
 			]
 		];
