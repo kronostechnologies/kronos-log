@@ -15,6 +15,7 @@ class LineBuilderTest extends \PHPUnit_Framework_TestCase {
 	const SOME_ARGS = [1,2,['test']];
 
 	const EMPTY_LINE = "";
+	const ARRAY_TYPE = 'Array';
 
 	public function test_givenACompleteSetOfExceptionTraceElements_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndArguments(){
 		$line_builder = new LineBuilder();
@@ -28,7 +29,7 @@ class LineBuilderTest extends \PHPUnit_Framework_TestCase {
 
 		$line = $line_builder->buildExceptionString();
 
-		$this->assertEquals('#'.self::A_LINE_NB.' '.self::A_FILE_PATH.'('.self::A_LINE.'): '.self::A_CLASS.self::A_TYPE.self::A_FUNCTION.'(1,2,Array)', $line);
+		$this->assertEquals('#'.self::A_LINE_NB.' '.self::A_FILE_PATH.'('.self::A_LINE.'): '.self::A_CLASS.self::A_TYPE.self::A_FUNCTION.'(1,2,'.self::ARRAY_TYPE.')', $line);
 	}
 
 	public function test_givenASetOfExceptionTraceElementWithoutArgs_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoArguments(){
@@ -111,3 +112,5 @@ class LineBuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 }
+
+class LineBuilderTestClass{}
