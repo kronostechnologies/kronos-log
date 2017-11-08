@@ -34,8 +34,8 @@ class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function thenAFormattedStackAsTraceWithoutArguments(){
-		return '#0 /path/to/file/Testerino.php(20): Testerino->a()
-#1 /path/to/file/Tool.php(478): Testerino->runTool()
+		return '#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
+#1 /path/to/file/Tool.php(478): TestClass->runTool()
 #2 /path/to/file/CLI.php(197): Tool->run()
 #3 /path/to/file/CLI.php(59): CLI->runTool()
 #4 /path/to/file/tool.php(35): CLI->run()
@@ -44,8 +44,8 @@ class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function thenAFormattedStackAsTraceWithArguments(){
-		return '#0 /path/to/file/Testerino.php(20): Testerino->a(1,2,Array)
-#1 /path/to/file/Tool.php(478): Testerino->runTool()
+		return '#0 /path/to/file/TestClass.php(20): TestClass->testFunction(1,2,Array)
+#1 /path/to/file/Tool.php(478): TestClass->runTool()
 #2 /path/to/file/CLI.php(197): Tool->run()
 #3 /path/to/file/CLI.php(59): CLI->runTool()
 #4 /path/to/file/tool.php(35): CLI->run()
@@ -59,10 +59,10 @@ class TestableException {
 	public function getTrace(){
 		return [
 			0 => [
-				'file' => '/path/to/file/Testerino.php',
+				'file' => '/path/to/file/TestClass.php',
 				'line' => 20,
-				'function' => 'a',
-				'class' => 'Testerino',
+				'function' => 'testFunction',
+				'class' => 'TestClass',
 				'type' => '->',
 				'args' => [
 					0 => 1,
@@ -76,7 +76,7 @@ class TestableException {
 				'file' => '/path/to/file/Tool.php',
 				'line' => 478,
 				'function' => 'runTool',
-				'class' => 'Testerino',
+				'class' => 'TestClass',
 				'type' => '->',
 				'args' => [],
 			],
