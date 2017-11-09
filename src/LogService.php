@@ -2,34 +2,7 @@
 
 namespace Kronos\Log;
 
-use Kronos\Log\Traits\LoggerAware;
-
-/**
- * Class LogService is a static point of entry for logging.
- *
- * @package Kronos\Log
- */
 class LogService {
-
-	use LoggerAware;
-
-	/**
-	 * @var LogService
-	 */
-	private static $instance;
-
-	/**
-	 * Get the LogService instance.
-	 *
-	 * @return LogService
-	 */
-	private static function getInstance() {
-		if(!self::$instance) {
-			self::$instance = new LogService();
-		}
-
-		return self::$instance;
-	}
 
 	/**
 	 * System is unusable.
@@ -38,7 +11,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function emergency($message, array $context = array()) {
-		self::getInstance()->logEmergency($message, $context);
+		LogLocator::getLogger()->emergency($message, $context);
 	}
 
 	/**
@@ -51,7 +24,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function alert($message, array $context = array()) {
-		self::getInstance()->logAlert($message, $context);
+		LogLocator::getLogger()->alert($message, $context);
 	}
 
 	/**
@@ -63,7 +36,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function critical($message, array $context = array()) {
-		self::getInstance()->logCritical($message, $context);
+		LogLocator::getLogger()->critical($message, $context);
 	}
 
 	/**
@@ -74,7 +47,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function error($message, array $context = array()) {
-		self::getInstance()->logError($message, $context);
+		LogLocator::getLogger()->error($message, $context);
 	}
 
 	/**
@@ -87,7 +60,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function warning($message, array $context = array()) {
-		self::getInstance()->logWarning($message, $context);
+		LogLocator::getLogger()->warning($message, $context);
 	}
 
 	/**
@@ -97,7 +70,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function notice($message, array $context = array()) {
-		self::getInstance()->logNotice($message, $context);
+		LogLocator::getLogger()->notice($message, $context);
 	}
 
 	/**
@@ -109,7 +82,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function info($message, array $context = array()) {
-		self::getInstance()->logInfo($message, $context);
+		LogLocator::getLogger()->info($message, $context);
 	}
 
 	/**
@@ -119,7 +92,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function debug($message, array $context = array()) {
-		self::getInstance()->logDebug($message, $context);
+		LogLocator::getLogger()->debug($message, $context);
 	}
 
 
@@ -130,6 +103,7 @@ class LogService {
 	 * @param array $context
 	 */
 	public static function exception($message, \Exception $exception, array $context = array()) {
-		self::getInstance()->logException($message, $exception, $context);
+		$context[Logger::EXCEPTION_CONTEXT] = $exception;
+		LogLocator::getLogger()->error($message, $context);
 	}
 }
