@@ -29,20 +29,20 @@ class File extends \Kronos\Log\AbstractWriter {
 	private $context_stringifier = NULL;
 
 	/**
-     * @var ExceptionTraceBuilder
-     */
+	 * @var ExceptionTraceBuilder
+	 */
 	private $trace_builder;
 
-    /**
-     * File constructor.
-     * @param $filename
-     * @param FileFactory $factory
-     * @param ExceptionTraceBuilder|null $trace_builder
-     */
-    public function __construct($filename, FileFactory $factory, ExceptionTraceBuilder $trace_builder = null) {
-        $this->file_adaptor = $factory->createFileAdaptor($filename);
-        $this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
-    }
+	/**
+	 * File constructor.
+	 * @param $filename
+	 * @param FileFactory $factory
+	 * @param ExceptionTraceBuilder|null $trace_builder
+	 */
+	public function __construct($filename, FileFactory $factory, ExceptionTraceBuilder $trace_builder = null) {
+		$this->file_adaptor = $factory->createFileAdaptor($filename);
+		$this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
+	}
 
 	/**
 	 * @param ContextStringifier $context_stringifier
@@ -59,7 +59,7 @@ class File extends \Kronos\Log\AbstractWriter {
 	 */
 	public function log($level, $message, array $context = []) {
 		$this->writeMessage($level, $message, $context);
-		$this->writeExceptionIfGiven($level, $context);
+		$this->writeExceptionIfGiven($message, $level, $context);
 		$this->writeContextIfStringifierGiven($context);
 	}
 
@@ -86,14 +86,15 @@ class File extends \Kronos\Log\AbstractWriter {
 	}
 
 	/**
-	 * @param string $level
+	 * @param $message
+	 * @param $level
 	 * @param array $context
 	 */
-	private function writeExceptionIfGiven($level, array $context) {
+	private function writeExceptionIfGiven($message, $level, array $context) {
 		if(isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof Exception) {
 			/** @var Exception $exception */
 			$exception = $context[Logger::EXCEPTION_CONTEXT];
-			$this->writeException($level, $exception);
+			$this->writeException($message, $level, $exception);
 		}
 	}
 
@@ -102,23 +103,35 @@ class File extends \Kronos\Log\AbstractWriter {
 	 * @param Exception $exception
 	 * @param int $depth
 	 */
-	private function writeException($level, Exception $exception, $depth=0){
+	private function writeException($message, $level, Exception $exception, $depth=0){
+		if ($message != $exception->getMessage()){
+			$this->writeExceptionTitle($exception, $depth);
+		}
+
+		if(! $this->isLevelLower(LogLevel::ERROR, $level)) {
+			$ex_trace = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
+			$this->file_adaptor->write($ex_trace);
+		}
+
+		$previous = $exception->getPrevious();
+		if($previous instanceof Exception) {
+			$this->writeException($message, $level, $previous, $depth+1);
+		}
+	}
+
+	/**
+	 * @param Exception $exception
+	 * @param $depth
+	 */
+	private function writeExceptionTitle(Exception $exception, $depth){
 		$title = ($depth === 0 ? self::EXCEPTION_TITLE_LINE : self::PREVIOUS_EXCEPTION_TITLE_LINE);
+
 		$title = strtr($title, [
 			'{message}' => $exception->getMessage(),
 			'{file}' => $exception->getFile(),
 			'{line}' => $exception->getLine()
 		]);
+
 		$this->file_adaptor->write($title);
-
-		if(! $this->isLevelLower(LogLevel::ERROR, $level)) {
-		    $ex_trace = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
-		    $this->file_adaptor->write($ex_trace);
-		}
-
-		$previous = $exception->getPrevious();
-		if($previous instanceof Exception) {
-			$this->writeException($level, $previous, $depth+1);
-		}
 	}
 }
