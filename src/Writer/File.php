@@ -115,7 +115,7 @@ class File extends \Kronos\Log\AbstractWriter {
 
 		$previous = $exception->getPrevious();
 		if($previous instanceof Exception) {
-			$this->writeException($previous->getMessage(), $level, $previous, $depth+1);
+			$this->writeException($message, $level, $previous, $depth+1);
 		}
 	}
 
