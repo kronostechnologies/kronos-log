@@ -11,16 +11,26 @@ class LogLocator {
 
 	/**
 	 * @param \Psr\Log\LoggerInterface $logger
+	 * @param bool $force
 	 */
-	public static function setLogger(\Psr\Log\LoggerInterface $logger) {
-		self::$logger = $logger;
+	public static function setLogger(\Psr\Log\LoggerInterface $logger, $force = false) {
+		if(!self::isLoggerSet() || $force) {
+			self::$logger = $logger;
+		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function isLoggerSet() {
+		return isset(self::$logger);
 	}
 
 	/**
 	 * @return \Psr\Log\LoggerInterface
 	 */
 	public static function getLogger() {
-		if(!self::$logger) {
+		if(!self::isLoggerSet()) {
 			$settings = [
 				[
 					'type' => \Kronos\Log\Enumeration\WriterTypes::FILE,
@@ -31,7 +41,7 @@ class LogLocator {
 			];
 
 			$builder = new \Kronos\Log\Builder();
-			self::$logger = $builder->buildFromArray($settings);
+			self::setLogger($builder->buildFromArray($settings));
 		}
 
 		return self::$logger;
