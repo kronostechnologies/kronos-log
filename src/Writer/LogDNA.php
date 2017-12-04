@@ -5,6 +5,7 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
+use Kronos\Log\Exception\ExceptionTraceBuilder;
 
 class LogDNA extends AbstractWriter {
 
@@ -37,6 +38,11 @@ class LogDNA extends AbstractWriter {
 	private $guzzleClient;
 
 	/**
+	 * @var ExceptionTraceBuilder
+	 */
+	private $trace_builder;
+
+	/**
 	 * LogDNA constructor.
 	 * @param string $hostname
 	 * @param string $application
@@ -44,9 +50,10 @@ class LogDNA extends AbstractWriter {
 	 * @param array $guzzleOptions
 	 * @param GuzzleFactory $guzzleFactory
 	 */
-	public function __construct($hostname, $application, $ingestionKey, $guzzleOptions = [], Factory\Guzzle $guzzleFactory = null) {
+	public function __construct($hostname, $application, $ingestionKey, $guzzleOptions = [], Factory\Guzzle $guzzleFactory = null, ExceptionTraceBuilder $trace_builder = null) {
 		$this->hostname = $hostname;
 		$this->application = $application;
+		$this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
 
 		$this->createGuzzleClient($ingestionKey, $guzzleOptions, $guzzleFactory);
 	}
@@ -122,7 +129,7 @@ class LogDNA extends AbstractWriter {
 			unset($context['exception']);
 
 			$context['exception'] = $exception->getMessage();
-			$context['stacktrace'] = $exception->getTraceAsString();
+			$context['stacktrace'] = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
 		}
 		return $context;
 	}
