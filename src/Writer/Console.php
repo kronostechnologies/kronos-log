@@ -39,11 +39,17 @@ class Console extends \Kronos\Log\AbstractWriter {
 	private $trace_builder;
 
 	/**
+	 * @var FileFactory
+	 */
+	private $factory;
+
+	/**
 	 * @param FileFactory $factory
 	 */
-	public function __construct(FileFactory $factory, ExceptionTraceBuilder $trace_builder = null) {
-		$this->stdout = $factory->createTTYAdaptor(self::STDOUT);
-		$this->stderr = $factory->createTTYAdaptor(self::STDERR);
+	public function __construct(FileFactory $factory = null, ExceptionTraceBuilder $trace_builder = null) {
+		$this->factory = is_null($factory) ? new FileFactory() : $factory;
+		$this->stdout = $this->factory->createTTYAdaptor(self::STDOUT);
+		$this->stderr = $this->factory->createTTYAdaptor(self::STDERR);
 		$this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
 	}
 

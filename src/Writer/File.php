@@ -34,13 +34,19 @@ class File extends \Kronos\Log\AbstractWriter {
 	private $trace_builder;
 
 	/**
+	 * @var FileFactory
+	 */
+	private $factory;
+
+	/**
 	 * File constructor.
 	 * @param $filename
 	 * @param FileFactory $factory
 	 * @param ExceptionTraceBuilder|null $trace_builder
 	 */
-	public function __construct($filename, FileFactory $factory, ExceptionTraceBuilder $trace_builder = null) {
-		$this->file_adaptor = $factory->createFileAdaptor($filename);
+	public function __construct($filename, FileFactory $factory = null, ExceptionTraceBuilder $trace_builder = null) {
+		$this->factory = is_null($factory) ? new FileFactory() : $factory;
+		$this->file_adaptor = $this->factory->createFileAdaptor($filename);
 		$this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
 	}
 
