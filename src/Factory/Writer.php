@@ -37,6 +37,7 @@ class Writer {
 		$writer = new File($filename, $this->getFileFactory());
 		$writer->setPrependDateTime();
 		$writer->setPrependLogLevel();
+		$writer->setPrependFilePath();
 		$writer->setContextStringifier($this->getContextStringifier());
 
 		return $writer;
@@ -56,7 +57,12 @@ class Writer {
 	 * @return Console
 	 */
 	public function createConsoleWriter() {
-		return new Console($this->getFileFactory());
+		$writer = new Console($this->getFileFactory());
+		$writer->setPrependDateTime();
+		$writer->setPrependLogLevel();
+		$writer->setPrependFilePath();
+
+		return $writer;
 	}
 
 	/**

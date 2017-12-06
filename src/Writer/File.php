@@ -13,6 +13,7 @@ class File extends \Kronos\Log\AbstractWriter {
 
 	use \Kronos\Log\Traits\PrependDateTime;
 	use \Kronos\Log\Traits\PrependLogLevel;
+	use \Kronos\Log\Traits\PrependFilePath;
 
 	const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
 	const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
@@ -77,7 +78,8 @@ class File extends \Kronos\Log\AbstractWriter {
 	private function writeMessage($level, $message, array $context = []) {
 		$interpolated_message = $this->interpolate($message, $context);
 		$message_with_loglevel = $this->prependLogLevel($level, $interpolated_message);
-		$message_with_datetime = $this->prependDateTime($message_with_loglevel);
+		$message_with_filepath = $this->prependFilePath($message_with_loglevel);
+		$message_with_datetime = $this->prependDateTime($message_with_filepath);
 		$this->file_adaptor->write($message_with_datetime);
 	}
 
