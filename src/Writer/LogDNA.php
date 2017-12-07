@@ -12,6 +12,9 @@ class LogDNA extends AbstractWriter {
 	const LOGDNA_URL = 'https://logs.logdna.com/';
 	const INGEST_URI = 'logs/ingest';
 
+	const METADATA_EXCEPTION = 'exception';
+	const METADATA_CONTEXT = 'kronosContext';
+
 	/**
 	 * @var string
 	 */
@@ -80,16 +83,21 @@ class LogDNA extends AbstractWriter {
 	 */
 	public function log($level, $message, array $context = []) {
 		try {
+			$metadata = $this->processMetadata($context);
+
 			$this->guzzleClient->post($this->buildUri(), ['json' =>
 				['lines' => [
 					[
 						'line' => $this->interpolate($message, $context),
 						'app' => $this->application,
 						'level' => $level,
-						'meta' => $this->processContext($context)
+						'meta' => [
+							self::METADATA_EXCEPTION => $metadata[self::METADATA_EXCEPTION],
+							self::METADATA_CONTEXT => $metadata[self::METADATA_CONTEXT]
+						]
 					]
 				]
-			]]);
+				]]);
 		}
 		catch(\Exception $exception) {
 			// A logger should never be the reason why the app crashed.
@@ -115,8 +123,17 @@ class LogDNA extends AbstractWriter {
 	 * @param mixed $context
 	 * @return mixed whatever $context is
 	 */
-	private function processContext($context) {
-		return $this->replaceException($context);
+	private function processMetadata($context) {
+		$metadata = [];
+
+		$metadata[self::METADATA_CONTEXT] = $context['context'];
+		unset($context['context']);
+
+		$exception = $this->replaceException($context);
+
+		$metadata[self::METADATA_EXCEPTION] = $exception;
+
+		return $metadata;
 	}
 
 	/**
@@ -128,9 +145,10 @@ class LogDNA extends AbstractWriter {
 			$exception = $context['exception'];
 			unset($context['exception']);
 
-			$context['exception'] = $exception->getMessage();
+			$context['message'] = $exception->getMessage();
 			$context['stacktrace'] = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
 		}
+
 		return $context;
 	}
 
