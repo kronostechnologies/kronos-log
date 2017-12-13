@@ -32,7 +32,7 @@ class LogDNA extends AbstractWriter {
 	public function buildFromArray(array $settings) {
 		$this->checkRequiredSettings($settings);
 
-		$writer = $this->factory->createLogDNAWriter($settings[self::HOSTNAME], $settings[self::APPLICATION], $settings[self::INGESTION_KEY]);
+		$writer = $this->factory->createLogDNAWriter($this->getHostName($settings), $settings[self::APPLICATION], $settings[self::INGESTION_KEY]);
 
 		$this->setCommonSettings($writer, $settings);
 
@@ -52,8 +52,6 @@ class LogDNA extends AbstractWriter {
 	 * @throws RequiredSetting
 	 */
 	private function checkRequiredSettings(array $settings) {
-		$this->throwIfMissing($settings, self::HOSTNAME);
-		$this->throwIfMissing($settings, self::APPLICATION);
 		$this->throwIfMissing($settings, self::INGESTION_KEY);
 	}
 
@@ -65,6 +63,29 @@ class LogDNA extends AbstractWriter {
 	private function throwIfMissing($settings, $index) {
 		if(!isset($settings[$index])) {
 			throw new RequiredSetting($index.' setting is required');
+		}
+	}
+
+	/**
+	 * Obtains the hostname from the settings array
+	 * if not set, we use the server hostname instead.
+	 *
+	 * @param $settings
+	 * @return string
+	 * @throws RequiredSetting
+	 */
+	private function getHostName($settings){
+		if(isset($settings[self::HOSTNAME]) && $settings[self::HOSTNAME]){
+			return $settings[self::HOSTNAME];
+		}
+		else{
+			$hostname = gethostname();
+
+			if (!$hostname){
+				throw new RequiredSetting('Hostname setting is false or null. Please either specify a hostname in the config file or remove it.');
+			}
+
+			return $hostname;
 		}
 	}
 }
