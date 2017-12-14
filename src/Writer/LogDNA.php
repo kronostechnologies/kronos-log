@@ -12,8 +12,9 @@ class LogDNA extends AbstractWriter {
 	const LOGDNA_URL = 'https://logs.logdna.com/';
 	const INGEST_URI = 'logs/ingest';
 
+	const METADATA_CONTEXT = 'context';
+	const METADATA_USER = 'user';
 	const METADATA_EXCEPTION = 'exception';
-	const METADATA_CONTEXT = 'kronosContext';
 
 	/**
 	 * @var string
@@ -92,7 +93,6 @@ class LogDNA extends AbstractWriter {
 						'app' => $this->application,
 						'level' => $level,
 						'meta' => [
-							self::METADATA_EXCEPTION => $metadata[self::METADATA_EXCEPTION],
 							self::METADATA_CONTEXT => $metadata[self::METADATA_CONTEXT]
 						]
 					]
@@ -120,20 +120,42 @@ class LogDNA extends AbstractWriter {
 	}
 
 	/**
-	 * @param mixed $context
-	 * @return mixed whatever $context is
+	 * @param $context
+	 * @return array whatever $metadata is
 	 */
 	private function processMetadata($context) {
 		$metadata = [];
 
-		$metadata[self::METADATA_CONTEXT] = $context['context'];
-		unset($context['context']);
+		$metadata[self::METADATA_CONTEXT][self::METADATA_USER] = $this->addUserContext();
 
-		$exception = $this->replaceException($context);
+		if (!empty($context)){
+			foreach ($context as $key => $val){
+				if ($key != self::METADATA_EXCEPTION && $key != self::METADATA_USER){
+					$metadata[self::METADATA_CONTEXT][$key] = $val;
+					unset($context[$key]);
+				}
+			}
+		}
 
-		$metadata[self::METADATA_EXCEPTION] = $exception;
+		$exception_context = $this->replaceException($context);
+		$metadata[self::METADATA_CONTEXT][self::METADATA_EXCEPTION] = $exception_context;
+		unset($context[self::METADATA_EXCEPTION]);
 
 		return $metadata;
+	}
+
+	/**
+	 * Get infos about the current webuser.
+	 * @return array $user_context
+	 */
+	private function addUserContext(){
+		$user_context = [];
+
+		$user_context['database'] =  \AppManager::GetInstance()->GetCurrentDatabase();
+		$user_context['screen_name'] =  \AppManager::GetWebUser()->GetScreenName();
+		$user_context['email'] =  \AppManager::GetWebUser()->GetEmail();
+
+		return $user_context;
 	}
 
 	/**
