@@ -125,7 +125,6 @@ class LogDNA extends AbstractWriter {
 	 */
 	private function processMetadata($context) {
 
-	    \Kronos\Common\Debug::Debug($this->context == \Kronos\Log\Enumeration\ConfigContext::TOOL);
 		$metadata = [];
 
 		if ($this->context == \Kronos\Log\Enumeration\ConfigContext::APP){
