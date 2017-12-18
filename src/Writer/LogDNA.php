@@ -127,9 +127,10 @@ class LogDNA extends AbstractWriter {
 
 		$metadata = [];
 
-		if ($this->context == \Kronos\Log\Enumeration\ConfigContext::APP){
-            $metadata[self::METADATA_CONTEXT][self::METADATA_USER] = $this->addUserContext();
-        }
+		if ($this->context == \Kronos\Log\Enumeration\ConfigContext::APP && isset($context['user'])){
+			$metadata[self::METADATA_CONTEXT][self::METADATA_USER] = $this->addUserContext($context['user']);
+			unset($context['user']);
+		}
 
 		if (!empty($context)){
 			foreach ($context as $key => $val){
@@ -142,9 +143,9 @@ class LogDNA extends AbstractWriter {
 
 		$exception_context = $this->replaceException($context);
 		if (!empty($exception_context)){
-            $metadata[self::METADATA_CONTEXT][self::METADATA_EXCEPTION] = $exception_context;
-            unset($context[self::METADATA_EXCEPTION]);
-        }
+			$metadata[self::METADATA_CONTEXT][self::METADATA_EXCEPTION] = $exception_context;
+			unset($context[self::METADATA_EXCEPTION]);
+		}
 
 		return $metadata;
 	}
@@ -153,12 +154,12 @@ class LogDNA extends AbstractWriter {
 	 * Get infos about the current webuser.
 	 * @return array $user_context
 	 */
-	private function addUserContext(){
+	private function addUserContext($context){
 		$user_context = [];
 
-		$user_context['database'] =  \AppManager::GetInstance()->GetCurrentDatabase();
-		$user_context['screen_name'] =  \AppManager::GetWebUser()->GetScreenName();
-		$user_context['email'] =  \AppManager::GetWebUser()->GetEmail();
+		$user_context['database'] = $context['db'];
+		$user_context['screen_name'] = $context['screen_name'];
+		$user_context['email'] = $context['email'];
 
 		return $user_context;
 	}
