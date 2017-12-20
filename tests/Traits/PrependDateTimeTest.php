@@ -6,7 +6,7 @@ use Kronos\Log\Traits\PrependDateTime;
 
 class PrependDateTimeTest extends \PHPUnit_Framework_TestCase {
 
-	const A_MESSAGE = 'a message';
+	const A_MESSAGE = ' a message';
 	const DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
 
 	private $datetime_prepender;
@@ -26,6 +26,6 @@ class PrependDateTimeTest extends \PHPUnit_Framework_TestCase {
 		
 		$returned_message = $this->datetime_prepender->prependDateTime(self::A_MESSAGE);
 
-		$this->assertRegExp('/'.self::DATETIME_REGEX.' '.self::A_MESSAGE.'/', $returned_message);
+		$this->assertRegExp('/'.self::DATETIME_REGEX.''.self::A_MESSAGE.'/', $returned_message);
 	}
 }

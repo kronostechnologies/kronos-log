@@ -2,6 +2,7 @@
 
 namespace Kronos\Tests\Log\Writer;
 
+use Kronos\Log\Exception\ExceptionTraceBuilder;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
@@ -42,6 +43,11 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $client;
 
+	/**
+	 * @var \PHPUnit_Framework_MockObject_MockObject|ExceptionTraceBuilder
+	 */
+	private $exception_trace_builder;
+
 	public function setUp() {
 		$this->client = $this->getMockBuilder(\GuzzleHttp\Client::class)
 			->disableOriginalConstructor()
@@ -50,6 +56,8 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 
 		$this->factory = $this->getMock(Factory\Guzzle::class);
 		$this->factory->method('createClient')->willReturn($this->client);
+
+		$this->exception_trace_builder = $this->getMockWithoutInvokingTheOriginalConstructor(ExceptionTraceBuilder::class);
 	}
 
 	public function test_constructor_ShouldCreateGuzzleClient() {
@@ -64,7 +72,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 				'base_uri' => LogDNA::LOGDNA_URL
 			]);
 
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory, $this->exception_trace_builder);
 	}
 
 	public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions() {
@@ -91,7 +99,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 			'timeout' => self::TIMEOUT
 		];
 
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions, $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions, $this->factory, $this->exception_trace_builder);
 	}
 
 	public function test_Writer_log_ShouldPostMessage() {
@@ -106,7 +114,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 							'line' => self::MESSAGE,
 							'app' => self::APPLICATION,
 							'level' => self::ANY_LOG_LEVEL,
-							'meta' => self::CONTEXT
+							'meta' => ['context' => self::CONTEXT]
 						]
 					]
 				]]
@@ -128,7 +136,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 							'line' => self::INTERPOLATED_MESSAGE,
 							'app' => self::APPLICATION,
 							'level' => self::ANY_LOG_LEVEL,
-							'meta' => self::CONTEXT
+							'meta' => ['context' => self::CONTEXT]
 						]
 					]
 				]]
@@ -167,7 +175,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function test_ExceptionInContext_log_ShouldReplaceExceptionWithMessageAndAddStacktrace() {
-		$exception = new \Exception('exception message');
+		$exception = new TestableException('exception message');
 		$this->client
 			->expects(self::once())
 			->method('post')
@@ -180,12 +188,18 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 							'app' => self::APPLICATION,
 							'level' => self::ANY_LOG_LEVEL,
 							'meta' => [
-								'exception' => $exception->getMessage(),
-								'stacktrace' => $exception->getTraceAsString()
+								'context' => [
+									'exception' => [
+										'message' => $exception->getMessage(),
+										'stacktrace' => $this->exception_trace_builder->getTraceAsString($exception)
+									]
+								]
 							]
 						]
+
+						]
 					]
-				]]
+				]
 			);
 		$this->givenWriter();
 
@@ -205,7 +219,11 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 							'app' => self::APPLICATION,
 							'level' => self::ANY_LOG_LEVEL,
 							'meta' => [
-								'exception' => self::SOME_TEXT,
+								'context' => [
+									'exception' => [
+										'exception' => self::SOME_TEXT
+									]
+								]
 							]
 						]
 					]
@@ -227,10 +245,72 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	}
 
 	private function givenWriter() {
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory, $this->exception_trace_builder);
 	}
 
 	private function buildUriRegex($uri) {
 		return '/'.str_replace(['?', '/', '.'], ['\?', '\/', '\.'], $uri).'/';
+	}
+}
+
+class TestableException extends \Exception {
+
+	public function getExceptionTrace(){
+		return [
+			0 => [
+				'file' => '/path/to/file/TestClass.php',
+				'line' => 20,
+				'function' => 'testFunction',
+				'class' => 'TestClass',
+				'type' => '->',
+				'args' => [
+					0 => 1,
+					1 => 2,
+					2 => [
+						'test' => 'test_value'
+					],
+				],
+			],
+			1 => [
+				'file' => '/path/to/file/Tool.php',
+				'line' => 478,
+				'function' => 'runTool',
+				'class' => 'TestClass',
+				'type' => '->',
+				'args' => [],
+			],
+			2 => [
+				'file' => '/path/to/file/CLI.php',
+				'line' => 197,
+				'function' => 'run',
+				'class' => 'Tool',
+				'type' => '->',
+				'args' => [],
+			],
+			3 => [
+				'file' => '/path/to/file/CLI.php',
+				'line' => 59,
+				'function' => 'runTool',
+				'class' => 'CLI',
+				'type' => '->',
+				'args' => [],
+			],
+			4 => [
+				'file' => '/path/to/file/tool.php',
+				'line' => 35,
+				'function' => 'run',
+				'class' => 'CLI',
+				'type' => '->',
+				'args' => [],
+			],
+			5 => [
+				'file' => '/path/to/file/tool',
+				'line' => 4,
+				'function' => 'includeTest',
+				'args' => [
+					0 => '/path/to/file/tool.php'
+				],
+			]
+		];
 	}
 }

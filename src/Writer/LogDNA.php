@@ -93,7 +93,7 @@ class LogDNA extends AbstractWriter {
 						'app' => $this->application,
 						'level' => $level,
 						'meta' => [
-							self::METADATA_CONTEXT => $metadata[self::METADATA_CONTEXT]
+							self::METADATA_CONTEXT => (isset($metadata[self::METADATA_CONTEXT])) ? $metadata[self::METADATA_CONTEXT] : []
 						]
 					]
 				]
@@ -123,7 +123,7 @@ class LogDNA extends AbstractWriter {
 	 * @param $context
 	 * @return array whatever $metadata is
 	 */
-	private function processMetadata($context) {
+	private function processMetadata(array $context = []) {
 
 		$metadata = [];
 

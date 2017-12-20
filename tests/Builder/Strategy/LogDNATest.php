@@ -30,6 +30,8 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $writer;
 
+	const SOME_CONTEXT = 1; // APP
+
 	public function setUp() {
 		$this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\LogDNA::class);
 		$this->factory = $this->getMock(Writer::class);
@@ -45,7 +47,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 			->with(self::HOSTNAME_VALUE, self::APPLICATION_VALUE, self::INGESTION_KEY_VALUE);
 		$settings = $this->givenRequiredSettings();
 
-		$this->strategy->buildFromArray($settings);
+		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
 	}
 
 	public function test_MinLevel_buildFromArray_ShouldSetMinLevel() {
@@ -56,7 +58,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSettings();
 		$settings[LogDNA::MIN_LEVEL] = self::MIN_LEVEL;
 
-		$this->strategy->buildFromArray($settings);
+		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
 	}
 
 	public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel() {
@@ -67,7 +69,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSettings();
 		$settings[LogDNA::MAX_LEVEL] = self::MAX_LEVEL;
 
-		$this->strategy->buildFromArray($settings);
+		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
 	}
 
 	public function test_IpAddress_buildFromArray_ShouldSetIpAddress() {
@@ -78,7 +80,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSettings();
 		$settings[LogDNA::IP_ADDRESS] = self::IP_ADDRESS;
 
-		$this->strategy->buildFromArray($settings);
+		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
 	}
 
 	public function test_MacAddress_buildFromArray_ShouldSetMacAddress() {
@@ -89,37 +91,15 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSettings();
 		$settings[LogDNA::MAC_ADDRESS] = self::MAC_ADDRESS;
 
-		$this->strategy->buildFromArray($settings);
+		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
 	}
 
 	public function test_buildFromArray_ShouldReturnWriter() {
 		$settings = $this->givenRequiredSettings();
 
-		$actualWriter = $this->strategy->buildFromArray($settings);
+		$actualWriter = $this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
 
 		$this->assertSame($this->writer, $actualWriter);
-	}
-
-	public function test_MissingHostnameSetting_buildFromArray_ShouldThrowRequiredSettingException() {
-		$this->expectException(RequiredSetting::class);
-		$this->expectExceptionMessage(LogDNA::HOSTNAME.' setting is required');
-		$settings = [
-			LogDNA::APPLICATION => self::APPLICATION_VALUE,
-			LogDNA::INGESTION_KEY => self::INGESTION_KEY_VALUE
-		];
-
-		$this->strategy->buildFromArray($settings);
-	}
-
-	public function test_MissingApplicationSetting_buildFromArray_ShouldThrowRequiredSettingException() {
-		$this->expectException(RequiredSetting::class);
-		$this->expectExceptionMessage(LogDNA::APPLICATION.' setting is required');
-		$settings = [
-			LogDNA::HOSTNAME => self::HOSTNAME_VALUE,
-			LogDNA::INGESTION_KEY => self::INGESTION_KEY_VALUE
-		];
-
-		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_MissingIngestionKeySetting_buildFromArray_ShouldThrowRequiredSettingException() {
@@ -130,7 +110,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 			LogDNA::APPLICATION => self::APPLICATION_VALUE
 		];
 
-		$this->strategy->buildFromArray($settings);
+		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
 	}
 
 	private function givenRequiredSettings() {

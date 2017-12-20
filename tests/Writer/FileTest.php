@@ -73,7 +73,7 @@ class FileTest extends \PHPUnit_Framework_TestCase {
 
 	public function test_WriterPrependingLogLevelAndDateTime_Log_ShouldCallWriteWithMessagePrependedByDateTimeThenLogLevel() {
 		$this->givenFactoryReturnAdaptor();
-		$this->expectsWriteToByCalledOnceWith($this->matchesRegularExpression('/'.self::DATETIME_REGEX.' '.self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL.'/'));
+		$this->expectsWriteToByCalledOnceWith($this->matchesRegularExpression('/'.self::DATETIME_REGEX.''.self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL.'/'));
 		$writer = new File(self::A_FILENAME, $this->factory);
 		$writer->setPrependLogLevel();
 		$writer->setPrependDateTime();
