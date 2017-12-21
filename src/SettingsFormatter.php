@@ -14,11 +14,12 @@ class SettingsFormatter {
 	private $settings = [];
 
 	/**
-	 * @var
+	 * @var array
 	 */
 	private $changes = [];
 
 	const WRITER_TYPE = 'type';
+
 	const WRITER_SETTINGS = 'settings';
 
 	/**
@@ -62,15 +63,14 @@ class SettingsFormatter {
 	 *
 	 * @return array
 	 */
-	private function getWriters(){
-		return $this->settings['writers'];
+	public function getWriters(){
+		return (isset($this->settings['writers'])) ? $this->settings['writers'] : [];
 	}
 
 	/**
 	 * Sets the writer settings to change, using an array of the format
 	 *
-	 * [
-	 * 	'writer_name' => [
+	 * ['writer_name' => [
 	 * 						'setting_name' => 'setting_value'
 	 * 					]
 	 * ]
@@ -79,20 +79,5 @@ class SettingsFormatter {
 	 */
 	public function setChanges(array $changes){
 		$this->changes = $changes;
-	}
-
-	/**
-	 * Adds a series of settings changes for a writer using an array of the format
-	 *
-	 * [
-	 * 	'writer_name' => [
-	 * 						'setting_name' => 'setting_value'
-	 * 					]
-	 * ]
-	 *
-	 * @param array $changes
-	 */
-	public function addChanges(array $changes){
-		$this->changes[] = $changes;
 	}
 }
