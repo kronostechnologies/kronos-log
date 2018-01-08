@@ -127,15 +127,15 @@ class LogDNA extends AbstractWriter {
 
 		$metadata = [];
 
-		if ($this->context == \Kronos\Log\Enumeration\ConfigContext::APP && isset($context['user'])){
-			$metadata[self::METADATA_CONTEXT][self::METADATA_USER] = $this->addUserContext($context['user']);
-			unset($context['user']);
+		if (isset($context[self::METADATA_USER])){
+			$metadata[self::METADATA_CONTEXT][self::METADATA_USER] = $context[self::METADATA_USER];
+			unset($context[self::METADATA_USER]);
 		}
 
 		if (!empty($context)){
 			foreach ($context as $key => $val){
 				if ($key != self::METADATA_EXCEPTION && $key != self::METADATA_USER){
-					$metadata[self::METADATA_CONTEXT][$key] = $val;
+					$metadata[self::METADATA_CONTEXT][$key] = (string) $val;
 					unset($context[$key]);
 				}
 			}
@@ -148,20 +148,6 @@ class LogDNA extends AbstractWriter {
 		}
 
 		return $metadata;
-	}
-
-	/**
-	 * Get infos about the current webuser.
-	 * @return array $user_context
-	 */
-	private function addUserContext($context){
-		$user_context = [];
-
-		$user_context['database'] = $context['db'];
-		$user_context['screen_name'] = $context['screen_name'];
-		$user_context['email'] = $context['email'];
-
-		return $user_context;
 	}
 
 	/**
