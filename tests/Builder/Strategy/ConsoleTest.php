@@ -24,8 +24,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $writer;
 
-	const SOME_CONTEXT = 1; // APP
-
 	public function setUp() {
 		$this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\Console::class);
 		$this->factory = $this->getMock(Writer::class);
@@ -39,7 +37,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 			->expects(self::once())
 			->method('createConsoleWriter');
 
-		$this->strategy->buildFromArray([], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([]);
 	}
 
 	public function test_MinLevel_buildFromArray_ShouldSetMinLevel() {
@@ -48,7 +46,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 			->method('setMinLevel')
 			->with(self::MIN_LEVEL);
 
-		$this->strategy->buildFromArray([Console::MIN_LEVEL => self::MIN_LEVEL], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Console::MIN_LEVEL => self::MIN_LEVEL]);
 	}
 
 	public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel() {
@@ -57,7 +55,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 			->method('setMaxLevel')
 			->with(self::MAX_LEVEL);
 
-		$this->strategy->buildFromArray([Console::MAX_LEVEL => self::MAX_LEVEL], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Console::MAX_LEVEL => self::MAX_LEVEL]);
 	}
 
 	public function test_ForceAnsiColor_buildFromArray_ShouldSetForceAnsiColor() {
@@ -66,7 +64,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 			->method('setForceAnsiColorSupport')
 			->with(true);
 
-		$this->strategy->buildFromArray([Console::FORCE_ANSI_COLOR => true], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Console::FORCE_ANSI_COLOR => true]);
 	}
 
 	public function test_FalseForceAnsiColor_buildFromArray_ShouldNeverSetForceAnsiColor() {
@@ -74,7 +72,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 			->expects(self::never())
 			->method('setForceAnsiColorSupport');
 
-		$this->strategy->buildFromArray([Console::FORCE_ANSI_COLOR => false], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Console::FORCE_ANSI_COLOR => false]);
 	}
 
 	public function test_ForceNoAnsiColor_buildFromArray_ShouldSetForceAnsiColor() {
@@ -83,7 +81,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 			->method('setForceNoAnsiColorSupport')
 			->with(true);
 
-		$this->strategy->buildFromArray([Console::FORCE_NO_ANSI_COLOR => true], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Console::FORCE_NO_ANSI_COLOR => true]);
 	}
 
 	public function test_FalseForceNoAnsiColor_buildFromArray_ShouldNeverSetForceNoAnsiColor() {
@@ -91,11 +89,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 			->expects(self::never())
 			->method('setForceNoAnsiColorSupport');
 
-		$this->strategy->buildFromArray([Console::FORCE_NO_ANSI_COLOR => false], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Console::FORCE_NO_ANSI_COLOR => false]);
 	}
 
 	public function test_buildFromArray_ShouldReturnWriter() {
-		$actualWriter = $this->strategy->buildFromArray([], self::SOME_CONTEXT);
+		$actualWriter = $this->strategy->buildFromArray([]);
 
 		$this->assertSame($this->writer, $actualWriter);
 	}

@@ -20,12 +20,10 @@ class Memory extends AbstractWriter {
 	 * @param array $settings
 	 * @return \Kronos\Log\Writer\Memory
 	 */
-	public function buildFromArray(array $settings, $context) {
+	public function buildFromArray(array $settings) {
 		$writer = $this->factory->createMemoryWriter();
 
 		$this->setCommonSettings($writer, $settings);
-
-        $writer->setConfigContext($context);
 
 		return $writer;
 	}

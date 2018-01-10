@@ -32,7 +32,7 @@ class Sentry extends AbstractWriter {
 	 * @throws InvalidSetting
 	 * @throws RequiredSetting
 	 */
-	public function buildFromArray(array $settings, $context) {
+	public function buildFromArray(array $settings) {
 		if(isset($settings[self::CLIENT]) && $settings[self::CLIENT]) {
 			if($settings[self::CLIENT] instanceof \Raven_Client) {
 				$writer = $this->factory->createSentryWriter($settings[self::CLIENT]);
@@ -57,8 +57,6 @@ class Sentry extends AbstractWriter {
 		}
 
 		$this->setCommonSettings($writer, $settings);
-
-        $writer->setConfigContext($context);
 
 		return $writer;
 	}

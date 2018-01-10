@@ -23,7 +23,7 @@ class Console extends AbstractWriter {
 	 * @param array $settings
 	 * @return \Kronos\Log\Writer\Console
 	 */
-	public function buildFromArray(array $settings, $context) {
+	public function buildFromArray(array $settings) {
 		$writer = $this->factory->createConsoleWriter();
 
 		$this->setCommonSettings($writer, $settings);
@@ -34,8 +34,6 @@ class Console extends AbstractWriter {
 		if(isset($settings['forceNoAnsiColor']) && $settings['forceNoAnsiColor']) {
 			$writer->setForceNoAnsiColorSupport();
 		}
-
-		$writer->setConfigContext($context);
 
 		return $writer;
 	}

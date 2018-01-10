@@ -13,5 +13,5 @@ interface Strategy {
 	 * @param array $settings
 	 * @return AbstractWriter
 	 */
-	public function buildFromArray(array $settings, $context);
+	public function buildFromArray(array $settings);
 }

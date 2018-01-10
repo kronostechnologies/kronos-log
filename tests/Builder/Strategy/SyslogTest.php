@@ -27,8 +27,6 @@ class SyslogTest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $writer;
 
-	const SOME_CONTEXT = 1; // APP
-
 	public function setUp() {
 		$this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\Syslog::class);
 		$this->factory = $this->getMock(Writer::class);
@@ -44,7 +42,7 @@ class SyslogTest extends \PHPUnit_Framework_TestCase {
 			->with(self::APPLICATION_VALUE);
 		$settings = $this->givenRequiredSetting();
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_Option_buildFromArray_ShouldCreateSyslogWriterWithOption() {
@@ -55,7 +53,7 @@ class SyslogTest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSetting();
 		$settings[Syslog::OPTION] = LOG_PID;
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_Facility_buildFromArray_ShouldCreateSyslogWriterWithFacility() {
@@ -66,7 +64,7 @@ class SyslogTest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSetting();
 		$settings[Syslog::FACILITY] = LOG_LOCAL6;
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_MinLevel_buildFromArray_ShouldSetMinLevel() {
@@ -77,7 +75,7 @@ class SyslogTest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSetting();
 		$settings[Syslog::MIN_LEVEL] = self::MIN_LEVEL;
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel() {
@@ -88,13 +86,13 @@ class SyslogTest extends \PHPUnit_Framework_TestCase {
 		$settings = $this->givenRequiredSetting();
 		$settings[Syslog::MAX_LEVEL] = self::MAX_LEVEL;
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_buildFromArray_ShouldReturnWriter() {
 		$settings = $this->givenRequiredSetting();
 
-		$actualWriter = $this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$actualWriter = $this->strategy->buildFromArray($settings);
 
 		$this->assertSame($this->writer, $actualWriter);
 	}
@@ -103,7 +101,7 @@ class SyslogTest extends \PHPUnit_Framework_TestCase {
 		$this->expectException(RequiredSetting::class);
 		$this->expectExceptionMessage(Syslog::APPLICATION.' setting is required');
 
-		$this->strategy->buildFromArray([], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([]);
 	}
 
 	private function givenRequiredSetting() {

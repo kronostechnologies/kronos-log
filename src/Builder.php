@@ -6,7 +6,6 @@ use Kronos\Log\Builder\Strategy\Selector;
 use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\Logger as LoggerFactory;
 use phpDocumentor\Reflection\Types\Context;
-use Kronos\Log\Enumeration\ConfigContext;
 
 class Builder {
 
@@ -20,20 +19,14 @@ class Builder {
 	 */
 	private $selector;
 
-    /**
-     * @var \Kronos\Log\Enumeration\ConfigContext
-     */
-	private $context;
-
 	/**
 	 * Builder constructor.
 	 * @param LoggerFactory $loggerFactory
 	 * @param Selector $selector
 	 */
-	public function __construct(LoggerFactory $loggerFactory = null, Selector $selector = null, $context = \Kronos\Log\Enumeration\ConfigContext::APP) {
+	public function __construct(LoggerFactory $loggerFactory = null, Selector $selector = null) {
 		$this->loggerFactory = $loggerFactory ?: new LoggerFactory();
 		$this->selector = $selector ?: new Selector();
-		$this->context = $context;
 	}
 
 
@@ -51,7 +44,7 @@ class Builder {
 
 		foreach($settings as $writerSetting) {
 			$strategy = $this->selector->getStrategyForType($writerSetting['type']);
-			$writer = $strategy->buildFromArray($writerSetting['settings'], $this->context);
+			$writer = $strategy->buildFromArray($writerSetting['settings']);
 			$logger->addWriter($writer);
 		}
 

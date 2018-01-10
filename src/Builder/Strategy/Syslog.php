@@ -26,7 +26,7 @@ class Syslog extends AbstractWriter {
 	 * @return \Kronos\Log\Writer\Syslog
 	 * @throws RequiredSetting
 	 */
-	public function buildFromArray(array $settings, $context) {
+	public function buildFromArray(array $settings) {
 		if(!isset($settings[self::APPLICATION])) {
 			throw new RequiredSetting(self::APPLICATION.' setting is required');
 		}
@@ -38,8 +38,6 @@ class Syslog extends AbstractWriter {
 		);
 
 		$this->setCommonSettings($writer, $settings);
-
-        $writer->setConfigContext($context);
 
 		return $writer;
 	}

@@ -35,8 +35,6 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $ravenClient;
 
-	const SOME_CONTEXT = 1; // APP
-
 	public function setUp() {
 		$this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\Syslog::class);
 		$this->factory = $this->getMock(Writer::class);
@@ -54,7 +52,7 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			->with($this->ravenClient);
 		$settings = [Sentry::CLIENT => $this->ravenClient];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_RavenClientConfiguration_buildFromArray_ShouldCreateSentryWriterAndRavenClient() {
@@ -70,7 +68,7 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			Sentry::OPTIONS => self::SENTRY_OPTIONS
 		];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_MinLevel_buildFromArray_ShouldSetMinLevel() {
@@ -83,7 +81,7 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			Sentry::MIN_LEVEL => self::MIN_LEVEL
 		];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel() {
@@ -96,13 +94,13 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			Sentry::MAX_LEVEL => self::MAX_LEVEL
 		];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_buildFromArray_ShouldReturnWriter() {
 		$settings = [Sentry::CLIENT => $this->ravenClient];
 
-		$actualWriter = $this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$actualWriter = $this->strategy->buildFromArray($settings);
 
 		$this->assertSame($this->writer, $actualWriter);
 	}
@@ -116,7 +114,7 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			->expects(self::never())
 			->method('createSentryWriter');
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_MissingSentryOption_buildFromArray_ShouldCreateWriterAndRavenClientWithEmptyArrayOptions() {
@@ -131,7 +129,7 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
 		];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_MissingClientAndKeySetting_buildFromArray_ShouldThrowRequiredSettingException() {
@@ -145,7 +143,7 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
 		];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_KeySettingAndNoSecret_buildFromArray_ShouldThrowRequiredSettingException() {
@@ -159,7 +157,7 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
 		];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 
 	public function test_KeySettingAndNoProjectId_buildFromArray_ShouldThrowRequiredSettingException() {
@@ -173,6 +171,6 @@ class SentryTest extends \PHPUnit_Framework_TestCase {
 			Sentry::SECRET => self::SENTRY_SECRET
 		];
 
-		$this->strategy->buildFromArray($settings, self::SOME_CONTEXT);
+		$this->strategy->buildFromArray($settings);
 	}
 }

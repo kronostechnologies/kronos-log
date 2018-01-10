@@ -28,7 +28,6 @@ abstract class AbstractWriter implements WriterInterface {
 	protected $min_level = LogLevel::DEBUG;
 	protected $max_level = LogLevel::EMERGENCY;
 	protected $include_exception_args = false;
-	protected $context = \Kronos\Log\Enumeration\ConfigContext::APP;
 
 	public function canLogLevel($level) {
 		$this->validateLogLevel($level);
@@ -69,8 +68,4 @@ abstract class AbstractWriter implements WriterInterface {
 	protected function isLevelHigher($base_level, $compared_level) {
 		return $this->level_priorities[$compared_level] > $this->level_priorities[$base_level];
 	}
-
-	public function setConfigContext($context = \Kronos\Log\Enumeration\ConfigContext::APP){
-	    $this->context = $context;
-    }
 }

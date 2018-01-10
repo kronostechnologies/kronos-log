@@ -29,7 +29,7 @@ class LogDNA extends AbstractWriter {
 	 * @return \Kronos\Log\Writer\LogDNA
 	 * @throws RequiredSetting
 	 */
-	public function buildFromArray(array $settings, $context) {
+	public function buildFromArray(array $settings) {
 		$this->checkRequiredSettings($settings);
 
 		$writer = $this->factory->createLogDNAWriter($this->getHostName($settings), $settings[self::APPLICATION], $settings[self::INGESTION_KEY]);
@@ -43,8 +43,6 @@ class LogDNA extends AbstractWriter {
 		if(isset($settings[self::MAC_ADDRESS])) {
 			$writer->setMacAddress($settings[self::MAC_ADDRESS]);
 		}
-
-        $writer->setConfigContext($context);
 
 		return $writer;
 	}

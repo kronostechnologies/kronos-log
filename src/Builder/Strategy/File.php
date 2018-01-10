@@ -24,7 +24,7 @@ class File extends AbstractWriter {
 	 * @return \Kronos\Log\Writer\File
 	 * @throws RequiredSetting
 	 */
-	public function buildFromArray(array $settings,$context) {
+	public function buildFromArray(array $settings) {
 		if(!isset($settings[self::FILENAME])) {
 			throw new RequiredSetting(self::FILENAME.' setting is required');
 		}
@@ -32,8 +32,6 @@ class File extends AbstractWriter {
 		$writer = $this->factory->createFileWriter($settings[self::FILENAME]);
 
 		$this->setCommonSettings($writer, $settings);
-
-        $writer->setConfigContext($context);
 
 		return $writer;
 	}

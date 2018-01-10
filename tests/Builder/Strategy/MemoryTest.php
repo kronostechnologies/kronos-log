@@ -24,8 +24,6 @@ class MemoryTest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $writer;
 
-	const SOME_CONTEXT = 1; //APP
-
 	public function setUp() {
 		$this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\Memory::class);
 		$this->factory = $this->getMock(Writer::class);
@@ -39,7 +37,7 @@ class MemoryTest extends \PHPUnit_Framework_TestCase {
 			->expects(self::once())
 			->method('createMemoryWriter');
 
-		$this->strategy->buildFromArray([], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([]);
 	}
 
 	public function test_MinLevel_buildFromArray_ShouldSetMinLevel() {
@@ -48,7 +46,7 @@ class MemoryTest extends \PHPUnit_Framework_TestCase {
 			->method('setMinLevel')
 			->with(self::MIN_LEVEL);
 
-		$this->strategy->buildFromArray([Memory::MIN_LEVEL => self::MIN_LEVEL], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Memory::MIN_LEVEL => self::MIN_LEVEL]);
 	}
 
 	public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel() {
@@ -57,11 +55,11 @@ class MemoryTest extends \PHPUnit_Framework_TestCase {
 			->method('setMaxLevel')
 			->with(self::MAX_LEVEL);
 
-		$this->strategy->buildFromArray([Memory::MAX_LEVEL => self::MAX_LEVEL], self::SOME_CONTEXT);
+		$this->strategy->buildFromArray([Memory::MAX_LEVEL => self::MAX_LEVEL]);
 	}
 
 	public function test_buildFromArray_ShouldReturnWriter() {
-		$actualWriter = $this->strategy->buildFromArray([], self::SOME_CONTEXT);
+		$actualWriter = $this->strategy->buildFromArray([]);
 
 		$this->assertSame($this->writer, $actualWriter);
 	}
