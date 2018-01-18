@@ -61,6 +61,7 @@ class Writer {
 		$writer->setPrependDateTime();
 		$writer->setPrependLogLevel();
 		$writer->setPrependFilePath();
+		$writer->setCanLog(false);
 
 		return $writer;
 	}

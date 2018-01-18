@@ -2,9 +2,12 @@
 
 namespace Kronos\Log;
 
+use Kronos\Log\Writer\Console;
+
 class Logger extends \Psr\Log\AbstractLogger {
 
 	const EXCEPTION_CONTEXT = 'exception';
+	const WRITER_PATH = "\Kronos\Log\Writer\\";
 
 	private $context = [];
 
@@ -32,9 +35,17 @@ class Logger extends \Psr\Log\AbstractLogger {
 		$this->context = array_merge($this->context, $context);
 	}
 
+	public function setWriterCanLog($writer_name, $can_log = true){
+		foreach($this->writers as $writer) {
+			if(is_a($writer, self::WRITER_PATH.ucfirst($writer_name), true)) {
+				$writer->setCanLog($can_log);
+			}
+		}
+	}
+
 	public function log($level, $message, array $context = array()) {
 		foreach($this->writers as $writer) {
-			if($writer->canLogLevel($level)) {
+			if($writer->canLogLevel($level) && $writer->canLog()) {
 				$writer->log($level, $message, $context + $this->context);
 			}
 		}
