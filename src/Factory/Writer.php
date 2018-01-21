@@ -59,7 +59,6 @@ class Writer {
 		$writer = new Console($this->getFileFactory());
 		$writer->setPrependDateTime();
 		$writer->setPrependLogLevel();
-		$writer->setCanLog(false);
 
 		return $writer;
 	}
