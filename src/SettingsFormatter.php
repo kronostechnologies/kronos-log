@@ -56,8 +56,9 @@ class SettingsFormatter {
 
 						if (!empty($this->tool_log_modes)) {
 							$this->markUnallowedWritersToDelete($writers, $writer, $key);
-							$this->deleteMarkedWritersToDelete($writers, $key);
 						}
+
+						$this->deleteMarkedWritersToDelete($writers);
 
 						if ($writer[self::WRITER_TYPE] == $writer_type){
 							foreach ($writer_settings as $setting_name => $setting_value){
@@ -164,9 +165,9 @@ class SettingsFormatter {
 	 * @param $writers
 	 * @param $key
 	 */
-	private function deleteMarkedWritersToDelete(&$writers, $key){
-		foreach ($writers as $writer){
-			if ($writer[self::TO_DELETE]){
+	private function deleteMarkedWritersToDelete(&$writers){
+		foreach ($writers  as $key => $writer){
+			if (isset($writer[self::TO_DELETE]) && $writer[self::TO_DELETE]){
 				unset($writers[$key]);
 			}
 		}
