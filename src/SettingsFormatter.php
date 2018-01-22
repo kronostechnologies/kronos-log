@@ -137,7 +137,7 @@ class SettingsFormatter {
 		$deactivate_array = $writer[self::WRITER_SETTINGS][self::DEACTIVATE_ONLY_WITH_FLAG] ?: [];
 
 		foreach($tool_log_modes as $tool_log_mode_name => $tool_log_mode){
-			$this->markToDelete($writers, $key, $tool_log_mode, ($tool_log_mode_name == 'active_modes') ? $activate_array : $deactivate_array);
+			$this->markToDelete($writers, $key, $tool_log_mode, ($tool_log_mode_name == 'active_modes') ? $deactivate_array : $activate_array);
 		}
 	}
 
