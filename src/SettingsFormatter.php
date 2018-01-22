@@ -19,13 +19,15 @@ class SettingsFormatter {
 	private $changes = [];
 
 	/**
-	 * @var null|\Tool
+	 * @var array
 	 */
-	private $tool = null;
+	private $tool_log_modes = [];
 
 	const WRITER_TYPE = 'type';
-
 	const WRITER_SETTINGS = 'settings';
+	const TO_DELETE = 'to_delete';
+	const ACTIVATE_ONLY_WITH_FLAG = 'activateOnlyWithFlag';
+	const DEACTIVATE_ONLY_WITH_FLAG = 'deactivateOnlyWithFlag';
 
 	/**
 	 * SettingsFormatter constructor.
@@ -33,84 +35,10 @@ class SettingsFormatter {
 	 * @param array $settings
 	 * @param array $changes
 	 */
-	public function __construct(array $settings = [], array $changes = [], \Tool $tool = null) {
+	public function __construct(array $settings = [], array $changes = [], array $tool_log_modes = []) {
 		$this->settings = $settings;
 		$this->changes = $changes;
-		$this->tool = $tool;
-	}
-
-	/**
-	 * @return array
-	 */
-	private function getToolCurrentLogModesTuple(){
-		$active_modes = [];
-		$inactive_modes = [];
-
-		$current_log_modes = [
-			'verbose' => $this->tool->isVerbose(),
-			'dry-run' => $this->tool->isDryRun(),
-			'debug' => $this->tool->isDebug()
-		];
-
-		foreach($current_log_modes as $log_mode => $is_activated){
-			if ($is_activated){
-				$active_modes[] = $log_mode;
-			}
-			else if (!$is_activated){
-				$inactive_modes[] = $log_mode;
-			}
-		}
-
-		return [
-			'active_modes' => $active_modes,
-			'inactive_modes' => $inactive_modes
-		];
-	}
-
-	/**
-	 * @param $writers
-	 * @param $writer
-	 * @param $key
-	 */
-	private function markUnallowedWritersToDelete(&$writers, &$writer, $key){
-		$writers[$key]['to_delete'] = false;
-
-		$tool_log_modes = $this->getToolCurrentLogModesTuple();
-
-		$activate_array = $writer[self::WRITER_SETTINGS]['activateOnlyWithFlag'] ?: [];
-		$deactivate_array = $writer[self::WRITER_SETTINGS]['deactivateOnlyWithFlag'] ?: [];
-
-		foreach($tool_log_modes as $tool_log_mode_name => $tool_log_mode){
-			$this->markToDelete($writers, $key, $tool_log_mode, ($tool_log_mode_name == 'active_modes') ? $activate_array : $deactivate_array);
-		}
-	}
-
-	/**
-	 * @param $writers
-	 * @param $key
-	 * @param $tool_log_modes
-	 * @param $config_log_modes
-	 */
-	private function markToDelete(&$writers, $key, $tool_log_modes, $config_log_modes){
-		if (!empty($tool_log_modes)){
-			foreach ($tool_log_modes as $tool_log_mode){
-				if (in_array($tool_log_mode, $config_log_modes)){
-					$writers[$key]['to_delete'] = true;
-				}
-			}
-		}
-	}
-
-	/**
-	 * @param $writers
-	 * @param $key
-	 */
-	private function deleteMarkedWritersToDelete(&$writers, $key){
-		foreach ($writers as $writer){
-			if ($writer['to_delete']){
-				unset($writers[$key]);
-			}
-		}
+		$this->tool_log_modes = $tool_log_modes;
 	}
 
 	/**
@@ -126,7 +54,7 @@ class SettingsFormatter {
 				if (!empty($this->settings)){
 					foreach($writers as $key => &$writer) {
 
-						if (!is_null($this->tool)) {
+						if (!empty($this->tool_log_modes)) {
 							$this->markUnallowedWritersToDelete($writers, $writer, $key);
 							$this->deleteMarkedWritersToDelete($writers, $key);
 						}
@@ -140,6 +68,7 @@ class SettingsFormatter {
 				}
 			}
 		}
+
 		return $writers;
 	}
 
@@ -165,5 +94,81 @@ class SettingsFormatter {
 	 */
 	public function setChanges(array $changes){
 		$this->changes = $changes;
+	}
+
+	/**
+	 * Returns a tuple of log modes arrays separated by whether or not they are activated.
+	 *
+	 * @return array
+	 */
+	private function getToolCurrentLogModesTuple(){
+		$active_modes = [];
+		$inactive_modes = [];
+
+		foreach($this->tool_log_modes as $log_mode => $is_activated){
+			if ($is_activated){
+				$active_modes[] = $log_mode;
+			}
+			else if (!$is_activated){
+				$inactive_modes[] = $log_mode;
+			}
+		}
+
+		return [
+			'active_modes' => $active_modes,
+			'inactive_modes' => $inactive_modes
+		];
+	}
+
+	/**
+	 * Takes the current log mode setup of a tool and compares it to the activateOnlyWith and deactivateOnlyWith flags in the settings.
+	 *
+	 * @param $writers
+	 * @param $writer
+	 * @param $key
+	 */
+	private function markUnallowedWritersToDelete(&$writers, &$writer, $key){
+		$writers[$key][self::TO_DELETE] = false;
+
+		$tool_log_modes = $this->getToolCurrentLogModesTuple();
+
+		$activate_array = $writer[self::WRITER_SETTINGS][self::ACTIVATE_ONLY_WITH_FLAG] ?: [];
+		$deactivate_array = $writer[self::WRITER_SETTINGS][self::DEACTIVATE_ONLY_WITH_FLAG] ?: [];
+
+		foreach($tool_log_modes as $tool_log_mode_name => $tool_log_mode){
+			$this->markToDelete($writers, $key, $tool_log_mode, ($tool_log_mode_name == 'active_modes') ? $activate_array : $deactivate_array);
+		}
+	}
+
+	/**
+	 * MArks writers for deletion.
+	 *
+	 * @param $writers
+	 * @param $key
+	 * @param $tool_log_modes
+	 * @param $config_log_modes
+	 */
+	private function markToDelete(&$writers, $key, $tool_log_modes, $config_log_modes){
+		if (!empty($tool_log_modes)){
+			foreach ($tool_log_modes as $tool_log_mode){
+				if (in_array($tool_log_mode, $config_log_modes)){
+					$writers[$key][self::TO_DELETE] = true;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Delete writers marked for deletion.
+	 *
+	 * @param $writers
+	 * @param $key
+	 */
+	private function deleteMarkedWritersToDelete(&$writers, $key){
+		foreach ($writers as $writer){
+			if ($writer[self::TO_DELETE]){
+				unset($writers[$key]);
+			}
+		}
 	}
 }
