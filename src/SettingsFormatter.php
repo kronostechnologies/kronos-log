@@ -28,6 +28,8 @@ class SettingsFormatter {
 	const TO_DELETE = 'to_delete';
 	const ACTIVATE_ONLY_WITH_FLAG = 'activateOnlyWithFlag';
 	const DEACTIVATE_ONLY_WITH_FLAG = 'deactivateOnlyWithFlag';
+	const ACTIVE_MODES = 'active_modes';
+	const INACTIVE_MODES = 'inactive_modes';
 
 	/**
 	 * SettingsFormatter constructor.
@@ -116,8 +118,8 @@ class SettingsFormatter {
 		}
 
 		return [
-			'active_modes' => $active_modes,
-			'inactive_modes' => $inactive_modes
+			self::ACTIVE_MODES => $active_modes,
+			self::INACTIVE_MODES => $inactive_modes
 		];
 	}
 
@@ -137,23 +139,35 @@ class SettingsFormatter {
 		$deactivate_array = $writer[self::WRITER_SETTINGS][self::DEACTIVATE_ONLY_WITH_FLAG] ?: [];
 
 		foreach($tool_log_modes as $tool_log_mode_name => $tool_log_mode){
-			$this->markToDelete($writers, $key, $tool_log_mode, ($tool_log_mode_name == 'active_modes') ? $deactivate_array : $activate_array);
+			$this->markToDelete($writers, $key, $tool_log_mode, ($tool_log_mode_name == self::ACTIVE_MODES) ? $deactivate_array : $activate_array, $tool_log_mode_name);
 		}
 	}
 
 	/**
-	 * MArks writers for deletion.
+	 * Marks writers for deletion.
 	 *
 	 * @param $writers
 	 * @param $key
 	 * @param $tool_log_modes
 	 * @param $config_log_modes
 	 */
-	private function markToDelete(&$writers, $key, $tool_log_modes, $config_log_modes){
+	private function markToDelete(&$writers, $key, $tool_log_modes, $config_log_modes, $tool_log_mode_name){
 		if (!empty($tool_log_modes)){
-			foreach ($tool_log_modes as $tool_log_mode){
-				if (in_array($tool_log_mode, $config_log_modes)){
-					$writers[$key][self::TO_DELETE] = true;
+			if ($tool_log_mode_name == self::INACTIVE_MODES){
+				foreach ($tool_log_modes as $tool_log_mode){
+					foreach ($config_log_modes as $config_log_mode){
+						if ($tool_log_mode == $config_log_mode){
+							$writers[$key][self::TO_DELETE] = true;
+						}
+						return;
+					}
+				}
+			}
+			else{
+				foreach ($tool_log_modes as $tool_log_mode){
+					if (in_array($tool_log_mode, $config_log_modes)){
+						$writers[$key][self::TO_DELETE] = true;
+					}
 				}
 			}
 		}
