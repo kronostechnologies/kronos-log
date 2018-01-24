@@ -3,6 +3,7 @@
 namespace Kronos\Log\Writer;
 
 use Kronos\Log\AbstractWriter;
+use Kronos\Log\ContextStringifier;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
 use Kronos\Log\Exception\ExceptionTraceBuilder;
@@ -47,17 +48,26 @@ class LogDNA extends AbstractWriter {
 	private $trace_builder;
 
 	/**
-	 * LogDNA constructor.
-	 * @param string $hostname
-	 * @param string $application
-	 * @param string $ingestionKey
-	 * @param array $guzzleOptions
-	 * @param GuzzleFactory $guzzleFactory
+	 * @var ContextStringifier
 	 */
-	public function __construct($hostname, $application, $ingestionKey, $guzzleOptions = [], Factory\Guzzle $guzzleFactory = null, ExceptionTraceBuilder $trace_builder = null) {
+	private $contextStringifier;
+
+	/**
+	 * LogDNA constructor.
+	 * @param $hostname
+	 * @param $application
+	 * @param $ingestionKey
+	 * @param array $guzzleOptions
+	 * @param Factory\Guzzle|null $guzzleFactory
+	 * @param ExceptionTraceBuilder|null $trace_builder
+	 * @param ContextStringifier|null $contextStringifier
+	 */
+	public function __construct($hostname, $application, $ingestionKey, $guzzleOptions = [], Factory\Guzzle $guzzleFactory = null, ExceptionTraceBuilder $trace_builder = null, ContextStringifier $contextStringifier = null) {
 		$this->hostname = $hostname;
 		$this->application = $application;
 		$this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
+
+		$this->contextStringifier = $contextStringifier ?: new ContextStringifier();
 
 		$this->createGuzzleClient($ingestionKey, $guzzleOptions, $guzzleFactory);
 	}
@@ -124,28 +134,11 @@ class LogDNA extends AbstractWriter {
 	 * @return array whatever $metadata is
 	 */
 	private function processMetadata(array $context = []) {
-
-		$metadata = [];
-
-		if (isset($context[self::METADATA_USER])){
-			$metadata[self::METADATA_CONTEXT][self::METADATA_USER] = $context[self::METADATA_USER];
-			unset($context[self::METADATA_USER]);
-		}
-
-		if (!empty($context)){
-			foreach ($context as $key => $val){
-				if ($key != self::METADATA_EXCEPTION && $key != self::METADATA_USER){
-					$metadata[self::METADATA_CONTEXT][$key] = (string) $val;
-					unset($context[$key]);
-				}
-			}
-		}
-
 		$exception_context = $this->replaceException($context);
-		if (!empty($exception_context)){
-			$metadata[self::METADATA_CONTEXT][self::METADATA_EXCEPTION] = $exception_context;
-			unset($context[self::METADATA_EXCEPTION]);
-		}
+
+		$metadata = [
+			self::METADATA_CONTEXT => $this->contextStringifier->stringifyArray($exception_context)
+		];
 
 		return $metadata;
 	}
@@ -157,10 +150,10 @@ class LogDNA extends AbstractWriter {
 	private function replaceException($context) {
 		if(isset($context['exception']) && $context['exception'] instanceof \Exception) {
 			$exception = $context['exception'];
-			unset($context['exception']);
+			$context['exception'] = [];
 
-			$context['message'] = $exception->getMessage();
-			$context['stacktrace'] = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
+			$context['exception']['message'] = $exception->getMessage();
+			$context['exception']['stacktrace'] = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
 		}
 
 		return $context;
