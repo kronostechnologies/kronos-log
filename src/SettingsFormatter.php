@@ -58,6 +58,7 @@ class SettingsFormatter {
 
                         if (!empty($this->tool_log_modes)) {
                             $this->markUnallowedWritersToDelete($writers, $writer, $key);
+                            $this->setIncludeDebugLevel($writer, $this->tool_log_modes['debug']);
                         }
 
                         $this->deleteMarkedWritersToDelete($writers);
@@ -75,6 +76,13 @@ class SettingsFormatter {
         return $writers;
     }
 
+    /**
+     * @param $writer
+     * @param $tool_debug_value
+     */
+    private function setIncludeDebugLevel(&$writer, $tool_debug_value){
+        $writer[self::WRITER_SETTINGS]['includeDebugLevel'] = $tool_debug_value;
+    }
 
     /**
      * Gets the writers options of the 'log' config settings
