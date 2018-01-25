@@ -52,11 +52,10 @@ class SettingsFormatter {
 		$writers = $this->getWriters();
 
 		if (!empty($writers)){
-			$active_tool_log_modes = $this->getActiveToolLogModes();
-			$writers = $this->markUnallowedWritersToDelete($writers, $active_tool_log_modes);
-			$writers = $this->deleteMarkedWritersToDelete($writers);
-
 			if (!empty($this->tool_log_modes)) {
+				$active_tool_log_modes = $this->getActiveToolLogModes();
+				$writers = $this->markUnallowedWritersToDelete($writers, $active_tool_log_modes);
+				$writers = $this->deleteMarkedWritersToDelete($writers);
 				$writers = $this->setIncludeDebugLevelForWriters($writers);
 			}
 
@@ -161,8 +160,8 @@ class SettingsFormatter {
 		$writers_array = $writers;
 
 		foreach ($writers_array as $key => $writer){
-			$config_activate_with_flags = $writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG];
-			$config_deactivate_with_flags = $writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG];
+			$config_activate_with_flags = isset($writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG]) ? $writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG] : [];
+			$config_deactivate_with_flags = isset($writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG]) ? $writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG] : [];
 			$to_delete = false;
 
 			if (empty($config_activate_with_flags) && empty($config_deactivate_with_flags)){
