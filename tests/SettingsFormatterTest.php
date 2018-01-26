@@ -111,66 +111,444 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->thenAnArrayOfLogWritersWithAllDeletionMarkersSetToFalse(), $writers);
 	}
 
-	public function test_givenWritersWithNoActivateWithFlagAndDeactivateWithFlagSettings_markUnallowedWritersToDelete_willReturnTheWritersWithNoneMarkedAsToDelete(){
-		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
-
-		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$this->anArrayOfLogWritersWithNoActivateWithFlagAndDeactivateWithFlagOptions(), $this->thenAnArrayOfMultipleActiveToolLogModes()]);
-
-		$this->assertEquals($this->anArrayOfLogWritersWithNoActivateWithFlagAndDeactivateWithFlagOptions(), $writers);
+	// UTIL FUNCTIONS
+	private function aBasicLogConfigSettingsArrayWithNoActivateWithOrDeactivateWithOptions(){
+		return [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true
+				]
+			]
+		];
 	}
 
-	public function test_givenWritersWithDebugActiveFlagAndDryRunToolLogMode_markUnallowedWritersToDelete_willReturnAWritersArrayWithItMarkedAsToDelete(){
-		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
-
-		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$this->givenAnArrayOfLogWriterWithActivateWithDebugFlag(), ['dry-run']]);
-
-		$this->assertEquals($this->thenAnArrayOfLogWritersWithOnlyAWriterHavingItsDeletionMarkerToTrue(), $writers);
+	private function addOptionToLogConfigSettingsArray($option, $value = []){
+		return $this->aBasicLogConfigSettingsArrayWithNoActivateWithOrDeactivateWithOptions()['settings'][$option] = $value;
 	}
 
-	public function test_givenWritersWithDebugActiveFlagAndDebugToolLogMode_markUnallowedWritersToDelete_willReturnAWritersArrayWithItNotMarkedAsToDelete(){
-		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+	private function addActivateWithFlagOptions($options = []){
+		if (!is_array($options)){
+			$options = [$options];
+		}
 
-		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$this->givenAnArrayOfLogWriterWithActivateWithDebugFlag(), ['debug']]);
-
-		$this->assertEquals($this->thenAnArrayOfLogWritersWithOnlyAWriterHavingItsDeletionMarkerToFalse2(), $writers);
+		return $this->addOptionToLogConfigSettingsArray('activateWithFlag', $options);
 	}
 
-	public function test_givenWritersWithDebugDeactivateWithFlagSettingsAndDryRunToolLogMode_markUnallowedWritersToDelete_willReturnAWritersArrayWithItNotMarkedAsToDelete(){
-		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+	private function addDeactivateWithFlagOptions($options = []){
+		if (!is_array($options)){
+			$options = [$options];
+		}
 
-		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$this->givenAnArrayOfLogWriterWithDeActivateWithDebugFlag(), ['dry-run']]);
-
-		$this->assertEquals($this->thenAnArrayOfLogWriterWithDeActivateWithToDeleteFlagSetToFalse(), $writers);
+		return $this->addOptionToLogConfigSettingsArray('deactivateWithFlag', $options);
 	}
 
-	/**
-	 * Call protected/private method of a class.
-	 *
-	 * @param object &$object    Instantiated object that we will run method on.
-	 * @param string $methodName Method name to call
-	 * @param array  $parameters Array of parameters to pass into method.
-	 *
-	 * @return mixed Method return.
-	 */
-	private function invokeMethod(&$object, $methodName, array $parameters = array())
-	{
-		$reflection = new \ReflectionClass(get_class($object));
-		$method = $reflection->getMethod($methodName);
-		$method->setAccessible(true);
+	private function addToDeleteMarkerToLogConfigSettingsArray($settings_array = [], $to_delete = true){
+		return $settings_array['to_delete'] = $to_delete;
+	}
 
-		return $method->invokeArgs($object, $parameters);
+	// if (empty($config_activate_with_flags) && empty($config_deactivate_with_flags))
+	public function test_markUnallowedWritersToDelete8(){
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$this->aBasicLogConfigSettingsArrayWithNoActivateWithOrDeactivateWithOptions(), ['dry-run']]);
+
+		$this->assertEquals($this->aBasicLogConfigSettingsArrayWithNoActivateWithOrDeactivateWithOptions(), $writers);
+	}
+
+	// else if(empty($config_activate_with_flags) && !empty($config_deactivate_with_flags))
+	public function test_markUnallowedWritersToDelete4(){
+		$array = $this->addDeactivateWithFlagOptions()
+
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'deactivateWithFlag' => ['verbose', 'debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'deactivateWithFlag' => ['verbose', 'debug']
+				],
+				'to_delete' => false
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete5(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'deactivateWithFlag' => ['verbose', 'debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'deactivateWithFlag' => ['verbose', 'debug']
+				],
+				'to_delete' => true
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run', 'verbose']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete6(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'deactivateWithFlag' => ['verbose', 'debug', 'dry-run']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'deactivateWithFlag' => ['verbose', 'debug', 'dry-run']
+				],
+				'to_delete' => true
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run', 'verbose']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	// if (!empty($config_activate_with_flags) && empty($config_deactivate_with_flags))
+	public function test_markUnallowedWritersToDelete7aaa(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['verbose', 'debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['verbose', 'debug']
+				],
+				'to_delete' => false
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['verbose']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete7(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['verbose', 'debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['verbose', 'debug']
+				],
+				'to_delete' => false
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run', 'verbose']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete7b(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['verbose', 'debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['verbose', 'debug']
+				],
+				'to_delete' => true
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	// else if(!empty($config_activate_with_flags) && !empty($config_deactivate_with_flags))
+	public function test_markUnallowedWritersToDelete1(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['debug']
+				],
+				'to_delete' => false
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete2(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['debug']
+				],
+				'to_delete' => true
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['debug']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete3(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['verbose', 'debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['verbose', 'debug']
+				],
+				'to_delete' => true
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['debug']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete3v(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['verbose', 'debug']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['verbose', 'debug']
+				],
+				'to_delete' => true
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run', 'debug']]);
+
+		$this->assertEquals($b, $writers);
+	}
+
+	public function test_markUnallowedWritersToDelete3vv(){
+		$a = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['verbose', 'debug', 'dry-run']
+				]
+			]
+		];
+
+		$b = [
+			[
+				'type' => 'file',
+				'settings' => [
+					'setting1' => '/path/to/some/file.log',
+					'setting2' => true,
+					'setting3' => true,
+					'activateWithFlag' => ['dry-run'],
+					'deactivateWithFlag' => ['verbose', 'debug', 'dry-run']
+				],
+				'to_delete' => true
+			]
+		];
+
+
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
+
+		$writers = $this->invokeMethod($settings_formatter, 'markUnallowedWritersToDelete', [$a, ['dry-run']]);
+
+		$this->assertEquals($b, $writers);
 	}
 
 	private function thenAnArrayOfActiveToolLogMode(){
 		return ['debug'];
-	}
-
-	private function thenAnArrayOfMultipleActiveToolLogModes(){
-		return ['debug', 'verbose'];
-	}
-
-	private function thenAnArrayOfInactiveToolLogModes(){
-		return ['verbose', 'dry-run'];
 	}
 
 	private function givenToolLogModesArray(){
@@ -191,18 +569,6 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 		];
 	}
 
-	private function anArrayOfLogWritersWithNoActivateWithFlagAndDeactivateWithFlagOptions(){
-		return  [
-			[
-				'type' => 'file',
-				'settings' => [
-					'setting1' => '/path/to/some/file.log',
-					'setting2' => true,
-				]
-			]
-		];
-	}
-
 	private function givenAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse(){
 		return  [
 			[
@@ -212,49 +578,6 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 					'setting2' => true,
 					'includeDebugLevel' => false
 				]
-			]
-		];
-	}
-
-	private function givenAnArrayOfLogWriterWithActivateWithDebugFlag(){
-		return  [
-			[
-				'type' => 'file',
-				'settings' => [
-					'setting1' => '/path/to/some/file.log',
-					'setting2' => true,
-					'setting3' => true,
-					'activateWithFlag' => ['debug']
-				]
-			]
-		];
-	}
-
-	private function givenAnArrayOfLogWriterWithDeActivateWithDebugFlag(){
-		return  [
-			[
-				'type' => 'file',
-				'settings' => [
-					'setting1' => '/path/to/some/file.log',
-					'setting2' => true,
-					'setting3' => true,
-					'deactivateWithFlag' => ['debug']
-				]
-			]
-		];
-	}
-
-	private function thenAnArrayOfLogWriterWithDeActivateWithToDeleteFlagSetToFalse(){
-		return  [
-			[
-				'type' => 'file',
-				'settings' => [
-					'setting1' => '/path/to/some/file.log',
-					'setting2' => true,
-					'setting3' => true,
-					'deactivateWithFlag' => ['debug']
-				],
-				'to_delete' => false
 			]
 		];
 	}
@@ -343,36 +666,6 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 		];
 	}
 
-	private function thenAnArrayOfLogWritersWithOnlyAWriterHavingItsDeletionMarkerToTrue(){
-		return  [
-			[
-				'type' => 'file',
-				'settings' => [
-					'setting1' => '/path/to/some/file.log',
-					'setting2' => true,
-					'setting3' => true,
-					'activateWithFlag' => ['debug']
-				],
-				'to_delete' => true
-			]
-		];
-	}
-
-	private function thenAnArrayOfLogWritersWithOnlyAWriterHavingItsDeletionMarkerToFalse2(){
-		return  [
-			[
-				'type' => 'file',
-				'settings' => [
-					'setting1' => '/path/to/some/file.log',
-					'setting2' => true,
-					'setting3' => true,
-					'activateWithFlag' => ['debug']
-				],
-				'to_delete' => false
-			]
-		];
-	}
-
 	private function givenAConfigStruct(){
 		return ['writers' => [
 						[
@@ -438,19 +731,6 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 			];
 	}
 
-	private function thenAnArrayOfLogWriter(){
-		return  [
-			[
-				'type' => 'file',
-				'settings' => [
-					'setting1' => '/path/to/some/file.log',
-					'setting2' => true,
-					'setting3' => true
-				]
-			]
-		];
-	}
-
 	private function thenAnArrayOfLogWritersWithSomeChanges(){
 		return  [
 			[
@@ -514,5 +794,22 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 				]
 			],
 		];
+	}
+
+	/**
+	 * Call protected/private method of a class.
+	 *
+	 * @param object &$object    Instantiated object that we will run method on.
+	 * @param string $methodName Method name to call
+	 * @param array  $parameters Array of parameters to pass into method.
+	 *
+	 * @return mixed Method return.
+	 */
+	private function invokeMethod(&$object, $methodName, array $parameters = []){
+		$reflection = new \ReflectionClass(get_class($object));
+		$method = $reflection->getMethod($methodName);
+		$method->setAccessible(true);
+
+		return $method->invokeArgs($object, $parameters);
 	}
 }
