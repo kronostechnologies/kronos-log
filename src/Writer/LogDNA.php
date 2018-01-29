@@ -169,7 +169,8 @@ class LogDNA extends AbstractWriter {
 		$baseOptions = [
 			'headers' => [
 				'Content-Type' => 'application/json',
-				'apikey' => $ingestionKey
+				'apikey' => $ingestionKey,
+				'Connection' => 'keep-alive'
 			],
 			'base_uri' => self::LOGDNA_URL
 		];
