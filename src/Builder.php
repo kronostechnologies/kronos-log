@@ -5,6 +5,7 @@ namespace Kronos\Log;
 use Kronos\Log\Builder\Strategy\Selector;
 use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\Logger as LoggerFactory;
+use phpDocumentor\Reflection\Types\Context;
 
 class Builder {
 

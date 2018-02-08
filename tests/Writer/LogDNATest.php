@@ -2,6 +2,8 @@
 
 namespace Kronos\Tests\Log\Writer;
 
+use Kronos\Log\ContextStringifier;
+use Kronos\Log\Exception\ExceptionTraceBuilder;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
@@ -26,6 +28,8 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	const CUSTOM_HEADER = 'X-Foo';
 	const PROXY = 'tcp://localhost:8125';
 	const TIMEOUT = 3.14;
+	const STINGIFYIED_CONTEXT = ['field' => 'stringified value'];
+	const EXCEPTION_TRACE = 'exception trace';
 
 	/**
 	 * @var LogDNA
@@ -42,6 +46,16 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	 */
 	private $client;
 
+	/**
+	 * @var \PHPUnit_Framework_MockObject_MockObject|ExceptionTraceBuilder
+	 */
+	private $exception_trace_builder;
+
+	/**
+	 * @var \PHPUnit_Framework_MockObject_MockObject
+	 */
+	private $context_stringifier;
+
 	public function setUp() {
 		$this->client = $this->getMockBuilder(\GuzzleHttp\Client::class)
 			->disableOriginalConstructor()
@@ -50,6 +64,9 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 
 		$this->factory = $this->getMock(Factory\Guzzle::class);
 		$this->factory->method('createClient')->willReturn($this->client);
+
+		$this->exception_trace_builder = $this->getMockWithoutInvokingTheOriginalConstructor(ExceptionTraceBuilder::class);
+		$this->context_stringifier = $this->getMockWithoutInvokingTheOriginalConstructor(ContextStringifier::class);
 	}
 
 	public function test_constructor_ShouldCreateGuzzleClient() {
@@ -59,12 +76,13 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 			->with([
 				'headers' => [
 					'Content-Type' => 'application/json',
-					'apikey' => self::INGESTION_KEY
+					'apikey' => self::INGESTION_KEY,
+					'Connection' => 'keep-alive'
 				],
 				'base_uri' => LogDNA::LOGDNA_URL
 			]);
 
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory, $this->exception_trace_builder, $this->context_stringifier);
 	}
 
 	public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions() {
@@ -75,6 +93,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 				'headers' => [
 					'Content-Type' => 'application/json',
 					'apikey' => self::INGESTION_KEY,
+					'Connection' => 'keep-alive',
 					self::CUSTOM_HEADER => self::CUSTOM_HEADER_VALUE
 				],
 				'base_uri' => LogDNA::LOGDNA_URL,
@@ -91,10 +110,20 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 			'timeout' => self::TIMEOUT
 		];
 
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions, $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions, $this->factory, $this->exception_trace_builder, $this->context_stringifier);
 	}
 
-	public function test_Writer_log_ShouldPostMessage() {
+	public function test_Context_log_ShouldStringifyContext() {
+		$this->context_stringifier
+			->expects(self::once())
+			->method('stringifyArray')
+			->with(self::CONTEXT);
+		$this->givenWriter();
+
+		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, self::CONTEXT);
+	}
+
+	public function test_StringifiedContext_log_ShouldPostMessage() {
 		$this->client
 			->expects(self::once())
 			->method('post')
@@ -106,12 +135,13 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 							'line' => self::MESSAGE,
 							'app' => self::APPLICATION,
 							'level' => self::ANY_LOG_LEVEL,
-							'meta' => self::CONTEXT
+							'meta' => [LogDNA::METADATA_CONTEXT => self::STINGIFYIED_CONTEXT]
 						]
 					]
 				]]
 			);
 		$this->givenWriter();
+		$this->givenStringifiedContext();
 
 		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, self::CONTEXT);
 	}
@@ -128,12 +158,13 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 							'line' => self::INTERPOLATED_MESSAGE,
 							'app' => self::APPLICATION,
 							'level' => self::ANY_LOG_LEVEL,
-							'meta' => self::CONTEXT
+							'meta' => [LogDNA::METADATA_CONTEXT => self::STINGIFYIED_CONTEXT]
 						]
 					]
 				]]
 			);
 		$this->givenWriter();
+		$this->givenStringifiedContext();
 
 		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE_WITH_INTERPOLATION, self::CONTEXT);
 	}
@@ -167,53 +198,39 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function test_ExceptionInContext_log_ShouldReplaceExceptionWithMessageAndAddStacktrace() {
-		$exception = new \Exception('exception message');
-		$this->client
+		$exception = new TestableException('exception message');
+		$this->exception_trace_builder
 			->expects(self::once())
-			->method('post')
-			->with(
-				$this->anything(),
-				['json' => [
-					'lines' => [
-						[
-							'line' => self::MESSAGE,
-							'app' => self::APPLICATION,
-							'level' => self::ANY_LOG_LEVEL,
-							'meta' => [
-								'exception' => $exception->getMessage(),
-								'stacktrace' => $exception->getTraceAsString()
-							]
-						]
-					]
-				]]
-			);
+			->method('getTraceAsString')
+			->with($exception)
+			->willReturn(self::EXCEPTION_TRACE);
+		$this->context_stringifier
+			->expects(self::once())
+			->method('stringifyArray')
+			->with([
+				'exception' => [
+					'message' => $exception->getMessage(),
+					'stacktrace' => self::EXCEPTION_TRACE
+				]
+			]);
 		$this->givenWriter();
 
 		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
 	}
 
 	public function test_ExceptionStringInContext_log_ShouldKeepExceptionText() {
-		$this->client
+		$this->exception_trace_builder
+			->expects(self::never())
+			->method('getTraceAsString');
+		$this->context_stringifier
 			->expects(self::once())
-			->method('post')
-			->with(
-				$this->anything(),
-				['json' => [
-					'lines' => [
-						[
-							'line' => self::MESSAGE,
-							'app' => self::APPLICATION,
-							'level' => self::ANY_LOG_LEVEL,
-							'meta' => [
-								'exception' => self::SOME_TEXT,
-							]
-						]
-					]
-				]]
-			);
+			->method('stringifyArray')
+			->with([
+				'exception' => 'message'
+			]);
 		$this->givenWriter();
 
-		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => self::SOME_TEXT]);
+		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => 'message']);
 	}
 
 	public function test_GuzzleClientThrowException_log_ShouldDoNothing() {
@@ -223,14 +240,81 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 		$this->givenWriter();
 
 		$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
-
 	}
 
 	private function givenWriter() {
-		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory);
+		$this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory, $this->exception_trace_builder, $this->context_stringifier);
 	}
 
 	private function buildUriRegex($uri) {
 		return '/'.str_replace(['?', '/', '.'], ['\?', '\/', '\.'], $uri).'/';
+	}
+
+	protected function givenStringifiedContext() {
+		$this->context_stringifier
+			->method('stringifyArray')
+			->willReturn(self::STINGIFYIED_CONTEXT);
+	}
+}
+
+class TestableException extends \Exception {
+
+	public function getExceptionTrace(){
+		return [
+			0 => [
+				'file' => '/path/to/file/TestClass.php',
+				'line' => 20,
+				'function' => 'testFunction',
+				'class' => 'TestClass',
+				'type' => '->',
+				'args' => [
+					0 => 1,
+					1 => 2,
+					2 => [
+						'test' => 'test_value'
+					],
+				],
+			],
+			1 => [
+				'file' => '/path/to/file/Tool.php',
+				'line' => 478,
+				'function' => 'runTool',
+				'class' => 'TestClass',
+				'type' => '->',
+				'args' => [],
+			],
+			2 => [
+				'file' => '/path/to/file/CLI.php',
+				'line' => 197,
+				'function' => 'run',
+				'class' => 'Tool',
+				'type' => '->',
+				'args' => [],
+			],
+			3 => [
+				'file' => '/path/to/file/CLI.php',
+				'line' => 59,
+				'function' => 'runTool',
+				'class' => 'CLI',
+				'type' => '->',
+				'args' => [],
+			],
+			4 => [
+				'file' => '/path/to/file/tool.php',
+				'line' => 35,
+				'function' => 'run',
+				'class' => 'CLI',
+				'type' => '->',
+				'args' => [],
+			],
+			5 => [
+				'file' => '/path/to/file/tool',
+				'line' => 4,
+				'function' => 'includeTest',
+				'args' => [
+					0 => '/path/to/file/tool.php'
+				],
+			]
+		];
 	}
 }

@@ -96,7 +96,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase {
 
 	public function test_ConsolePrependingLogLevelAndDateTime_LogWithLevelBelowError_ShouldCallWriteWithMessagePrependedByDateTimeThenLogLevel() {
 		$this->givenFactoryReturnFileAdaptors();
-		$this->expectsWriteToBeCalled($this->stdout, $this->matchesRegularExpression('/'.self::DATETIME_REGEX.' '.self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL.'/'));
+		$this->expectsWriteToBeCalled($this->stdout, $this->matchesRegularExpression('/'.self::DATETIME_REGEX.''.self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL.'/'));
 		$this->writer = new Console($this->factory);
 		$this->writer->setPrependLogLevel();
 		$this->writer->setPrependDateTime();

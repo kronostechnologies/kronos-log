@@ -56,7 +56,11 @@ class Writer {
 	 * @return Console
 	 */
 	public function createConsoleWriter() {
-		return new Console($this->getFileFactory());
+		$writer = new Console($this->getFileFactory());
+		$writer->setPrependDateTime();
+		$writer->setPrependLogLevel();
+
+		return $writer;
 	}
 
 	/**

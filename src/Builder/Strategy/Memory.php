@@ -12,8 +12,8 @@ class Memory extends AbstractWriter {
 	 */
 	private $factory;
 
-	public function __construct(WriterFactory $factory) {
-		$this->factory = $factory;
+	public function __construct(WriterFactory $factory = null) {
+		$this->factory = is_null($factory) ? new WriterFactory() : $factory;
 	}
 
 	/**
