@@ -31,17 +31,7 @@ class LogLocator {
 	 */
 	public static function getLogger() {
 		if(!self::isLoggerSet()) {
-			$settings = [
-				[
-					'type' => \Kronos\Log\Enumeration\WriterTypes::FILE,
-					'settings' => [
-						'filename' => '/dev/null'
-					]
-				]
-			];
-
-			$builder = new \Kronos\Log\Builder();
-			self::setLogger($builder->buildFromArray($settings));
+			self::setLogger(new Logger());
 		}
 
 		return self::$logger;
