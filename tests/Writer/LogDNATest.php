@@ -76,7 +76,8 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 			->with([
 				'headers' => [
 					'Content-Type' => 'application/json',
-					'apikey' => self::INGESTION_KEY
+					'apikey' => self::INGESTION_KEY,
+					'Connection' => 'keep-alive'
 				],
 				'base_uri' => LogDNA::LOGDNA_URL
 			]);
@@ -92,6 +93,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase {
 				'headers' => [
 					'Content-Type' => 'application/json',
 					'apikey' => self::INGESTION_KEY,
+					'Connection' => 'keep-alive',
 					self::CUSTOM_HEADER => self::CUSTOM_HEADER_VALUE
 				],
 				'base_uri' => LogDNA::LOGDNA_URL,
