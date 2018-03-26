@@ -53,24 +53,24 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->thenAnArrayOfLogWritersWithOneOfTheWriterSettingSwappedOutForAnother(), $formatted_settings);
 	}
 
-	public function test_givenToolLogModesArray_getActiveToolLogModes_ShouldReturnAnArrayOfActiveToolLogModeNames(){
-		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct(), [], $this->givenToolLogModesArray());
+	public function test_givenLogFlagsArray_getActiveFlags_ShouldReturnAnArrayOfActiveLogFlagNames(){
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct(), [], $this->givenLogFlagsArray());
 
-		$active_modes = $this->invokeMethod($settings_formatter, 'getActiveToolLogModes');
+		$active_modes = $this->invokeMethod($settings_formatter, 'getActiveFlags');
 
-		$this->assertEquals($this->thenAnArrayOfActiveToolLogMode(), $active_modes);
+		$this->assertEquals($this->thenAnArrayOfActiveLogFlag(), $active_modes);
 	}
 
-	public function test_givenToolLogModesArrayAllSetToFalse_getActiveToolLogModes_ShouldReturnAnEmptyArray(){
-		$settings_formatter = new SettingsFormatter($this->givenAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse(), [], $this->givenToolLogModesFalseArray());
+	public function test_givenLogFlagsArrayAllSetToFalse_getActiveFlags_ShouldReturnAnEmptyArray(){
+		$settings_formatter = new SettingsFormatter($this->givenAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse(), [], $this->givenLogFlagsFalseArray());
 
-		$active_modes = $this->invokeMethod($settings_formatter, 'getActiveToolLogModes');
+		$active_modes = $this->invokeMethod($settings_formatter, 'getActiveFlags');
 
-		$this->assertEquals(self::NO_TOOL_LOG_ACTIVE_MODES, $active_modes);
+		$this->assertEquals(self::NO_LOG_ACTIVE_MODES, $active_modes);
 	}
 
-	public function test_givenToolLogModeSetToDebugAndAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse_setIncludeDebugLevelForWriters_shouldSetTheIncludeDebugLevelSettingToTrue(){
-		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct(), [], $this->givenToolLogModesArray());
+	public function test_givenLogFlagSetToDebugAndAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse_setIncludeDebugLevelForWriters_shouldSetTheIncludeDebugLevelSettingToTrue(){
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct(), [], $this->givenLogFlagsArray());
 
 		$writers = $this->invokeMethod($settings_formatter, 'setIncludeDebugLevelForWriters', [$this->givenAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse()]);
 
@@ -79,8 +79,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($include_debug);
 	}
 
-	public function test_givenToolLogModesNotSetToDebugAndAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse_setIncludeDebugLevelForWriters_shouldNotSetTheIncludeDebugLevelSettingToTrue(){
-		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct(), [], $this->givenToolLogModesFalseArray());
+	public function test_givenLogFlagsNotSetToDebugAndAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse_setIncludeDebugLevelForWriters_shouldNotSetTheIncludeDebugLevelSettingToTrue(){
+		$settings_formatter = new SettingsFormatter($this->givenAConfigStruct(), [], $this->givenLogFlagsFalseArray());
 
 		$writers = $this->invokeMethod($settings_formatter, 'setIncludeDebugLevelForWriters', [$this->givenAnArrayOfLogWriterWithIncludeDebugLevelSetToFalse()]);
 
@@ -124,7 +124,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($settings_array_to_delete_false, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithTwoDeactivateWithFlagsAndToolLogModesHavingOneAllowedAndOneUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithTwoDeactivateWithFlagsAndLogFlagsHavingOneAllowedAndOneUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addDeactivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::VERBOSE, self::DEBUG]);
@@ -135,7 +135,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings_array_to_delete_true, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithThreeDeactivateWithFlagsAndToolLogModesHavingTwoUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithThreeDeactivateWithFlagsAndLogFlagsHavingTwoUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addDeactivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::VERBOSE, self::DEBUG, self::DRY_RUN]);
@@ -146,7 +146,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings_array_to_delete_true, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithTwoActivateWithFlagsAndToolLogModesHavingOneAllowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayNotMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithTwoActivateWithFlagsAndLogFlagsHavingOneAllowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayNotMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addActivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::VERBOSE, self::DEBUG]);
@@ -157,7 +157,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings_array_to_delete_false, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithTwoActivateWithFlagsAndToolLogModesHavingOneAllowedAndOneUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayNotMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithTwoActivateWithFlagsAndLogFlagsHavingOneAllowedAndOneUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayNotMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addActivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::VERBOSE, self::DEBUG]);
@@ -168,7 +168,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings_array_to_delete_false, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithTwoActivateWithFlagsAndToolLogModesHavingOneUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithTwoActivateWithFlagsAndLogFlagsHavingOneUnallowed_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addActivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::VERBOSE, self::DEBUG]);
@@ -180,7 +180,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	// else if(!empty($config_activate_with_flags) && !empty($config_deactivate_with_flags))
-	public function test_givenALogWriterConfigSettingsArrayWithBothActivateAndDeactivateWithFlagsAndAndAllowedToolLogMode_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayNotMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithBothActivateAndDeactivateWithFlagsAndAndAllowedLogFlag_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayNotMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addActivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::DRY_RUN]);
@@ -192,7 +192,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings_array_to_delete_false, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithBothActivateAndDeactivateWithFlagsAndAndUnallowedToolLogMode_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithBothActivateAndDeactivateWithFlagsAndAndUnallowedLogFlag_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addActivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::DRY_RUN]);
@@ -204,7 +204,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings_array_to_delete_true, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithOneActivateWithFlagAndTwoDeactivateWithFlagndUnallowedToolLogMode_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithOneActivateWithFlagAndTwoDeactivateWithFlagndUnallowedLogFlag_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addActivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::DRY_RUN]);
@@ -216,7 +216,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings_array_to_delete_true, $writers);
 	}
 
-	public function test_givenALogWriterConfigSettingsArrayWithOneActivateWithFlagAndTwoDeactivateWithFlagAndOneAllowedToolLogModeAndOneUnallowedToolLogMode_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
+	public function test_givenALogWriterConfigSettingsArrayWithOneActivateWithFlagAndTwoDeactivateWithFlagAndOneAllowedLogFlagAndOneUnallowedLogFlag_markUnallowedWritersToDelete_shouldReturnALogWritersSettingsArrayMarkedToDelete(){
         $settings_formatter = new SettingsFormatter($this->givenAConfigStruct());
 
         $settings_array = $this->addActivateWithFlagOptions(self::BASIC_LOG_WRITERS_CONFIG_SETTINGS, [self::DRY_RUN]);
@@ -247,7 +247,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
     const DRY_RUN = 'dry-run';
     const VERBOSE = 'verbose';
     const EMPTY_SETTINGS = [];
-    const NO_TOOL_LOG_ACTIVE_MODES = [];
+    const NO_LOG_ACTIVE_MODES = [];
     const BASIC_LOG_WRITERS_CONFIG_SETTINGS = [
         [
             'type' => 'file',
@@ -259,11 +259,11 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         ]
     ];
 
-	private function thenAnArrayOfActiveToolLogMode(){
+	private function thenAnArrayOfActiveLogFlag(){
 		return ['debug'];
 	}
 
-	private function givenToolLogModesArray(){
+	private function givenLogFlagsArray(){
 		return [
 			'verbose' => false,
 			'debug' => true,
@@ -272,7 +272,7 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 		];
 	}
 
-	private function givenToolLogModesFalseArray(){
+	private function givenLogFlagsFalseArray(){
 		return [
 			'verbose' => false,
 			'debug' => false,
