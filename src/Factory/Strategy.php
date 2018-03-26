@@ -3,6 +3,7 @@
 namespace Kronos\Log\Factory;
 
 use Kronos\Log\Builder\Strategy\Console;
+use Kronos\Log\Builder\Strategy\CustomWriter;
 use Kronos\Log\Builder\Strategy\File;
 use Kronos\Log\Builder\Strategy\LogDNA;
 use Kronos\Log\Builder\Strategy\Memory;
@@ -52,4 +53,11 @@ class Strategy {
 	public function createSyslogStrategy() {
 		return new Syslog();
 	}
+
+    /**
+     * @return CustomWriter
+     */
+	public function createCustomWriterStrategy() {
+        return new CustomWriter();
+    }
 }
