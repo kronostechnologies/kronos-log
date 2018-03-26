@@ -17,14 +17,6 @@ abstract class AbstractWriter implements Strategy {
 	 * @param array $settings Writer settings
 	 */
 	protected function setCommonSettings(\Kronos\Log\AbstractWriter $writer, array $settings) {
-
-		if(isset($settings[self::INCLUDE_DEBUG_LEVEL]) && $settings[self::INCLUDE_DEBUG_LEVEL]) {
-			$writer->setMinLevel(LogLevel::DEBUG);
-		}
-		elseif (isset($settings[self::INCLUDE_DEBUG_LEVEL]) && !$settings[self::INCLUDE_DEBUG_LEVEL]){
-			$writer->setMinLevel(LogLevel::INFO);
-		}
-
 		if(isset($settings[self::MIN_LEVEL])) {
 			$writer->setMinLevel($settings[self::MIN_LEVEL]);
 		}

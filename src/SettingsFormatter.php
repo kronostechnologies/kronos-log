@@ -2,6 +2,8 @@
 
 namespace Kronos\Log;
 
+use Psr\Log\LogLevel;
+
 /**
  * Class SettingsFormatter
  * @package Kronos\Log
@@ -33,33 +35,21 @@ class SettingsFormatter {
 	const TO_DELETE = 'to_delete';
 	const ACTIVATE_WITH_FLAG = 'activateWithFlag';
 	const DEACTIVATE_WITH_FLAG = 'deactivateWithFlag';
-	const ACTIVE_MODES = 'active_modes';
 
 	/**
 	 * SettingsFormatter constructor.
 	 *
 	 * @param array $settings
-	 * @param array $changes
-	 * @param array $flags
 	 */
-	public function __construct(array $settings = [], array $changes = [], array $flags = []) {
+	public function __construct(array $settings = []) {
 		$this->settings = $settings;
-		$this->writerSpecificChanges = $changes;
-		$this->flags = $flags;
 	}
 
     /**
-     * @param array $settings
-     */
-    public function setSettings($settings) {
-        $this->settings = $settings;
-    }
-
-    /**
-     * Sets the writer settings to change, using an array of the format
+     * Sets the writer specific settings to change, using an array of the format
      *
-     * ['writerName' => [
-     * 	    'settingName' => 'setting_value'
+     * ['type' => [
+     * 	    'settingName' => 'setting value'
      * 	  ]
      * ]
      *
@@ -70,9 +60,21 @@ class SettingsFormatter {
     }
 
     /**
+     * Change settings for all writers
+     *
+     * ['settingName' => 'setting value']
+     *
+     * @param array $globalChanges
+     */
+    public function setGlobalChanges(array $globalChanges)
+    {
+        $this->globalChanges = $globalChanges;
+    }
+
+    /**
      * @param array $flags
      */
-    public function setFlags($flags) {
+    public function setFlags(array $flags) {
         $this->flags = $flags;
     }
 
@@ -82,131 +84,60 @@ class SettingsFormatter {
 	 * @return array
 	 */
 	public function getFormattedSettings(){
-		$writers = $this->getWriters();
-
-		if (!empty($writers)){
-			if (!empty($this->flags)) {
-				$activeFlags = $this->getActiveFlags();
-				$writers = $this->markUnallowedWritersToDelete($writers, $activeFlags);
-				$writers = $this->deleteMarkedWritersToDelete($writers);
-				$writers = $this->setIncludeDebugLevelForWriters($writers);
-			}
-
-			$writers = $this->formatWritersSettings($writers);
-		}
-
-		return $writers;
+		$settings = $this->filterSettings($this->settings);
+		$settings = $this->applyGlobalChanges($settings);
+        return $this->applySpecificChanges($settings);
 	}
 
 	/**
-	 * Uses the changes array to modify or add to the log settings.
+	 * Compares active and inactive flags with allowed and unallowed flags in each of the writers' config.
 	 *
-	 * @param $writers
+	 * @param $settings
+	 * @param $flags
 	 * @return mixed
 	 */
-	private function formatWritersSettings($writers){
-		$writersArray = $writers;
+	private function filterSettings($settings){
+		foreach ($settings as $index => $writer){
+            $activationFlags = $this->getActivationFlags($writer);
+            $deactivationFlags = $this->getDeactivationFlags($writer);
 
-		if (!empty($this->writerSpecificChanges)){
-			foreach ($this->writerSpecificChanges as $writerType => $writerSettings){
-				if (!empty($this->settings)){
-					foreach($writersArray as $key => $writer) {
-						if ($writer[self::WRITER_TYPE] == $writerType){
-							foreach ($writerSettings as $settingName => $settingValue){
-								$writersArray[$key][self::WRITER_SETTINGS][$settingName] = $settingValue;
-							}
-						}
-					}
-				}
-			}
+			if(!empty($deactivationFlags) && $this->isAtLeastOneFlagInConfig($this->flags, $deactivationFlags)) {
+                unset($settings[$index]);
+            }
+            elseif (!empty($activationFlags) && $this->noFlagsAreInConfig($this->flags, $activationFlags)) {
+                unset($settings[$index]);
+            }
 		}
 
-		return $writersArray;
+		return $settings;
 	}
 
-    /**
-     * If the 'debug' flag is set, include the 'DEBUG' LogLevel in the writer
-     *
-     * @param $writers
-     * @return array
-     */
-	private function setIncludeDebugLevelForWriters($writers){
-		$writersArray = $writers;
+	public function applyGlobalChanges($settings) {
+	    foreach($settings as $index => $writer) {
+	        foreach($this->globalChanges as $settingName => $settingValue) {
+	            if(!isset($writer[self::WRITER_SETTINGS])) {
+                    $settings[$index][self::WRITER_SETTINGS] = [];
+                }
 
-		foreach ($writersArray as $key => $writer){
-			if ($this->flags['debug']){
-				$writersArray[$key][self::WRITER_SETTINGS]['includeDebugLevel'] = true;
-			}
-		}
+                $settings[$index][self::WRITER_SETTINGS][$settingName] = $settingValue;
+            }
+        }
 
-		return $writersArray;
-	}
+        return $settings;
+    }
 
-	/**
-	 * Gets the writers options of the 'log' config settings
-	 *
-	 * @return array
-	 */
-	public function getWriters(){
-		return (isset($this->settings['writers'])) ? $this->settings['writers'] : [];
-	}
+    public function applySpecificChanges($settings) {
+        foreach($settings as $index => $writer) {
+            foreach($this->writerSpecificChanges as $writerType => $changes) {
+                if($writer[self::WRITER_TYPE] == $writerType) {
+                    foreach($changes as $settingName => $settingValue) {
+                        $settings[$index][self::WRITER_SETTINGS][$settingName] = $settingValue;
+                    }
+                }
+            }
+        }
 
-	/**
-	 * Returns an array of active flags..
-	 *
-	 * @return array
-	 */
-	private function getActiveFlags(){
-		$activeFlags = [];
-
-		foreach($this->flags as $flag => $isActivated){
-			if ($isActivated){
-				$activeFlags[] = $flag;
-			}
-		}
-
-		return $activeFlags;
-	}
-
-	/**
-	 * Compares active and inactive tool_log_modes (verbose/debug/dry-run) with allowed and unallowed modes in each of the writers' config.
-	 *
-	 * @param $writers
-	 * @param $activeFlags
-	 * @return mixed
-	 */
-	private function markUnallowedWritersToDelete($writers, $activeFlags){
-		$writersArray = $writers;
-
-		foreach ($writersArray as $key => $writer){
-			$configActivatedWithFlags = isset($writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG]) ? $writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG] : [];
-			$configDeactivatedWithFlags = isset($writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG]) ? $writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG] : [];
-			$toDelete = false;
-
-			if (empty($configActivatedWithFlags) && empty($configDeactivatedWithFlags)){
-				continue;
-			}
-			else if(empty($configActivatedWithFlags) && !empty($configDeactivatedWithFlags)){
-				if ($this->isAtLeastOneFlagInConfig($activeFlags, $configDeactivatedWithFlags)){
-					$toDelete = true;
-				}
-			}
-			else if (!empty($configActivatedWithFlags) && empty($configDeactivatedWithFlags)){
-				if ($this->areAllFlagsNotInConfig($activeFlags, $configActivatedWithFlags)){
-					$toDelete = true;
-				}
-			}
-			else if(!empty($configActivatedWithFlags) && !empty($configDeactivatedWithFlags)){
-				if ($this->isAtLeastOneFlagInConfig($activeFlags, $configDeactivatedWithFlags)
-					|| $this->areAllFlagsNotInConfig($activeFlags, $configActivatedWithFlags)){
-					$toDelete = true;
-				}
-			}
-
-			$writersArray[$key][self::TO_DELETE] = $toDelete;
-		}
-
-		return $writersArray;
+        return $settings;
 	}
 
 	/**
@@ -227,25 +158,35 @@ class SettingsFormatter {
 	 * @param $config
 	 * @return bool
 	 */
-	private function areAllFlagsNotInConfig($activeFlags, $config){
+	private function noFlagsAreInConfig($activeFlags, $config){
 		return count(array_intersect($activeFlags, $config)) == 0;
 	}
 
     /**
-     * Remove writers marked for deletion.
-     *
-     * @param $writers
+     * @param $writer
      * @return array
      */
-	private function deleteMarkedWritersToDelete($writers){
-		$writersArray = $writers;
+    private function getActivationFlags($writer)
+    {
+        if(isset($writer[self::WRITER_SETTINGS]) && isset($writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG]) && is_array($writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG])) {
+            return $writer[self::WRITER_SETTINGS][self::ACTIVATE_WITH_FLAG];
+        }
+        else {
+            return [];
+        }
+    }
 
-		foreach ($writersArray  as $key => $writer){
-			if (isset($writer[self::TO_DELETE]) && $writer[self::TO_DELETE]){
-				unset($writersArray[$key]);
-			}
-		}
-
-		return $writersArray;
-	}
+    /**
+     * @param $writer
+     * @return array
+     */
+    private function getDeactivationFlags($writer)
+    {
+        if(isset($writer[self::WRITER_SETTINGS]) && isset($writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG]) && is_array($writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG])) {
+            return $writer[self::WRITER_SETTINGS][self::DEACTIVATE_WITH_FLAG];
+        }
+        else {
+            return [];
+        }
+    }
 }
