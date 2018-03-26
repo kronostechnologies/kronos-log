@@ -16,7 +16,12 @@ class SettingsFormatter {
 	/**
 	 * @var array
 	 */
-	private $changes = [];
+	private $writerSpecificChanges = [];
+
+    /**
+     * @var array
+     */
+	private $globalChanges = [];
 
 	/**
 	 * @var array
@@ -39,9 +44,37 @@ class SettingsFormatter {
 	 */
 	public function __construct(array $settings = [], array $changes = [], array $flags = []) {
 		$this->settings = $settings;
-		$this->changes = $changes;
+		$this->writerSpecificChanges = $changes;
 		$this->flags = $flags;
 	}
+
+    /**
+     * @param array $settings
+     */
+    public function setSettings($settings) {
+        $this->settings = $settings;
+    }
+
+    /**
+     * Sets the writer settings to change, using an array of the format
+     *
+     * ['writerName' => [
+     * 	    'settingName' => 'setting_value'
+     * 	  ]
+     * ]
+     *
+     * @param array $writerSpecificChanges
+     */
+    public function setWriterSpecificChanges(array $writerSpecificChanges) {
+        $this->writerSpecificChanges = $writerSpecificChanges;
+    }
+
+    /**
+     * @param array $flags
+     */
+    public function setFlags($flags) {
+        $this->flags = $flags;
+    }
 
 	/**
 	 * Returns a formatted array of settings for the log writer builder.
@@ -74,8 +107,8 @@ class SettingsFormatter {
 	private function formatWritersSettings($writers){
 		$writersArray = $writers;
 
-		if (!empty($this->changes)){
-			foreach ($this->changes as $writerType => $writerSettings){
+		if (!empty($this->writerSpecificChanges)){
+			foreach ($this->writerSpecificChanges as $writerType => $writerSettings){
 				if (!empty($this->settings)){
 					foreach($writersArray as $key => $writer) {
 						if ($writer[self::WRITER_TYPE] == $writerType){
@@ -92,7 +125,7 @@ class SettingsFormatter {
 	}
 
     /**
-     * If the 'debug' tool log mode is set, include the 'DEBUG' LogLevel in the writer
+     * If the 'debug' flag is set, include the 'DEBUG' LogLevel in the writer
      *
      * @param $writers
      * @return array
@@ -116,20 +149,6 @@ class SettingsFormatter {
 	 */
 	public function getWriters(){
 		return (isset($this->settings['writers'])) ? $this->settings['writers'] : [];
-	}
-
-	/**
-	 * Sets the writer settings to change, using an array of the format
-	 *
-	 * ['writer_name' => [
-	 * 						'setting_name' => 'setting_value'
-	 * 					]
-	 * ]
-	 *
-	 * @param array $changes
-	 */
-	public function setChanges(array $changes){
-		$this->changes = $changes;
 	}
 
 	/**
