@@ -7,8 +7,6 @@ use Kronos\Log\Factory\Writer;
 
 interface Strategy {
 
-	public function __construct(Writer $writerFactory);
-
 	/**
 	 * @param array $settings
 	 * @return AbstractWriter
