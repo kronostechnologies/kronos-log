@@ -30,6 +30,11 @@ class SettingsFormatter {
 	 */
 	private $flags = [];
 
+    /**
+     * @var array
+     */
+	private $defaults = [];
+
 	const WRITER_TYPE = 'type';
 	const WRITER_SETTINGS = 'settings';
 	const TO_DELETE = 'to_delete';
@@ -72,12 +77,19 @@ class SettingsFormatter {
     }
 
     /**
+     * Default writer settings if they are not speficifed
+     * @param array $defaults
+     */
+    public function setDefaults(array $defaults) {
+        $this->defaults = $defaults;
+    }
+
+    /**
      * @param array $flags
      */
     public function setFlags(array $flags) {
         $this->flags = $flags;
     }
-
 	/**
 	 * Returns a formatted array of settings for the log writer builder.
 	 *
@@ -86,7 +98,8 @@ class SettingsFormatter {
 	public function getFormattedSettings(){
 		$settings = $this->filterSettings($this->settings);
 		$settings = $this->applyGlobalChanges($settings);
-        return $this->applySpecificChanges($settings);
+        $settings = $this->applySpecificChanges($settings);
+        return $this->applyDefaults($settings);
 	}
 
 	/**
@@ -139,6 +152,18 @@ class SettingsFormatter {
 
         return $settings;
 	}
+
+	public function applyDefaults($settings) {
+        foreach($settings as $index => $writer) {
+            foreach($this->defaults as $settingName => $settingValue) {
+                if(isset($writer[self::WRITER_SETTINGS]) && !isset($settings[$index][self::WRITER_SETTINGS][$settingName])) {
+                    $settings[$index][self::WRITER_SETTINGS][$settingName] = $settingValue;
+                }
+            }
+        }
+
+        return $settings;
+    }
 
 	/**
 	 * Checks if at least one of the active flags is in the activate/deactivate flags array

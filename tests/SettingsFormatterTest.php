@@ -17,6 +17,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
     const NEW_VALUE = 'new value';
     const GLOBAL_VALUE = 'global value';
 
+    const DEFAULT_SETTING_NAME = 'default setting name';
+
     public function test_Settings_getFormattedSettings_ShouldReturnSettings() {
         $expectedSettings = [
             [
@@ -186,6 +188,32 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $formatter = new SettingsFormatter($settings);
         $formatter->setWriterSpecificChanges([self::FIRST_WRITER_TYPE => [self::SETTING_NAME => self::NEW_VALUE]]);
         $formatter->setGlobalChanges([self::SETTING_NAME => self::GLOBAL_VALUE]);
+
+        $actualSettings = $formatter->getFormattedSettings();
+
+        $this->assertEquals($expectedSettings, $actualSettings);
+    }
+
+    public function test_DefaultSettings_getFormattedSettings_ShouldSetSettingIfNotSpeficied() {
+        $settings = [
+            [
+                SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
+                SettingsFormatter::WRITER_SETTINGS => [
+                    self::SETTING_NAME => self::SETTING_VALUE,
+                    self::DEFAULT_SETTING_NAME => self::ORIGINAL_SETTING_VALUE
+                ]
+            ],
+            [
+                SettingsFormatter::WRITER_TYPE => self::SECOND_WRITER_TYPE,
+                SettingsFormatter::WRITER_SETTINGS => [
+                    self::SETTING_NAME => self::SETTING_VALUE,
+                ]
+            ]
+        ];
+        $expectedSettings = $settings; // clone array
+        $expectedSettings[1][SettingsFormatter::WRITER_SETTINGS][self::DEFAULT_SETTING_NAME] = self::NEW_VALUE;
+        $formatter = new SettingsFormatter($settings);
+        $formatter->setDefaults([self::DEFAULT_SETTING_NAME => self::NEW_VALUE]);
 
         $actualSettings = $formatter->getFormattedSettings();
 
