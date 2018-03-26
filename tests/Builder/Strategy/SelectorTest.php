@@ -127,7 +127,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase {
         $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
         $customWriterStrategy
             ->expects(self::once())
-            ->method('getStrategyForClass')
+            ->method('getStrategyForClassname')
             ->with(self::CUSTOM_TYPE)
             ->willReturn($strategy);
         $this->factory
@@ -145,7 +145,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase {
         $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
         $customWriterStrategy
             ->expects(self::once())
-            ->method('getStrategyForClass')
+            ->method('getStrategyForClassname')
             ->with(self::UNSUPPORTED_TYPE)
             ->willThrowException(new \Exception());
         $this->factory
@@ -161,7 +161,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase {
         $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
         $customWriterStrategy
             ->expects(self::once())
-            ->method('getStrategyForClass')
+            ->method('getStrategyForClassname')
             ->with(self::UNSUPPORTED_TYPE)
             ->willThrowException(new InvalidCustomWriter());
         $this->factory

@@ -44,7 +44,7 @@ class Selector {
 			default:
 			    try {
                     $customStrategy = $this->factory->createCustomWriterStrategy();
-                    return $customStrategy->getStrategyForClass($type);
+                    return $customStrategy->getStrategyForClassname($type);
                 }
                 catch(InvalidCustomWriter $exception) {
 			        throw $exception;
