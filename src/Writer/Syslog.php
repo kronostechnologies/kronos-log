@@ -47,8 +47,7 @@ class Syslog extends AbstractWriter {
 		$this->facility = $facility;
 	}
 
-
-	private function getSyslogPriorityForLogLevel($level) {
+	protected function getSyslogPriorityForLogLevel($level) {
 		if(isset($this->log_level_map[$level])) {
 			return $this->log_level_map[$level];
 		}
