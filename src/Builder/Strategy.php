@@ -2,16 +2,13 @@
 
 namespace Kronos\Log\Builder;
 
-use Kronos\Log\AbstractWriter;
-use Kronos\Log\Factory\Writer;
+use Kronos\Log\WriterInterface;
 
 interface Strategy {
 
-	public function __construct(Writer $writerFactory);
-
 	/**
 	 * @param array $settings
-	 * @return AbstractWriter
+	 * @return WriterInterface
 	 */
 	public function buildFromArray(array $settings);
 }

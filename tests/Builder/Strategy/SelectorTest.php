@@ -3,18 +3,21 @@
 namespace Kronos\Tests\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy\Console;
+use Kronos\Log\Builder\Strategy\CustomWriter;
 use Kronos\Log\Builder\Strategy\File;
 use Kronos\Log\Builder\Strategy\LogDNA;
 use Kronos\Log\Builder\Strategy\Memory;
 use Kronos\Log\Builder\Strategy\Selector;
 use Kronos\Log\Builder\Strategy\Syslog;
 use Kronos\Log\Enumeration\WriterTypes;
+use Kronos\Log\Exception\InvalidCustomWriter;
 use Kronos\Log\Exception\UnsupportedType;
 use Kronos\Log\Factory\Strategy;
 use Kronos\Log\Writer\Sentry;
 
 class SelectorTest extends \PHPUnit_Framework_TestCase {
 	const UNSUPPORTED_TYPE = 'unsupported';
+	const CUSTOM_TYPE = 'custom type';
 
 	/**
 	 * @var Selector
@@ -109,9 +112,63 @@ class SelectorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertSame($this->strategy, $actualStrategy);
 	}
 
-	public function test_UnsuppertedType_getStrategyForType_ShouldThrowUnsupportedTypeException() {
-		$this->expectException(UnsupportedType::class);
+	public function test_UnknownType_getStrategyForType_ShouldCreateCustomWriter() {
+        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $this->factory
+            ->expects(self::once())
+            ->method('createCustomWriterStrategy')
+            ->willReturn($customWriterStrategy);
 
-		$this->selector->getStrategyForType(self::UNSUPPORTED_TYPE);
+        $this->selector->getStrategyForType(self::CUSTOM_TYPE);
+    }
+
+    public function test_CustomWriterStrategy_getStrategyForType_ShouldGetAndReturnStrategyForType() {
+	    $strategy = $this->getMock(\Kronos\Log\Builder\Strategy::class);
+        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $customWriterStrategy
+            ->expects(self::once())
+            ->method('getStrategyForClassname')
+            ->with(self::CUSTOM_TYPE)
+            ->willReturn($strategy);
+        $this->factory
+            ->expects(self::once())
+            ->method('createCustomWriterStrategy')
+            ->willReturn($customWriterStrategy);
+
+        $actualStrategy = $this->selector->getStrategyForType(self::CUSTOM_TYPE);
+
+        $this->assertSame($strategy, $actualStrategy);
+    }
+
+    public function test_CustomeWriterThrowsException_getStrategyForType_ShouldThrowUnsupportedTypeException() {
+	    $this->expectException(UnsupportedType::class);
+        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $customWriterStrategy
+            ->expects(self::once())
+            ->method('getStrategyForClassname')
+            ->with(self::UNSUPPORTED_TYPE)
+            ->willThrowException(new \Exception());
+        $this->factory
+            ->expects(self::once())
+            ->method('createCustomWriterStrategy')
+            ->willReturn($customWriterStrategy);
+
+        $this->selector->getStrategyForType(self::UNSUPPORTED_TYPE);
+    }
+
+	public function test_InvalidCustomWriter_getStrategyForType_ShouldThrowInvalidCustomWriterException() {
+		$this->expectException(InvalidCustomWriter::class);
+        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $customWriterStrategy
+            ->expects(self::once())
+            ->method('getStrategyForClassname')
+            ->with(self::UNSUPPORTED_TYPE)
+            ->willThrowException(new InvalidCustomWriter());
+        $this->factory
+            ->expects(self::once())
+            ->method('createCustomWriterStrategy')
+            ->willReturn($customWriterStrategy);
+
+        $this->selector->getStrategyForType(self::UNSUPPORTED_TYPE);
 	}
 }

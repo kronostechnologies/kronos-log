@@ -6,5 +6,9 @@ interface WriterInterface {
 
 	public function canLogLevel($level);
 
+	public function setCanLog($can_log);
+
+	public function canLog();
+
 	public function log($level, $message, array $context = []);
 }

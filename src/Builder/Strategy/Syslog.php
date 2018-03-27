@@ -17,8 +17,8 @@ class Syslog extends AbstractWriter {
 	 */
 	private $factory;
 
-	public function __construct(WriterFactory $factory) {
-		$this->factory = $factory;
+	public function __construct(WriterFactory $factory = null) {
+		$this->factory = is_null($factory) ? new WriterFactory() : $factory;
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Syslog extends AbstractWriter {
 	 * @param array $settings
 	 * @return int
 	 */
-	private function getOption(array $settings) {
+	protected function getOption(array $settings) {
 		return isset($settings[self::OPTION]) ? $settings[self::OPTION] : \Kronos\Log\Writer\Syslog::DEFAULT_OPTION;
 	}
 
@@ -54,7 +54,7 @@ class Syslog extends AbstractWriter {
 	 * @param array $settings
 	 * @return int
 	 */
-	private function getFacility(array $settings) {
+    protected function getFacility(array $settings) {
 		return isset($settings[self::FACILITY]) ? $settings[self::FACILITY] : \Kronos\Log\Writer\Syslog::DEFAULT_FACILITY;
 	}
 }

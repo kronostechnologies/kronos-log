@@ -7,8 +7,9 @@ trait Interpolate {
 		$translation = [];
 		$placeholders = $this->getPlaceholders($message);
 		foreach($placeholders as $placeholder => $key) {
-			if(isset($context[$key])) {
-				$translation[$placeholder] = (string)$context[$key];
+            $value = $this->getContextForPlaceholderKey($context, $key);
+			if($this->canBeInterpolated($value)) {
+				$translation[$placeholder] = (string)$value;
 			}
 			else {
 				$translation[$placeholder] = '~UNDEFINED~';
@@ -26,4 +27,16 @@ trait Interpolate {
 		return $keys;
 	}
 
+	private function getContextForPlaceholderKey($context, $placeholder) {
+	    return isset($context[$placeholder]) ? $context[$placeholder] : null;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    private function canBeInterpolated($value)
+    {
+        return $value && !is_array($value) && (!is_object($value) || method_exists($value, '__toString'));
+    }
 }

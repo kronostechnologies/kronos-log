@@ -14,7 +14,7 @@ trait PrependDateTime {
 
 	public function prependDateTime($message) {
 		if($this->prepend_datetime) {
-			return '['.date('Y-m-d H:i:s').'] '.$message;
+			return '['.date('Y-m-d H:i:s').']'.$message;
 		}
 		else {
 			return $message;

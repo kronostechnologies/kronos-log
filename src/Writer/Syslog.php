@@ -3,23 +3,13 @@
 namespace Kronos\Log\Writer;
 
 use Kronos\Log\AbstractWriter,
-	Psr\Log\LogLevel,
-	Kronos\Log\Traits\PrependContext;
+	Kronos\Log\Traits\PrependContext,
+    Kronos\Log\Traits\LogLevelToSyslogPriority;
 
 class Syslog extends AbstractWriter {
 
 	use PrependContext;
-
-	private $log_level_map = [
-		LogLevel::EMERGENCY => LOG_EMERG,
-		LogLevel::ALERT => LOG_ALERT,
-		LogLevel::CRITICAL => LOG_CRIT,
-		LogLevel::ERROR => LOG_ERR,
-		LogLevel::WARNING => LOG_WARNING,
-		LogLevel::NOTICE => LOG_NOTICE,
-		LogLevel::INFO => LOG_INFO,
-		LogLevel::DEBUG => LOG_DEBUG
-	];
+    use LogLevelToSyslogPriority;
 
 	const DEFAULT_OPTION = LOG_ODELAY;
 	const DEFAULT_FACILITY = LOG_LOCAL0;
@@ -45,16 +35,6 @@ class Syslog extends AbstractWriter {
 		$this->application = $application;
 		$this->option = $option;
 		$this->facility = $facility;
-	}
-
-
-	private function getSyslogPriorityForLogLevel($level) {
-		if(isset($this->log_level_map[$level])) {
-			return $this->log_level_map[$level];
-		}
-		else {
-			throw new \Kronos\Log\Exception\InvalidLogLevel($level);
-		}
 	}
 
 	public function log($level, $message, array $context = []) {

@@ -3,6 +3,7 @@
 namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Enumeration\WriterTypes;
+use Kronos\Log\Exception\InvalidCustomWriter;
 use Kronos\Log\Exception\UnsupportedType;
 use Kronos\Log\Factory\Strategy;
 
@@ -41,7 +42,16 @@ class Selector {
 			case WriterTypes::SYSLOG:
 				return $this->factory->createSyslogStrategy();
 			default:
-				throw new UnsupportedType('Unsupported writer type : '.$type);
+			    try {
+                    $customStrategy = $this->factory->createCustomWriterStrategy();
+                    return $customStrategy->getStrategyForClassname($type);
+                }
+                catch(InvalidCustomWriter $exception) {
+			        throw $exception;
+                }
+                catch(\Exception $exception) {
+                    throw new UnsupportedType('Unsupported writer type : '.$type);
+                }
 		}
 	}
 }
