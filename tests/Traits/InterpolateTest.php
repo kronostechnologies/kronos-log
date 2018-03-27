@@ -33,4 +33,34 @@ class InterpolateTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(self::MESSAGE_WITH_UNDEFINED, $interpolated_message);
 	}
+
+	public function test_ObjectInContext_Interpolate_ShouldReplaceWithUndefined() {
+	    $original_message = self::A_MESSAGE;
+	    $object = new ObjectWithoutToString();
+	    $object->property = 'value';
+
+        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $object]);
+
+        $this->assertEquals(self::MESSAGE_WITH_UNDEFINED, $interpolated_message);
+    }
+
+    public function test_ObjectWithToStringInContext_Interpolate_ShouldReplacePlaceholderWithToStringResult() {
+        $original_message = self::A_MESSAGE;
+        $object = new ObjectWithToString();
+        $object->property = 'value';
+        $expectedMessage = str_replace('{'.self::KEY.'}', (string)$object, self::A_MESSAGE);
+
+        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $object]);
+
+        $this->assertEquals($expectedMessage, $interpolated_message);
+    }
+
+    public function test_ArrayInContext_Interpolate_ShouldReplaceWithUndefined() {
+        $original_message = self::A_MESSAGE;
+        $array = ['index' => 'value'];
+
+        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $array]);
+
+        $this->assertEquals(self::MESSAGE_WITH_UNDEFINED, $interpolated_message);
+    }
 }
