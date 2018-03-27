@@ -10,54 +10,62 @@ use Kronos\Log\Builder\Strategy\Memory;
 use Kronos\Log\Builder\Strategy\Sentry;
 use Kronos\Log\Builder\Strategy\Syslog;
 
-class Strategy {
+class Strategy
+{
 
-	/**
-	 * @return Console
-	 */
-	public function createConsoleStrategy() {
-		return new Console();
-	}
+    /**
+     * @return Console
+     */
+    public function createConsoleStrategy()
+    {
+        return new Console();
+    }
 
-	/**
-	 * @return File
-	 */
-	public function createFileStrategy() {
-		return new File();
-	}
+    /**
+     * @return File
+     */
+    public function createFileStrategy()
+    {
+        return new File();
+    }
 
-	/**
-	 * @return LogDNA
-	 */
-	public function createLogDNAStrategy() {
-		return new LogDNA();
-	}
+    /**
+     * @return LogDNA
+     */
+    public function createLogDNAStrategy()
+    {
+        return new LogDNA();
+    }
 
-	/**
-	 * @return Memory
-	 */
-	public function createMemoryStrategy() {
-		return new Memory();
-	}
+    /**
+     * @return Memory
+     */
+    public function createMemoryStrategy()
+    {
+        return new Memory();
+    }
 
-	/**
-	 * @return Sentry
-	 */
-	public function createSentryStrategy() {
-		return new Sentry();
-	}
+    /**
+     * @return Sentry
+     */
+    public function createSentryStrategy()
+    {
+        return new Sentry();
+    }
 
-	/**
-	 * @return Syslog
-	 */
-	public function createSyslogStrategy() {
-		return new Syslog();
-	}
+    /**
+     * @return Syslog
+     */
+    public function createSyslogStrategy()
+    {
+        return new Syslog();
+    }
 
     /**
      * @return CustomWriter
      */
-	public function createCustomWriterStrategy() {
+    public function createCustomWriterStrategy()
+    {
         return new CustomWriter();
     }
 }

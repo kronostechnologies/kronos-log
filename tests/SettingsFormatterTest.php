@@ -5,7 +5,8 @@ namespace Kronos\Tests\Log;
 use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\SettingsFormatter;
 
-class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
+class SettingsFormatterTest extends \PHPUnit_Framework_TestCase
+{
     const FIRST_WRITER_TYPE = WriterTypes::CONSOLE;
     const SECOND_WRITER_TYPE = WriterTypes::FILE;
     const SETTING_NAME = 'setting name';
@@ -19,12 +20,13 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
 
     const DEFAULT_SETTING_NAME = 'default setting name';
 
-    public function test_Settings_getFormattedSettings_ShouldReturnSettings() {
+    public function test_Settings_getFormattedSettings_ShouldReturnSettings()
+    {
         $expectedSettings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
                 SettingsFormatter::WRITER_SETTINGS => [
-                        self::SETTING_NAME => self::SETTING_VALUE
+                    self::SETTING_NAME => self::SETTING_VALUE
                 ]
             ]
         ];
@@ -35,7 +37,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterWithActivationFlag_getFormattedSettings_ShouldRemoveWriterFromSettings() {
+    public function test_WriterWithActivationFlag_getFormattedSettings_ShouldRemoveWriterFromSettings()
+    {
         $settings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -52,7 +55,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([], $actualSettings);
     }
 
-    public function test_WriterWithActivationFlagAndFlagSet_getFormattedSettings_ShouldKeepWriterInSettings() {
+    public function test_WriterWithActivationFlagAndFlagSet_getFormattedSettings_ShouldKeepWriterInSettings()
+    {
         $expectedSettings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -70,7 +74,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterWithDeactivationFlag_getFormattedSettings_ShouldKeepWriterInSettings() {
+    public function test_WriterWithDeactivationFlag_getFormattedSettings_ShouldKeepWriterInSettings()
+    {
         $expectedSettings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -87,7 +92,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterWithDeactivationFlagAndFlagSet_getFormattedSettings_ShouldRemoveWriterFromSettings() {
+    public function test_WriterWithDeactivationFlagAndFlagSet_getFormattedSettings_ShouldRemoveWriterFromSettings()
+    {
         $settings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -105,7 +111,9 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([], $actualSettings);
     }
 
-    public function test_WriterWithBothActivationAndDeactivationFlagAndFlagsSet_getFormattedSettings_ShouldRemoveWriterFromSettings() {
+    public function test_WriterWithBothActivationAndDeactivationFlagAndFlagsSet_getFormattedSettings_ShouldRemoveWriterFromSettings(
+    )
+    {
         $expectedSettings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -124,7 +132,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([], $actualSettings);
     }
 
-    public function test_GlobalChanges_getFormattedSettings_ShouldChangeSettingsForAllWriters() {
+    public function test_GlobalChanges_getFormattedSettings_ShouldChangeSettingsForAllWriters()
+    {
         $settings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -149,7 +158,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterSpecificChanges_getFormattedSettings_ShouldChangeSettingsForSpecifiedWriters() {
+    public function test_WriterSpecificChanges_getFormattedSettings_ShouldChangeSettingsForSpecifiedWriters()
+    {
         $settings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -174,7 +184,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_GlobalAndWriterSpecificChanges_getFormattedSettings_ShouldKeepSpecificValue() {
+    public function test_GlobalAndWriterSpecificChanges_getFormattedSettings_ShouldKeepSpecificValue()
+    {
         $settings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,
@@ -194,7 +205,8 @@ class SettingsFormatterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_DefaultSettings_getFormattedSettings_ShouldSetSettingIfNotSpeficied() {
+    public function test_DefaultSettings_getFormattedSettings_ShouldSetSettingIfNotSpeficied()
+    {
         $settings = [
             [
                 SettingsFormatter::WRITER_TYPE => self::FIRST_WRITER_TYPE,

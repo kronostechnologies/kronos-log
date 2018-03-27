@@ -5,95 +5,102 @@ namespace Kronos\Log\Adaptor;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
 
-class TTY {
+class TTY
+{
 
-	const ESCAPE_SEQUENCE = "\033[";
-	const NO_COLOR = "\033[0m";
-	const END_SEQUENCE = "m";
+    const ESCAPE_SEQUENCE = "\033[";
+    const NO_COLOR = "\033[0m";
+    const END_SEQUENCE = "m";
 
-	private $ressource;
+    private $ressource;
 
-	private $force_ansi_color_support = false;
-	private $force_no_ansi_color_support = false;
-	
+    private $force_ansi_color_support = false;
+    private $force_no_ansi_color_support = false;
 
-	public function __construct($filename) {
-		$this->open($filename);
-	}
 
-	public function setForceAnsiColorSupport($force = true) {
-		$this->force_ansi_color_support = $force;
-	}
+    public function __construct($filename)
+    {
+        $this->open($filename);
+    }
 
-	public function setForceNoAnsiColorSupport($force = true) {
-		$this->force_no_ansi_color_support = $force;
-	}
+    public function setForceAnsiColorSupport($force = true)
+    {
+        $this->force_ansi_color_support = $force;
+    }
 
-	private function canUseColor() {
-		if($this->force_ansi_color_support) {
-			return true;
-		}
-		else if($this->force_no_ansi_color_support) {
-			return false;
-		}
-		else {
-			return function_exists('posix_isatty') && @posix_isatty($this->ressource);
-		}
-	}
+    public function setForceNoAnsiColorSupport($force = true)
+    {
+        $this->force_no_ansi_color_support = $force;
+    }
 
-	private function open($filename) {
-		$this->ressource = fopen($filename, 'a');
+    private function canUseColor()
+    {
+        if ($this->force_ansi_color_support) {
+            return true;
+        } elseif ($this->force_no_ansi_color_support) {
+            return false;
+        } else {
+            return function_exists('posix_isatty') && @posix_isatty($this->ressource);
+        }
+    }
 
-		if(!$this->ressource) {
-			throw new \Exception('Could not open file : '.$filename);
-		}
-	}
+    private function open($filename)
+    {
+        $this->ressource = fopen($filename, 'a');
 
-	/**
-	 * @param string $line
-	 * @param string $text_color AnsiTextColor enumeration value
-	 * @param string $background_color AnsiBackgroundColor enumeration value
-	 * @param bool $add_eol
-	 * @throws \Exception
-	 */
-	public function write($line, $text_color = NULL, $background_color = NULL, $add_eol = true) {
-		if(!$this->ressource) {
-			throw new \Exception('No file opened, cannot write');
-		}
-		
-		$line = $this->addColor($line, $text_color, $background_color);
+        if (!$this->ressource) {
+            throw new \Exception('Could not open file : ' . $filename);
+        }
+    }
 
-		fwrite($this->ressource, $line.($add_eol ? "\n" : ''));
-	}
-	
-	private function addColor($line, $text_color, $background_color) {
-		$colored_line = '';
-		$is_colored = false;
+    /**
+     * @param string $line
+     * @param string $text_color AnsiTextColor enumeration value
+     * @param string $background_color AnsiBackgroundColor enumeration value
+     * @param bool $add_eol
+     * @throws \Exception
+     */
+    public function write($line, $text_color = null, $background_color = null, $add_eol = true)
+    {
+        if (!$this->ressource) {
+            throw new \Exception('No file opened, cannot write');
+        }
 
-		if($this->canUseColor()) {
-			if(AnsiTextColor::isValidValue($text_color)) {
-				$is_colored = true;
-				$colored_line .= self::ESCAPE_SEQUENCE . $text_color.self::END_SEQUENCE;
-			}
+        $line = $this->addColor($line, $text_color, $background_color);
 
-			if(AnsiBackgroundColor::isValidValue($background_color)) {
-				$is_colored = true;
-				$colored_line .= self::ESCAPE_SEQUENCE . $background_color.self::END_SEQUENCE;
-			}
-		}
+        fwrite($this->ressource, $line . ($add_eol ? "\n" : ''));
+    }
 
-		$colored_line .= $line;
+    private function addColor($line, $text_color, $background_color)
+    {
+        $colored_line = '';
+        $is_colored = false;
 
-		if($is_colored) {
-			$colored_line .= self::NO_COLOR;
-		}
+        if ($this->canUseColor()) {
+            if (AnsiTextColor::isValidValue($text_color)) {
+                $is_colored = true;
+                $colored_line .= self::ESCAPE_SEQUENCE . $text_color . self::END_SEQUENCE;
+            }
 
-		return $colored_line;
-	}
+            if (AnsiBackgroundColor::isValidValue($background_color)) {
+                $is_colored = true;
+                $colored_line .= self::ESCAPE_SEQUENCE . $background_color . self::END_SEQUENCE;
+            }
+        }
 
-	public function __destruct() {
-		if($this->ressource) {
-			@fclose($this->ressource);
-		}
-	}
+        $colored_line .= $line;
+
+        if ($is_colored) {
+            $colored_line .= self::NO_COLOR;
+        }
+
+        return $colored_line;
+    }
+
+    public function __destruct()
+    {
+        if ($this->ressource) {
+            @fclose($this->ressource);
+        }
+    }
 }

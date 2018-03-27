@@ -2,6 +2,7 @@
 
 namespace Kronos\Log\Exception;
 
-class NoWriter extends \Exception {
+class NoWriter extends \Exception
+{
 
 }

@@ -2,6 +2,7 @@
 
 namespace Kronos\Log\Exception;
 
-class UnsupportedType extends \Exception {
+class UnsupportedType extends \Exception
+{
 
 }

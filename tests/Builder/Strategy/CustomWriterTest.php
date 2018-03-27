@@ -6,9 +6,11 @@ use Kronos\Log\Builder\Strategy\CustomWriter;
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\InvalidCustomWriter;
 
-class CustomWriterTest extends \PHPUnit_Framework_TestCase {
+class CustomWriterTest extends \PHPUnit_Framework_TestCase
+{
 
-    public function test_Classname_getStrategyFromClassname_ShouldReturnClassnameInstance() {
+    public function test_Classname_getStrategyFromClassname_ShouldReturnClassnameInstance()
+    {
         $customWriter = new CustomWriter();
 
         $strategy = $customWriter->getStrategyForClassname(ValidCustomStrategy::class);
@@ -16,14 +18,16 @@ class CustomWriterTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf(ValidCustomStrategy::class, $strategy);
     }
 
-    public function test_UnknownClass_getStrategyFromClassname_ShouldThrowThrowInvalidCustomWriterException() {
+    public function test_UnknownClass_getStrategyFromClassname_ShouldThrowThrowInvalidCustomWriterException()
+    {
         $this->expectException(InvalidCustomWriter::class);
         $customWriter = new CustomWriter();
 
         $customWriter->getStrategyForClassname('\Invalid\Strategy\Classname');
     }
 
-    public function test_NonBuilderStrategyClass_getStrategyFromClassname_ShouldThrowInvalidCustomWriterException() {
+    public function test_NonBuilderStrategyClass_getStrategyFromClassname_ShouldThrowInvalidCustomWriterException()
+    {
         $this->expectException(InvalidCustomWriter::class);
         $customWriter = new CustomWriter();
 
@@ -32,14 +36,17 @@ class CustomWriterTest extends \PHPUnit_Framework_TestCase {
 }
 
 
-class ValidCustomStrategy implements Strategy {
+class ValidCustomStrategy implements Strategy
+{
 
-    public function buildFromArray(array $settings) {
+    public function buildFromArray(array $settings)
+    {
 
     }
 
 }
 
-class NonBuildStrategyClass {
+class NonBuildStrategyClass
+{
 
 }

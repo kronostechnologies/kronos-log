@@ -2,6 +2,7 @@
 
 namespace Kronos\Log\Exception;
 
-class InvalidSetting extends \Exception {
+class InvalidSetting extends \Exception
+{
 
 }

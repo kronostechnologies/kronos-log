@@ -2,12 +2,14 @@
 
 namespace Kronos\Log\Factory;
 
-class Logger {
+class Logger
+{
 
-	/**
-	 * @return \Kronos\Log\Logger
-	 */
-	public function createLogger() {
-		return new \Kronos\Log\Logger();
-	}
+    /**
+     * @return \Kronos\Log\Logger
+     */
+    public function createLogger()
+    {
+        return new \Kronos\Log\Logger();
+    }
 }

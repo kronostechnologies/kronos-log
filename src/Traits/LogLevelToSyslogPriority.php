@@ -5,7 +5,8 @@ namespace Kronos\Log\Traits;
 use Kronos\Log\Exception\InvalidLogLevel;
 use Psr\Log\LogLevel;
 
-trait LogLevelToSyslogPriority {
+trait LogLevelToSyslogPriority
+{
     private $logLevelMap = [
         LogLevel::EMERGENCY => LOG_EMERG,
         LogLevel::ALERT => LOG_ALERT,
@@ -22,11 +23,11 @@ trait LogLevelToSyslogPriority {
      * @return mixed
      * @throws InvalidLogLevel
      */
-    protected function getSyslogPriorityForLogLevel($level) {
-        if(isset($this->logLevelMap[$level])) {
+    protected function getSyslogPriorityForLogLevel($level)
+    {
+        if (isset($this->logLevelMap[$level])) {
             return $this->logLevelMap[$level];
-        }
-        else {
+        } else {
             throw new InvalidLogLevel($level);
         }
     }

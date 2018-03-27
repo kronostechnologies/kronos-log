@@ -5,26 +5,29 @@ namespace Kronos\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Factory\Writer As WriterFactory;
 
-class Memory extends AbstractWriter {
+class Memory extends AbstractWriter
+{
 
-	/**
-	 * @var WriterFactory
-	 */
-	private $factory;
+    /**
+     * @var WriterFactory
+     */
+    private $factory;
 
-	public function __construct(WriterFactory $factory = null) {
-		$this->factory = is_null($factory) ? new WriterFactory() : $factory;
-	}
+    public function __construct(WriterFactory $factory = null)
+    {
+        $this->factory = is_null($factory) ? new WriterFactory() : $factory;
+    }
 
-	/**
-	 * @param array $settings
-	 * @return \Kronos\Log\Writer\Memory
-	 */
-	public function buildFromArray(array $settings) {
-		$writer = $this->factory->createMemoryWriter();
+    /**
+     * @param array $settings
+     * @return \Kronos\Log\Writer\Memory
+     */
+    public function buildFromArray(array $settings)
+    {
+        $writer = $this->factory->createMemoryWriter();
 
-		$this->setCommonSettings($writer, $settings);
+        $this->setCommonSettings($writer, $settings);
 
-		return $writer;
-	}
+        return $writer;
+    }
 }

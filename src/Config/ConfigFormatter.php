@@ -1,8 +1,10 @@
 <?php
 
-class ConfigFormatter {
+class ConfigFormatter
+{
 
-	public function __construct() {
+    public function __construct()
+    {
 
-	}
+    }
 }

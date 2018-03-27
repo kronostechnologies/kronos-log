@@ -2,6 +2,7 @@
 
 namespace Kronos\Log\Exception;
 
-class InvalidCustomWriter extends UnsupportedType {
+class InvalidCustomWriter extends UnsupportedType
+{
 
 }
