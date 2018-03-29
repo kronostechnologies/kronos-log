@@ -5,12 +5,14 @@ namespace Kronos\Log\Adaptor;
 class File
 {
 
+    private $filename;
+
     private $ressource;
 
     public function __construct($filename)
     {
-        if ((file_exists($filename) && is_writeable($filename)) || (is_dir(dirname($filename)) && is_writeable(dirname($filename)))) {
-            $this->open($filename);
+        if ($this->fileExistsAndWriteable($filename)) {
+            $this->filename = $filename;
         } else {
             throw new \Exception('File is not writeable : ' . $filename);
         }
@@ -18,6 +20,7 @@ class File
 
     private function open($filename)
     {
+        echo "open $filename\n";
         $this->ressource = fopen($filename, 'a');
 
         if (!$this->ressource) {
@@ -28,7 +31,7 @@ class File
     public function write($line, $add_eol = true)
     {
         if (!$this->ressource) {
-            throw new \Exception('No file opened, cannot write');
+            $this->open($this->filename);
         }
 
         fwrite($this->ressource, $line . ($add_eol ? "\n" : ''));
@@ -39,5 +42,14 @@ class File
         if ($this->ressource) {
             @fclose($this->ressource);
         }
+    }
+
+    /**
+     * @param $filename
+     * @return bool
+     */
+    private function fileExistsAndWriteable($filename)
+    {
+        return (file_exists($filename) && is_writeable($filename)) || (is_dir(dirname($filename)) && is_writeable(dirname($filename)));
     }
 }

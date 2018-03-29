@@ -12,4 +12,5 @@ class WriterTypes extends Enumeration
     const MEMORY = 'memory';
     const SENTRY = 'sentry';
     const SYSLOG = 'syslog';
+    const TRIGGER_ERROR = 'trigger_error';
 }

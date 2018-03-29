@@ -52,7 +52,12 @@ class Logger extends \Psr\Log\AbstractLogger
     {
         foreach ($this->writers as $writer) {
             if ($writer->canLogLevel($level)) {
-                $writer->log($level, $message, $context + $this->context);
+                try {
+                    $writer->log($level, $message, $context + $this->context);
+                }
+                catch(\Exception $exception) {
+                    trigger_error($exception->getMessage(), E_USER_ERROR);
+                }
             }
         }
     }

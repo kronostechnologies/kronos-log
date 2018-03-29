@@ -14,6 +14,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     const A_CONTEXT_VALUE = 'value';
     const ANOTHER_CONTEXT_KEY = 'another key';
     const ANOTHER_CONTEXT_VALUE = 'another value';
+    const WRITER_LOG_EXCEPTION_MESSAGE = 'Writer log exception message';
 
 
     /**
@@ -21,6 +22,9 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $writer;
 
     public function setUp()
@@ -88,6 +92,30 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
+    }
+
+    public function test_WriterThrowException_Log_ShouldCatchExceptionAndTriggerError()
+    {
+        $errorHandled = 0;
+        $handledTriggedError = false;
+        $previousErrorHandler = set_error_handler(function ($errno, $errstr) use (&$handledTriggedError, &$errorHandled) {
+            $errorHandled++;
+            $handledTriggedError = ($errno == E_USER_ERROR && $errstr == self::WRITER_LOG_EXCEPTION_MESSAGE);
+        });
+
+        try {
+            $this->givenWriterCanLog();
+            $this->writer->method('log')->willThrowException(new \Exception(self::WRITER_LOG_EXCEPTION_MESSAGE));
+
+            $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
+
+            $this->assertEquals(1, $errorHandled);
+            $this->assertTrue($handledTriggedError);
+        }
+        finally {
+            // making sure that no matter what happens in my test, PHPUnit error handler is put back
+            set_error_handler($previousErrorHandler);
+        }
     }
 
     private function givenWriterCanLog()

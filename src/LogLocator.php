@@ -2,6 +2,8 @@
 
 namespace Kronos\Log;
 
+use Kronos\Log\Writer\TriggerError;
+
 class LogLocator
 {
 
@@ -35,9 +37,19 @@ class LogLocator
     public static function getLogger()
     {
         if (!self::isLoggerSet()) {
-            self::setLogger(new Logger());
+            self::setLogger(self::createDefaultLogger());
         }
 
         return self::$logger;
+    }
+
+    /**
+     * @return Logger
+     */
+    public static function createDefaultLogger()
+    {
+        $logger = new Logger();
+        $logger->addWriter(new TriggerError());
+        return $logger;
     }
 }

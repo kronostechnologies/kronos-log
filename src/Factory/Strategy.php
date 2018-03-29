@@ -9,6 +9,7 @@ use Kronos\Log\Builder\Strategy\LogDNA;
 use Kronos\Log\Builder\Strategy\Memory;
 use Kronos\Log\Builder\Strategy\Sentry;
 use Kronos\Log\Builder\Strategy\Syslog;
+use Kronos\Log\Builder\Strategy\TriggerError;
 
 class Strategy
 {
@@ -59,6 +60,14 @@ class Strategy
     public function createSyslogStrategy()
     {
         return new Syslog();
+    }
+
+    /**
+     * @return TriggerError
+     */
+    public function createTriggerErrorStrategy()
+    {
+        return new TriggerError();
     }
 
     /**
