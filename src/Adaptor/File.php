@@ -20,8 +20,7 @@ class File
 
     private function open($filename)
     {
-        echo "open $filename\n";
-        $this->ressource = fopen($filename, 'a');
+        $this->ressource = @fopen($filename, 'a');
 
         if (!$this->ressource) {
             throw new \Exception('Could not open file : ' . $filename);
