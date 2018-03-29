@@ -11,7 +11,6 @@ abstract class AbstractWriter implements Strategy
     const MIN_LEVEL = 'minLevel';
     const MAX_LEVEL = 'maxLevel';
     const INCLUDE_EXCEPTION_ARGS = 'includeExceptionArgs';
-    const INCLUDE_DEBUG_LEVEL = 'includeDebugLevel';
 
     /**
      * @param \Kronos\Log\AbstractWriter $writer

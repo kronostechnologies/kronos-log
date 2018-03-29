@@ -9,6 +9,7 @@ use Kronos\Log\Builder\Strategy\LogDNA;
 use Kronos\Log\Builder\Strategy\Memory;
 use Kronos\Log\Builder\Strategy\Selector;
 use Kronos\Log\Builder\Strategy\Syslog;
+use Kronos\Log\Builder\Strategy\TriggerError;
 use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\Exception\InvalidCustomWriter;
 use Kronos\Log\Exception\UnsupportedType;
@@ -120,6 +121,20 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
+    public function test_TriggerError_getStrategyForType_ShouldCreateTriggerErrorStrategyAndReturnIt()
+    {
+        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(TriggerError::class);
+        $this->factory
+            ->expects(self::once())
+            ->method('createTriggerErrorStrategy')
+            ->willReturn($this->strategy);
+
+        $actualStrategy = $this->selector->getStrategyForType(WriterTypes::TRIGGER_ERROR);
+
+        $this->assertSame($this->strategy, $actualStrategy);
+    }
+
+
     public function test_UnknownType_getStrategyForType_ShouldCreateCustomWriter()
     {
         $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
@@ -150,7 +165,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($strategy, $actualStrategy);
     }
 
-    public function test_CustomeWriterThrowsException_getStrategyForType_ShouldThrowUnsupportedTypeException()
+    public function test_CustomWriterThrowsException_getStrategyForType_ShouldThrowUnsupportedTypeException()
     {
         $this->expectException(UnsupportedType::class);
         $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);

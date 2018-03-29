@@ -11,6 +11,7 @@ use Kronos\Log\Writer\Sentry;
 use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
 use Kronos\Log\Writer\Memory;
+use Kronos\Log\Writer\TriggerError;
 
 class Writer
 {
@@ -107,6 +108,14 @@ class Writer
     public function createLogDNAWriter($hostname, $application, $ingestionKey)
     {
         return new LogDNA($hostname, $application, $ingestionKey);
+    }
+
+    /**
+     * @return TriggerError
+     */
+    public function createTriggerErrorWriter()
+    {
+        return new TriggerError();
     }
 
     /**

@@ -6,6 +6,7 @@ use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\Exception\InvalidCustomWriter;
 use Kronos\Log\Exception\UnsupportedType;
 use Kronos\Log\Factory\Strategy;
+use Kronos\Log\Factory\Writer;
 
 class Selector
 {
@@ -44,6 +45,8 @@ class Selector
                 return $this->factory->createSentryStrategy();
             case WriterTypes::SYSLOG:
                 return $this->factory->createSyslogStrategy();
+            case WriterTypes::TRIGGER_ERROR:
+                return $this->factory->createTriggerErrorStrategy();
             default:
                 try {
                     $customStrategy = $this->factory->createCustomWriterStrategy();
