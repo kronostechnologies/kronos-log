@@ -57,7 +57,7 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function test_Emergency_log_ShouldTriggerUserError() {
+    public function test_Emergency_log_ShouldTriggerUserWarning() {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -65,14 +65,14 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
             $this->writer->log(LogLevel::EMERGENCY, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
-            $this->assertEquals(E_USER_ERROR, $triggeredErrors[0]['errno']);
+            $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
         }
         finally {
             set_error_handler($previousErrorHandler);
         }
     }
 
-    public function test_Alert_log_ShouldTriggerUserError() {
+    public function test_Alert_log_ShouldTriggerUserWarning() {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -80,14 +80,14 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
             $this->writer->log(LogLevel::ALERT, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
-            $this->assertEquals(E_USER_ERROR, $triggeredErrors[0]['errno']);
+            $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
         }
         finally {
             set_error_handler($previousErrorHandler);
         }
     }
 
-    public function test_Critical_log_ShouldTriggerUserError() {
+    public function test_Critical_log_ShouldTriggerUserWarning() {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -95,14 +95,14 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
             $this->writer->log(LogLevel::CRITICAL, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
-            $this->assertEquals(E_USER_ERROR, $triggeredErrors[0]['errno']);
+            $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
         }
         finally {
             set_error_handler($previousErrorHandler);
         }
     }
 
-    public function test_Error_log_ShouldTriggerUserError() {
+    public function test_Error_log_ShouldTriggerUserWarning() {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -110,7 +110,7 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
             $this->writer->log(LogLevel::ERROR, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
-            $this->assertEquals(E_USER_ERROR, $triggeredErrors[0]['errno']);
+            $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
         }
         finally {
             set_error_handler($previousErrorHandler);
@@ -177,7 +177,7 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function test_InvalidLogLevel_log_ShouldTriggerUserError() {
+    public function test_InvalidLogLevel_log_ShouldTriggerUserWarning() {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -185,7 +185,7 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
             $this->writer->log(self::INVALID_LOG_LEVEL, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
-            $this->assertEquals(E_USER_ERROR, $triggeredErrors[0]['errno']);
+            $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
         }
         finally {
             set_error_handler($previousErrorHandler);

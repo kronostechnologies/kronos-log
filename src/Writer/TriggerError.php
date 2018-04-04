@@ -8,10 +8,10 @@ use Psr\Log\LogLevel;
 class TriggerError extends AbstractWriter
 {
     const MAP = [
-        LogLevel::EMERGENCY => E_USER_ERROR,
-        LogLevel::ALERT => E_USER_ERROR,
-        LogLevel::CRITICAL => E_USER_ERROR,
-        LogLevel::ERROR => E_USER_ERROR,
+        LogLevel::EMERGENCY => E_USER_WARNING,
+        LogLevel::ALERT => E_USER_WARNING,
+        LogLevel::CRITICAL => E_USER_WARNING,
+        LogLevel::ERROR => E_USER_WARNING,
         LogLevel::WARNING => E_USER_WARNING,
         LogLevel::NOTICE => E_USER_NOTICE,
         LogLevel::INFO=> E_USER_NOTICE,
@@ -28,6 +28,6 @@ class TriggerError extends AbstractWriter
             return self::MAP[$level];
         }
 
-        return E_USER_ERROR;
+        return E_USER_WARNING;
     }
 }
