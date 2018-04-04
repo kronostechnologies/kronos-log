@@ -43,6 +43,11 @@ class LogLocator
         return self::$logger;
     }
 
+    public static function unsetLogger()
+    {
+        self::$logger = null;
+    }
+
     /**
      * @return Logger
      */
