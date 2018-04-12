@@ -2,7 +2,7 @@
 
 namespace Kronos\Tests\Log;
 
-use Kronos\Log\Exception\ExceptionTraceBuilder;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,14 +13,14 @@ class ExceptionTraceBuilderTest extends \PHPUnit_Framework_TestCase
     private $line_builder;
 
     /**
-     * @var ExceptionTraceBuilder
+     * @var \Kronos\Log\Formatter\Exception\TraceBuilder
      */
     private $exception_trace_builder;
 
     public function setUp()
     {
-        $this->line_builder = new \Kronos\Log\Exception\LineBuilder();
-        $this->exception_trace_builder = new \Kronos\Log\Exception\ExceptionTraceBuilder($this->line_builder);
+        $this->line_builder = new \Kronos\Log\Formatter\Exception\LineBuilder();
+        $this->exception_trace_builder = new \Kronos\Log\Formatter\Exception\TraceBuilder($this->line_builder);
     }
 
     public function test_givenAnExceptionTraceArrayWithNoIncludeArgumentsOption_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithoutArguments(

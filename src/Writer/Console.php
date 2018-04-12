@@ -11,7 +11,7 @@ use Kronos\Log\Traits\PrependLogLevel;
 use Kronos\Log\Logger;
 use Psr\Log\LogLevel;
 use \Exception;
-use Kronos\Log\Exception\ExceptionTraceBuilder;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class Console extends \Kronos\Log\AbstractWriter
 {
@@ -35,7 +35,7 @@ class Console extends \Kronos\Log\AbstractWriter
     private $stderr;
 
     /**
-     * @var ExceptionTraceBuilder
+     * @var TraceBuilder
      */
     private $trace_builder;
 
@@ -47,19 +47,19 @@ class Console extends \Kronos\Log\AbstractWriter
     /**
      * @param FileFactory $factory
      */
-    public function __construct(FileFactory $factory = null, ExceptionTraceBuilder $trace_builder = null)
+    public function __construct(FileFactory $factory = null, TraceBuilder $trace_builder = null)
     {
         $this->factory = is_null($factory) ? new FileFactory() : $factory;
         $this->stdout = $this->factory->createTTYAdaptor(self::STDOUT);
         $this->stderr = $this->factory->createTTYAdaptor(self::STDERR);
-        $this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
+        $this->trace_builder = is_null($trace_builder) ? new TraceBuilder() : $trace_builder;
     }
 
     /**
      * @param string $level
      * @param string $message
      * @param array $context
-     * @param ExceptionTraceBuilder|null $trace_builder
+     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $trace_builder
      */
     public function log($level, $message, array $context = [])
     {

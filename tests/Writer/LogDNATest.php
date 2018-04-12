@@ -3,7 +3,7 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Kronos\Log\Formatter\ContextStringifier;
-use Kronos\Log\Exception\ExceptionTraceBuilder;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
@@ -48,7 +48,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
     private $client;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ExceptionTraceBuilder
+     * @var \PHPUnit_Framework_MockObject_MockObject|TraceBuilder
      */
     private $exception_trace_builder;
 
@@ -67,7 +67,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->factory = $this->getMock(Factory\Guzzle::class);
         $this->factory->method('createClient')->willReturn($this->client);
 
-        $this->exception_trace_builder = $this->getMockWithoutInvokingTheOriginalConstructor(ExceptionTraceBuilder::class);
+        $this->exception_trace_builder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
         $this->context_stringifier = $this->getMockWithoutInvokingTheOriginalConstructor(ContextStringifier::class);
     }
 

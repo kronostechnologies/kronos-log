@@ -6,7 +6,7 @@ use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Logger;
 use Psr\Log\LogLevel;
-use Kronos\Log\Exception\ExceptionTraceBuilder;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Exception;
 
 class File extends \Kronos\Log\AbstractWriter
@@ -30,7 +30,7 @@ class File extends \Kronos\Log\AbstractWriter
     private $context_stringifier = null;
 
     /**
-     * @var ExceptionTraceBuilder
+     * @var \Kronos\Log\Formatter\Exception\TraceBuilder
      */
     private $trace_builder;
 
@@ -43,13 +43,13 @@ class File extends \Kronos\Log\AbstractWriter
      * File constructor.
      * @param $filename
      * @param FileFactory $factory
-     * @param ExceptionTraceBuilder|null $trace_builder
+     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $trace_builder
      */
-    public function __construct($filename, FileFactory $factory = null, ExceptionTraceBuilder $trace_builder = null)
+    public function __construct($filename, FileFactory $factory = null, TraceBuilder $trace_builder = null)
     {
         $this->factory = is_null($factory) ? new FileFactory() : $factory;
         $this->file_adaptor = $this->factory->createFileAdaptor($filename);
-        $this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
+        $this->trace_builder = is_null($trace_builder) ? new TraceBuilder() : $trace_builder;
     }
 
     /**

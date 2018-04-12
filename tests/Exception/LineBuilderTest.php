@@ -2,7 +2,7 @@
 
 namespace Kronos\Tests\Log;
 
-use \Kronos\Log\Exception\LineBuilder;
+use Kronos\Log\Formatter\Exception\LineBuilder;
 
 class LineBuilderTest extends \PHPUnit_Framework_TestCase
 {

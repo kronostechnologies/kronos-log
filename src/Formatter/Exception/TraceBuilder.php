@@ -1,16 +1,16 @@
 <?php
 
-namespace Kronos\Log\Exception;
+namespace Kronos\Log\Formatter\Exception;
 
 /**
  * Class ExceptionTraceBuilder
  * @package Kronos\Log\Exception
  */
-class ExceptionTraceBuilder
+class TraceBuilder
 {
 
     /**
-     * @var LineBuilder
+     * @var \Kronos\Log\Formatter\Exception\LineBuilder
      */
     private $line_builder;
 

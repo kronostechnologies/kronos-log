@@ -53,7 +53,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->factory = $this->getMock(\Kronos\Log\Adaptor\FileFactory::class);
 
-        $this->trace_builder = $this->getMockBuilder(\Kronos\Log\Exception\ExceptionTraceBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->trace_builder = $this->getMockBuilder(\Kronos\Log\Formatter\Exception\TraceBuilder::class)->disableOriginalConstructor()->getMock();
     }
 
     public function test_NewWriter_Constructor_ShouldCreateNewFile()

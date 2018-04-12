@@ -6,7 +6,7 @@ use Kronos\Log\AbstractWriter;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
-use Kronos\Log\Exception\ExceptionTraceBuilder;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class LogDNA extends AbstractWriter
 {
@@ -44,7 +44,7 @@ class LogDNA extends AbstractWriter
     private $guzzleClient;
 
     /**
-     * @var ExceptionTraceBuilder
+     * @var TraceBuilder
      */
     private $trace_builder;
 
@@ -60,7 +60,7 @@ class LogDNA extends AbstractWriter
      * @param $ingestionKey
      * @param array $guzzleOptions
      * @param Factory\Guzzle|null $guzzleFactory
-     * @param ExceptionTraceBuilder|null $trace_builder
+     * @param TraceBuilder|null $trace_builder
      * @param ContextStringifier|null $contextStringifier
      */
     public function __construct(
@@ -69,12 +69,12 @@ class LogDNA extends AbstractWriter
         $ingestionKey,
         $guzzleOptions = [],
         Factory\Guzzle $guzzleFactory = null,
-        ExceptionTraceBuilder $trace_builder = null,
+        TraceBuilder $trace_builder = null,
         ContextStringifier $contextStringifier = null
     ) {
         $this->hostname = $hostname;
         $this->application = $application;
-        $this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
+        $this->trace_builder = is_null($trace_builder) ? new TraceBuilder() : $trace_builder;
 
         $this->contextStringifier = $contextStringifier ?: new ContextStringifier();
 
