@@ -2,7 +2,7 @@
 
 namespace Kronos\Tests\Log\Writer;
 
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Exception\ExceptionTraceBuilder;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Factory;

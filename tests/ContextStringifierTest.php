@@ -2,7 +2,7 @@
 
 namespace Kronos\Tests\Log;
 
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
 
 class ContextStringifierTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,13 +17,13 @@ class ContextStringifierTest extends \PHPUnit_Framework_TestCase
     const SECOND_VALUE = 'second value';
 
     /**
-     * @var ContextStringifier
+     * @var \Kronos\Log\Formatter\ContextStringifier
      */
     private $context_stringifier;
 
     public function setUp()
     {
-        $this->context_stringifier = new ContextStringifier();
+        $this->context_stringifier = new \Kronos\Log\Formatter\ContextStringifier();
     }
 
     public function test_EmptyContext_Stringify_ShouldReturnEmptyString()

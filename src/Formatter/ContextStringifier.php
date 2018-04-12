@@ -1,8 +1,6 @@
 <?php
 
-namespace Kronos\Log;
-
-use function PHPSTORM_META\type;
+namespace Kronos\Log\Formatter;
 
 class ContextStringifier
 {

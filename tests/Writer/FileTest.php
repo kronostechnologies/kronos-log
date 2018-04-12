@@ -3,7 +3,7 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Kronos\Log\Adaptor\FileFactory;
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Writer\File;
 use Psr\Log\LogLevel;
 use \Kronos\Log\Logger;

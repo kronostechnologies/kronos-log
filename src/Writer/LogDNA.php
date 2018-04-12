@@ -3,7 +3,7 @@
 namespace Kronos\Log\Writer;
 
 use Kronos\Log\AbstractWriter;
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
 use Kronos\Log\Exception\ExceptionTraceBuilder;

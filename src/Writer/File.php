@@ -3,7 +3,7 @@
 namespace Kronos\Log\Writer;
 
 use Kronos\Log\Adaptor\FileFactory;
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Logger;
 use Psr\Log\LogLevel;
 use Kronos\Log\Exception\ExceptionTraceBuilder;
@@ -25,7 +25,7 @@ class File extends \Kronos\Log\AbstractWriter
     private $file_adaptor;
 
     /**
-     * @var ContextStringifier
+     * @var \Kronos\Log\Formatter\ContextStringifier
      */
     private $context_stringifier = null;
 

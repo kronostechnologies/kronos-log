@@ -4,7 +4,7 @@ namespace Kronos\Log\Factory;
 
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Adaptor\Syslog As SyslogAdaptor;
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Writer\File;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Writer\Sentry;
@@ -143,7 +143,7 @@ class Writer
     }
 
     /**
-     * @return ContextStringifier
+     * @return \Kronos\Log\Formatter\ContextStringifier
      */
     public function getContextStringifier()
     {
