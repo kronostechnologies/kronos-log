@@ -3,6 +3,8 @@
 namespace Kronos\Tests\Log;
 
 use Kronos\Log\Traits\Interpolate;
+use Kronos\Tests\Log\Formatter\ObjectWithoutToString;
+use Kronos\Tests\Log\Formatter\ObjectWithToString;
 
 class InterpolateTest extends \PHPUnit_Framework_TestCase
 {

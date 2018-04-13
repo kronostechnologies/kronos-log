@@ -250,6 +250,16 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => 'message']);
     }
 
+    public function test_ExceptionAndIncludeExceptionArgs_log_ShouldIncludeArgs() {
+        $this->exception_trace_builder
+            ->expects(self::once())
+            ->method('includeArgs');
+        $this->givenWriter();
+        $this->writer->setIncludeExceptionArgs();
+
+        $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => new \Exception()]);
+    }
+
     public function test_GuzzleClientThrowException_log_ShouldDoNothing()
     {
         $this->client

@@ -32,7 +32,7 @@ class File extends \Kronos\Log\AbstractWriter
     /**
      * @var \Kronos\Log\Formatter\Exception\TraceBuilder
      */
-    private $trace_builder;
+    private $traceBuilder;
 
     /**
      * @var FileFactory
@@ -43,13 +43,13 @@ class File extends \Kronos\Log\AbstractWriter
      * File constructor.
      * @param $filename
      * @param FileFactory $factory
-     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $trace_builder
+     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $traceBuilder
      */
-    public function __construct($filename, FileFactory $factory = null, TraceBuilder $trace_builder = null)
+    public function __construct($filename, FileFactory $factory = null, TraceBuilder $traceBuilder = null)
     {
         $this->factory = is_null($factory) ? new FileFactory() : $factory;
         $this->file_adaptor = $this->factory->createFileAdaptor($filename);
-        $this->trace_builder = is_null($trace_builder) ? new TraceBuilder() : $trace_builder;
+        $this->traceBuilder = is_null($traceBuilder) ? new TraceBuilder() : $traceBuilder;
     }
 
     /**
@@ -112,7 +112,8 @@ class File extends \Kronos\Log\AbstractWriter
     }
 
     /**
-     * @param string $level
+     * @param $message
+     * @param $level
      * @param Exception $exception
      * @param int $depth
      */
@@ -123,7 +124,8 @@ class File extends \Kronos\Log\AbstractWriter
         }
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
-            $ex_trace = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
+            if($this->include_exception_args) $this->traceBuilder->includeArgs();
+            $ex_trace = $this->traceBuilder->getTraceAsString($exception);
             $this->file_adaptor->write($ex_trace);
         }
 

@@ -37,7 +37,7 @@ class Console extends \Kronos\Log\AbstractWriter
     /**
      * @var TraceBuilder
      */
-    private $trace_builder;
+    private $traceBuilder;
 
     /**
      * @var FileFactory
@@ -45,14 +45,16 @@ class Console extends \Kronos\Log\AbstractWriter
     private $factory;
 
     /**
-     * @param FileFactory $factory
+     * Console constructor.
+     * @param FileFactory|null $factory
+     * @param TraceBuilder|null $traceBuilder
      */
-    public function __construct(FileFactory $factory = null, TraceBuilder $trace_builder = null)
+    public function __construct(FileFactory $factory = null, TraceBuilder $traceBuilder = null)
     {
         $this->factory = is_null($factory) ? new FileFactory() : $factory;
         $this->stdout = $this->factory->createTTYAdaptor(self::STDOUT);
         $this->stderr = $this->factory->createTTYAdaptor(self::STDERR);
-        $this->trace_builder = is_null($trace_builder) ? new TraceBuilder() : $trace_builder;
+        $this->traceBuilder = is_null($traceBuilder) ? new TraceBuilder() : $traceBuilder;
     }
 
     /**
@@ -128,7 +130,11 @@ class Console extends \Kronos\Log\AbstractWriter
         }
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
-            $ex_trace = $this->trace_builder->getTraceAsString($exception, $this->include_exception_args);
+            if($this->include_exception_args) {
+                $this->traceBuilder->includeArgs();
+            }
+
+            $ex_trace = $this->traceBuilder->getTraceAsString($exception);
             $this->stderr->write($ex_trace);
         }
 

@@ -166,6 +166,10 @@ class LogDNA extends AbstractWriter
     private function replaceException($context)
     {
         if (isset($context['exception']) && $context['exception'] instanceof \Exception) {
+            if($this->include_exception_args) {
+                $this->trace_builder->includeArgs();
+            }
+
             $exception = $context['exception'];
             $context['exception'] = [];
 

@@ -119,6 +119,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function test_ContextContainingExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStackTrace()
     {
         $this->givenFactoryReturnAdaptor();
+        $exception = new \Exception(self::EXCEPTION_MESSAGE);
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
@@ -127,14 +128,15 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $writer = new File(self::A_FILENAME, $this->factory, $this->trace_builder);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
-            Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
+            Logger::EXCEPTION_CONTEXT => $exception
         ];
+
+        $this->trace_builder->expects($this->at(0))->method('getTraceAsString')->with($exception);
 
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException(
-    )
+    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStacktraceOfPreviousException()
     {
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToBeCalledWithConsecutive([
@@ -152,8 +154,23 @@ class FileTest extends \PHPUnit_Framework_TestCase
             Logger::EXCEPTION_CONTEXT => $exception
         ];
 
-        $this->trace_builder->expects($this->at(0))->method('getTraceAsString')->with($exception, false);
-        $this->trace_builder->expects($this->at(1))->method('getTraceAsString')->with($previous_exception, false);
+        $this->trace_builder->expects($this->at(0))->method('getTraceAsString')->with($exception);
+        $this->trace_builder->expects($this->at(1))->method('getTraceAsString')->with($previous_exception);
+
+        $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
+    }
+
+    public function test_ExceptionInContextAndIncludeExceptionArgs_Log_ShouldTellTraceBuilderToIncludeArgs() {
+        $this->givenFactoryReturnAdaptor();
+        $writer = new File(self::A_FILENAME, $this->factory, $this->trace_builder);
+        $writer->setIncludeExceptionArgs();
+        $this->trace_builder->expects(self::once())
+            ->method('includeArgs');
+        $exception = new \Exception(self::EXCEPTION_MESSAGE);
+        $context = [
+            self::CONTEXT_KEY => self::CONTEXT_VALUE,
+            Logger::EXCEPTION_CONTEXT => $exception
+        ];
 
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }

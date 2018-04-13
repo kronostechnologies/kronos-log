@@ -1,6 +1,6 @@
 <?php
 
-namespace Kronos\Tests\Log;
+namespace Kronos\Tests\Log\Formatter;
 
 use Kronos\Log\Formatter\ContextStringifier;
 

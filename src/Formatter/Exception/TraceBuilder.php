@@ -8,69 +8,173 @@ namespace Kronos\Log\Formatter\Exception;
  */
 class TraceBuilder
 {
+    const LINE_SKIP = '...';
+
+    /**
+     * @var bool
+     */
+    private $showTopLines = false;
+
+    /**
+     * @var int
+     */
+    private $topLines = 0;
+
+    /**
+     * @var bool
+     */
+    private $showBottomLines = false;
+
+    /**
+     * @var integer
+     */
+    private $bottomLines = 0;
+
+    /**
+     * @var array
+     */
+    private $acceptedRange;
+
+    /**
+     * @var bool
+     */
+    private $includeArgs = false;
 
     /**
      * @var \Kronos\Log\Formatter\Exception\LineBuilder
      */
-    private $line_builder;
+    private $lineBuilder;
 
     /**
      * ExceptionTraceBuilder constructor.
-     * @param LineBuilder|null $line_builder
+     * @param LineBuilder|null $lineBuilder
      */
-    public function __construct(LineBuilder $line_builder = null)
+    public function __construct(LineBuilder $lineBuilder = null)
     {
-        $this->line_builder = is_null($line_builder) ? new LineBuilder() : $line_builder;
+        $this->lineBuilder = is_null($lineBuilder) ? new LineBuilder() : $lineBuilder;
     }
 
     /**
      * Builds the exception trace as a number of string lines separated by carriage return
      *
      * @param $exception
-     * @param bool $include_args
+     * @param bool $includeArgs
      * @return string
      */
-    public function getTraceAsString($exception, $include_args = false)
+    public function getTraceAsString($exception) // Once we support PHP 7 => $exception should be a \Throwable
     {
-        $ex_trace = "";
-        $ex_elements = $exception->getTrace();
+        $lines = [];
+        $traceStack = $exception->getTrace();
+        $this->generateAcceptedLineRange(count($traceStack));
 
-        if (!empty($ex_elements)) {
-            foreach ($ex_elements as $stack_line_nb => $ex_element) {
+        $addedLineSkip = false;
 
-                if (isset($stack_line_nb)) {
-                    $this->line_builder->setLineNb($stack_line_nb);
+        if (!empty($traceStack)) {
+            foreach ($traceStack as $stackLineNumber => $stackItem) {
+
+                if($this->shouldBuildLine($stackLineNumber)) {
+                    $this->setupLineBuilder($stackLineNumber, $stackItem);
+
+                    $lines[] = $this->lineBuilder->buildExceptionString();
+
+                    $this->lineBuilder->clearLine();
                 }
+                else if(!$addedLineSkip) {
+                    $lines[] = self::LINE_SKIP;
 
-                if (isset($ex_element['line'])) {
-                    $this->line_builder->setLine($ex_element['line']);
+                    $addedLineSkip = true;
                 }
-
-                if (isset($ex_element['file'])) {
-                    $this->line_builder->setFile($ex_element['file']);
-                }
-
-                if (isset($ex_element['class'])) {
-                    $this->line_builder->setClass($ex_element['class']);
-                }
-
-                if (isset($ex_element['function'])) {
-                    $this->line_builder->setFunction($ex_element['function']);
-                }
-
-                if (isset($ex_element['type'])) {
-                    $this->line_builder->setType($ex_element['type']);
-                }
-
-                if ($include_args && isset($ex_element['args'])) {
-                    $this->line_builder->setArgs($ex_element['args']);
-                }
-
-                $ex_trace .= $this->line_builder->buildExceptionString() . "\n";
-
-                $this->line_builder->clearLine();
             }
         }
-        return $ex_trace;
+        return implode(PHP_EOL, $lines);
     }
+
+    /**
+     * @param int $lines
+     */
+    public function showTopLines($lines)
+    {
+        $this->showTopLines = true;
+        $this->topLines = $lines;
+    }
+
+    /**
+     * @param int $lines
+     */
+    public function showBottomLines($lines)
+    {
+        $this->showBottomLines = true;
+        $this->bottomLines = $lines;
+    }
+
+    /**
+     * @param $includeArgs
+     */
+    public function includeArgs($includeArgs = true) {
+        $this->includeArgs = $includeArgs;
+    }
+
+    /**
+     * @param $stackLineNumber
+     * @param $traceElement
+     */
+    private function setupLineBuilder($stackLineNumber, $traceElement)
+    {
+        if (isset($stackLineNumber)) {
+            $this->lineBuilder->setLineNb($stackLineNumber);
+        }
+
+        if (isset($traceElement['line'])) {
+            $this->lineBuilder->setLine($traceElement['line']);
+        }
+
+        if (isset($traceElement['file'])) {
+            $this->lineBuilder->setFile($traceElement['file']);
+        }
+
+        if (isset($traceElement['class'])) {
+            $this->lineBuilder->setClass($traceElement['class']);
+        }
+
+        if (isset($traceElement['function'])) {
+            $this->lineBuilder->setFunction($traceElement['function']);
+        }
+
+        if (isset($traceElement['type'])) {
+            $this->lineBuilder->setType($traceElement['type']);
+        }
+
+        if ($this->includeArgs && isset($traceElement['args'])) {
+            $this->lineBuilder->setArgs($traceElement['args']);
+        }
+    }
+
+    /**
+     * @param $stackLineNumber
+     * @param $stackHeight
+     * @return bool
+     */
+    private function shouldBuildLine($stackLineNumber)
+    {
+        return (!$this->showTopLines && !$this->showBottomLines) || in_array($stackLineNumber, $this->acceptedRange);
+    }
+
+    /**
+     * @param $stackHeight
+     */
+    private function generateAcceptedLineRange($stackHeight)
+    {
+        $acceptedRange = [];
+
+        if ($this->showTopLines) {
+            $acceptedRange = array_merge($acceptedRange, range(0, $this->topLines - 1));
+        }
+
+        if ($this->showBottomLines) {
+            $acceptedRange = array_merge($acceptedRange, range($stackHeight - $this->bottomLines, $stackHeight - 1));
+        }
+
+        $this->acceptedRange = $acceptedRange;
+    }
+
 }
