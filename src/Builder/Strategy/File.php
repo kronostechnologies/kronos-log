@@ -8,6 +8,7 @@ use Kronos\Log\Factory\Writer As WriterFactory;
 
 class File extends AbstractWriter
 {
+    use Traits\ExceptionTraceSettings;
 
     const FILENAME = 'filename';
 
@@ -35,6 +36,7 @@ class File extends AbstractWriter
         $writer = $this->factory->createFileWriter($settings[self::FILENAME]);
 
         $this->setCommonSettings($writer, $settings);
+        $this->setExceptionTraceSettings($writer, $settings);
 
         return $writer;
     }

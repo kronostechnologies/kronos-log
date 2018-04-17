@@ -7,6 +7,7 @@ use Kronos\Log\Factory\Writer As WriterFactory;
 
 class Console extends AbstractWriter
 {
+    use Traits\ExceptionTraceSettings;
 
     const FORCE_ANSI_COLOR = 'forceAnsiColor';
     const FORCE_NO_ANSI_COLOR = 'forceNoAnsiColor';
@@ -30,6 +31,7 @@ class Console extends AbstractWriter
         $writer = $this->factory->createConsoleWriter();
 
         $this->setCommonSettings($writer, $settings);
+        $this->setExceptionTraceSettings($writer, $settings);
 
         if (isset($settings['forceAnsiColor']) && $settings['forceAnsiColor']) {
             $writer->setForceAnsiColorSupport();

@@ -8,6 +8,7 @@ use Kronos\Log\Factory\Writer As WriterFactory;
 
 class LogDNA extends AbstractWriter
 {
+    use Traits\ExceptionTraceSettings;
 
     const HOSTNAME = 'hostname';
     const APPLICATION = 'application';
@@ -39,6 +40,7 @@ class LogDNA extends AbstractWriter
             $settings[self::INGESTION_KEY]);
 
         $this->setCommonSettings($writer, $settings);
+        $this->setExceptionTraceSettings($writer, $settings);
 
         if (isset($settings[self::IP_ADDRESS])) {
             $writer->setIpAddress($settings[self::IP_ADDRESS]);

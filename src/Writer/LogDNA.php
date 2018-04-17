@@ -5,11 +5,13 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
+use Kronos\Log\Traits\ExceptionTraceSettings;
 use Psr\Log\LogLevel;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class LogDNA extends AbstractWriter
 {
+    use ExceptionTraceSettings;
 
     const LOGDNA_URL = 'https://logs.logdna.com/';
     const INGEST_URI = 'logs/ingest';
@@ -166,7 +168,7 @@ class LogDNA extends AbstractWriter
     private function replaceException($context)
     {
         if (isset($context['exception']) && $context['exception'] instanceof \Exception) {
-            if($this->include_exception_args) {
+            if($this->includeExceptionArgs) {
                 $this->trace_builder->includeArgs();
             }
 
@@ -174,8 +176,7 @@ class LogDNA extends AbstractWriter
             $context['exception'] = [];
 
             $context['exception']['message'] = $exception->getMessage();
-            $context['exception']['stacktrace'] = $this->trace_builder->getTraceAsString($exception,
-                $this->include_exception_args);
+            $context['exception']['stacktrace'] = $this->trace_builder->getTraceAsString($exception);
         }
 
         return $context;

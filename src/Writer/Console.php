@@ -6,6 +6,7 @@ use Kronos\Log\Adaptor\File as FileAdaptor;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
+use Kronos\Log\Traits\ExceptionTraceSettings;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Kronos\Log\Logger;
@@ -15,9 +16,9 @@ use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class Console extends \Kronos\Log\AbstractWriter
 {
-
     use PrependLogLevel;
     use PrependDateTime;
+    use ExceptionTraceSettings;
 
     const STDOUT = 'php://stdout';
     const STDERR = 'php://stderr';
@@ -130,7 +131,7 @@ class Console extends \Kronos\Log\AbstractWriter
         }
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
-            if($this->include_exception_args) {
+            if($this->includeExceptionArgs) {
                 $this->traceBuilder->includeArgs();
             }
 

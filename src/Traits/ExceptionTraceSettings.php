@@ -22,7 +22,7 @@ trait ExceptionTraceSettings
     /**
      * @param bool $includeExceptionArgs
      */
-    public function setIncludeExceptionArgs($includeExceptionArgs)
+    public function setIncludeExceptionArgs($includeExceptionArgs = true)
     {
         $this->includeExceptionArgs = $includeExceptionArgs;
     }

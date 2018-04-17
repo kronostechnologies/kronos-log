@@ -5,6 +5,9 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Logger;
+use Kronos\Log\Traits\ExceptionTraceSettings;
+use Kronos\Log\Traits\PrependDateTime;
+use Kronos\Log\Traits\PrependLogLevel;
 use Psr\Log\LogLevel;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Exception;
@@ -12,8 +15,9 @@ use Exception;
 class File extends \Kronos\Log\AbstractWriter
 {
 
-    use \Kronos\Log\Traits\PrependDateTime;
-    use \Kronos\Log\Traits\PrependLogLevel;
+    use PrependDateTime;
+    use PrependLogLevel;
+    use ExceptionTraceSettings;
 
     const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
     const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
@@ -124,7 +128,10 @@ class File extends \Kronos\Log\AbstractWriter
         }
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
-            if($this->include_exception_args) $this->traceBuilder->includeArgs();
+            if($this->includeExceptionArgs) {
+                $this->traceBuilder->includeArgs();
+            }
+
             $ex_trace = $this->traceBuilder->getTraceAsString($exception);
             $this->file_adaptor->write($ex_trace);
         }
