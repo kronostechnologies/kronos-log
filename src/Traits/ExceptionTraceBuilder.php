@@ -2,22 +2,51 @@
 
 namespace Kronos\Log\Traits;
 
-trait ExceptionTraceSettings
+use Kronos\Log\Factory\Formatter;
+
+trait ExceptionTraceBuilder
 {
     /**
      * @var bool
      */
     protected $includeExceptionArgs = false;
 
+    /**
+     * @var int
+     */
     protected $showExceptionTopLines = 0;
 
+    /**
+     * @var int
+     */
     protected $showExceptionBottomLines = 0;
 
+    /**
+     * @var bool
+     */
+    protected $exceptionSettingChanged = false;
+
+    /**
+     * @var bool
+     */
     protected $showPreviousException = true;
 
+    /**
+     * @var int
+     */
     protected $showPreviousExceptionTopLines = 0;
 
+    /**
+     * @var int
+     */
     protected $showPreviousExceptionBottomLines = 0;
+
+    /**
+     * @var bool
+     */
+    protected $previousExceptionSettingChanged = false;
+
+
 
     /**
      * @param bool $includeExceptionArgs
@@ -67,4 +96,22 @@ trait ExceptionTraceSettings
         $this->showPreviousExceptionBottomLines = $count;
     }
 
+    /**
+     * @param Formatter $formatterFactory
+     * @return \Kronos\Log\Formatter\Exception\TraceBuilder
+     */
+    private function getExceptionTrace(Formatter $formatterFactory, $exception)
+    {
+        $builder = $formatterFactory->createExceptionTraceBuilder();
+        $builder->getTraceAsString($exception);
+    }
+
+    /**
+     * @param Formatter $formatterFactory
+     * @return \Kronos\Log\Formatter\Exception\TraceBuilder
+     */
+    private function getPreviousTraceBuilder(Formatter $formatterFactory)
+    {
+        return $formatterFactory->createExceptionTraceBuilder();
+    }
 }

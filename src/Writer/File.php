@@ -5,7 +5,7 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Logger;
-use Kronos\Log\Traits\ExceptionTraceSettings;
+use Kronos\Log\Traits\ExceptionTraceBuilder;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Psr\Log\LogLevel;
@@ -17,7 +17,7 @@ class File extends \Kronos\Log\AbstractWriter
 
     use PrependDateTime;
     use PrependLogLevel;
-    use ExceptionTraceSettings;
+    use ExceptionTraceBuilder;
 
     const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
     const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";

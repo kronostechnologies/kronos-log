@@ -6,6 +6,8 @@ use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Adaptor\TTY;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
+use Kronos\Log\Factory\Formatter;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\Console;
 use \Kronos\Log\Logger;
 use Psr\Log\LogLevel;
@@ -42,7 +44,12 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     /**
      * @var FileFactory|PHPUnit_Framework_MockObject_MockObject
      */
-    private $factory;
+    private $fileFactory;
+
+    /**
+     * @var Formatter|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $formatterFactory;
 
     /**
      * @var TTY|PHPUnit_Framework_MockObject_MockObject
@@ -54,15 +61,26 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      */
     private $stderr;
 
+    /**
+     * @var TraceBuilder|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $exceptionTraceBuilder;
+
+    /**
+     * @var TraceBuilder|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $previousExceptionTraceBuilder;
+
 
     public function setUp()
     {
-        $this->factory = $this->getMockBuilder(FileFactory::class)->disableOriginalConstructor()->getMock();
+        $this->fileFactory = $this->getMockBuilder(FileFactory::class)->disableOriginalConstructor()->getMock();
+        $this->formatterFactory = $this->getMock(Formatter::class);
     }
 
     public function test_NewConsole_Constructor_ShouldCreateAdaptorForStdoutAndStderr()
     {
-        $this->factory
+        $this->fileFactory
             ->expects($this->exactly(2))
             ->method('createTTYAdaptor')
             ->withConsecutive(
@@ -70,14 +88,23 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
                 [Console::STDERR]
             );
 
-        $this->writer = new Console($this->factory);
+        $this->writer = new Console($this->fileFactory, $this->formatterFactory);
+    }
+
+    public function test_TTYAdaptors_Constructor_ShouldCreateExceptionsTraceBuilders()
+    {
+        $this->formatterFactory
+            ->expects(self::exactly(2))
+            ->method('createExceptionTraceBuilder');
+
+        $this->writer = new Console($this->fileFactory, $this->formatterFactory);
     }
 
     public function test_Console_LogWithLevelBelowError_ShouldWriteInterpolatedMessageToStdout()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout, self::INTERPOLATED_MESSAGE);
-        $this->writer = new Console($this->factory);
+        $this->writer = new Console($this->fileFactory);
 
         $this->writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
@@ -86,7 +113,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout, self::INTERPOLATED_MESSAGE, AnsiTextColor::YELLOW);
-        $this->writer = new Console($this->factory);
+        $this->writer = new Console($this->fileFactory);
 
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
@@ -96,7 +123,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stderr, self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE,
             AnsiBackgroundColor::RED);
-        $this->writer = new Console($this->factory);
+        $this->writer = new Console($this->fileFactory);
 
         $this->writer->log(self::LOGLEVEL_ABOVE_WARNING, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
@@ -107,7 +134,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout,
             $this->matchesRegularExpression('/' . self::DATETIME_REGEX . '' . self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL . '/'));
-        $this->writer = new Console($this->factory);
+        $this->writer = new Console($this->fileFactory);
         $this->writer->setPrependLogLevel();
         $this->writer->setPrependDateTime();
 
@@ -119,7 +146,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsSetForceAnsiColorSupportToBeCalled($this->stdout, true);
         $this->expectsSetForceAnsiColorSupportToBeCalled($this->stderr, true);
-        $this->writer = new Console($this->factory);
+        $this->writer = new Console($this->fileFactory);
 
         $this->writer->setForceAnsiColorSupport();
     }
@@ -129,7 +156,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsSetForceNoAnsiColorSupportToBeCalled($this->stdout, true);
         $this->expectsSetForceNoAnsiColorSupportToBeCalled($this->stderr, true);
-        $this->writer = new Console($this->factory);
+        $this->writer = new Console($this->fileFactory);
 
         $this->writer->setForceNoAnsiColorSupport();
     }
@@ -143,7 +170,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
         ]);
-        $writer = new Console($this->factory);
+        $writer = new Console($this->fileFactory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
@@ -161,7 +188,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
             [$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
         ]);
 
-        $writer = new Console($this->factory);
+        $writer = new Console($this->fileFactory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => new Exception(self::EXCEPTION_MESSAGE)
@@ -182,7 +209,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
             [$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
         ]);
 
-        $writer = new Console($this->factory);
+        $writer = new Console($this->fileFactory);
         $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $context = [
@@ -198,12 +225,15 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->stdout = $this->getMockBuilder(TTY::class)->disableOriginalConstructor()->getMock();
         $this->stderr = $this->getMockBuilder(TTY::class)->disableOriginalConstructor()->getMock();
 
-        $this->factory
+        $this->fileFactory
             ->method('createTTYAdaptor')
             ->will($this->returnValueMap([
                 [Console::STDOUT, $this->stdout],
                 [Console::STDERR, $this->stderr],
             ]));
+
+        $this->exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
     }
 
     /**

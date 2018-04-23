@@ -5,13 +5,13 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
-use Kronos\Log\Traits\ExceptionTraceSettings;
+use Kronos\Log\Traits\ExceptionTraceBuilder;
 use Psr\Log\LogLevel;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class LogDNA extends AbstractWriter
 {
-    use ExceptionTraceSettings;
+    use ExceptionTraceBuilder;
 
     const LOGDNA_URL = 'https://logs.logdna.com/';
     const INGEST_URI = 'logs/ingest';

@@ -145,7 +145,7 @@ class TestableTrait implements Strategy {
 
 class WriterWithTrait implements WriterInterface
 {
-    use \Kronos\Log\Traits\ExceptionTraceSettings;
+    use \Kronos\Log\Traits\ExceptionTraceBuilder;
 
     public function canLogLevel($level)
     {

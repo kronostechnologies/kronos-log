@@ -6,7 +6,8 @@ use Kronos\Log\Adaptor\File as FileAdaptor;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
-use Kronos\Log\Traits\ExceptionTraceSettings;
+use Kronos\Log\Factory\Formatter;
+use Kronos\Log\Traits\ExceptionTraceBuilder;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Kronos\Log\Logger;
@@ -18,7 +19,7 @@ class Console extends \Kronos\Log\AbstractWriter
 {
     use PrependLogLevel;
     use PrependDateTime;
-    use ExceptionTraceSettings;
+    use ExceptionTraceBuilder;
 
     const STDOUT = 'php://stdout';
     const STDERR = 'php://stderr';
@@ -38,24 +39,27 @@ class Console extends \Kronos\Log\AbstractWriter
     /**
      * @var TraceBuilder
      */
-    private $traceBuilder;
+    private $exceptionTraceBuilder;
 
     /**
-     * @var FileFactory
+     * @var TraceBuilder
      */
-    private $factory;
+    private $previousExceptionTraceBuilder;
 
     /**
      * Console constructor.
      * @param FileFactory|null $factory
-     * @param TraceBuilder|null $traceBuilder
+     * @param Formatter|null $formatterFactory
      */
-    public function __construct(FileFactory $factory = null, TraceBuilder $traceBuilder = null)
+    public function __construct(FileFactory $factory = null, Formatter $formatterFactory = null)
     {
-        $this->factory = is_null($factory) ? new FileFactory() : $factory;
-        $this->stdout = $this->factory->createTTYAdaptor(self::STDOUT);
-        $this->stderr = $this->factory->createTTYAdaptor(self::STDERR);
-        $this->traceBuilder = is_null($traceBuilder) ? new TraceBuilder() : $traceBuilder;
+        $factory = $factory ?: new FileFactory();
+        $this->stdout = $factory->createTTYAdaptor(self::STDOUT);
+        $this->stderr = $factory->createTTYAdaptor(self::STDERR);
+
+        $formatterFactory = $formatterFactory ?: new Formatter();
+        $this->exceptionTraceBuilder = $formatterFactory->createExceptionTraceBuilder();
+        $this->previousExceptionTraceBuilder = $formatterFactory->createExceptionTraceBuilder();
     }
 
     /**
@@ -132,10 +136,10 @@ class Console extends \Kronos\Log\AbstractWriter
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
             if($this->includeExceptionArgs) {
-                $this->traceBuilder->includeArgs();
+                $this->exceptionTraceBuilder->includeArgs();
             }
 
-            $ex_trace = $this->traceBuilder->getTraceAsString($exception);
+            $ex_trace = $this->exceptionTraceBuilder->getTraceAsString($exception);
             $this->stderr->write($ex_trace);
         }
 
