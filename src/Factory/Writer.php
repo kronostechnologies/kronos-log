@@ -108,11 +108,13 @@ class Writer
      * @param $hostname
      * @param $application
      * @param $ingestionKey
+     * @param TraceBuilder|null $exceptionTraceBuilder
+     * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return LogDNA
      */
-    public function createLogDNAWriter($hostname, $application, $ingestionKey)
+    public function createLogDNAWriter($hostname, $application, $ingestionKey, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
     {
-        return new LogDNA($hostname, $application, $ingestionKey);
+        return new LogDNA($hostname, $application, $ingestionKey, $exceptionTraceBuilder, $previousExceptionTraceBuilder);
     }
 
     /**

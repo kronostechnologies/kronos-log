@@ -8,8 +8,6 @@ use Kronos\Log\Factory\Writer As WriterFactory;
 
 class LogDNA extends AbstractWriter
 {
-    use Traits\ExceptionTraceSettings;
-
     const HOSTNAME = 'hostname';
     const APPLICATION = 'application';
     const INGESTION_KEY = 'ingestionKey';
@@ -22,9 +20,15 @@ class LogDNA extends AbstractWriter
      */
     private $factory;
 
-    public function __construct(WriterFactory $factory = null)
+    /**
+     * @var ExceptionTraceHelper
+     */
+    private $exceptionTraceHelper;
+
+    public function __construct(WriterFactory $factory = null, ExceptionTraceHelper $exceptionTraceHelper = null)
     {
         $this->factory = is_null($factory) ? new WriterFactory() : $factory;
+        $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
     }
 
     /**
@@ -36,11 +40,13 @@ class LogDNA extends AbstractWriter
     {
         $this->checkRequiredSettings($settings);
 
+        $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
+        $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
+
         $writer = $this->factory->createLogDNAWriter($this->getHostName($settings), $settings[self::APPLICATION],
-            $settings[self::INGESTION_KEY]);
+            $settings[self::INGESTION_KEY], $exceptionTraceBuilder, $previousExceptionTraceBuilder);
 
         $this->setCommonSettings($writer, $settings);
-        $this->setExceptionTraceSettings($writer, $settings);
 
         if (isset($settings[self::IP_ADDRESS])) {
             $writer->setIpAddress($settings[self::IP_ADDRESS]);

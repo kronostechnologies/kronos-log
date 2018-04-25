@@ -90,7 +90,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
             ]);
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            $this->exceptionTraceBuilder, $this->context_stringifier);
+            $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder, $this->context_stringifier);
     }
 
     public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions()
@@ -120,7 +120,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions,
-            $this->factory, $this->exceptionTraceBuilder, $this->context_stringifier);
+            $this->factory, $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder, $this->context_stringifier);
     }
 
     public function test_Context_log_ShouldStringifyContext()
