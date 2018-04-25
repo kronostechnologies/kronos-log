@@ -49,17 +49,17 @@ class Console extends \Kronos\Log\AbstractWriter
     /**
      * Console constructor.
      * @param FileFactory|null $factory
-     * @param Formatter|null $formatterFactory
+     * @param TraceBuilder|null $exceptionTraceBuilder
+     * @param TraceBuilder|null $previousExceptionTraceBuilder
      */
-    public function __construct(FileFactory $factory = null, Formatter $formatterFactory = null)
+    public function __construct(FileFactory $factory = null, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
     {
         $factory = $factory ?: new FileFactory();
         $this->stdout = $factory->createTTYAdaptor(self::STDOUT);
         $this->stderr = $factory->createTTYAdaptor(self::STDERR);
 
-        $formatterFactory = $formatterFactory ?: new Formatter();
-        $this->exceptionTraceBuilder = $formatterFactory->createExceptionTraceBuilder();
-        $this->previousExceptionTraceBuilder = $formatterFactory->createExceptionTraceBuilder();
+        $this->exceptionTraceBuilder = $exceptionTraceBuilder;
+        $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
     }
 
     /**
@@ -135,12 +135,15 @@ class Console extends \Kronos\Log\AbstractWriter
         }
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
-            if($this->includeExceptionArgs) {
-                $this->exceptionTraceBuilder->includeArgs();
+            if($depth > 0) {
+                if($this->previousExceptionTraceBuilder) {
+                    $ex_trace = $this->previousExceptionTraceBuilder->getTraceAsString($exception);
+                    $this->stderr->write($ex_trace);
+                }
+            } elseif ($this->exceptionTraceBuilder) {
+                $ex_trace = $this->exceptionTraceBuilder->getTraceAsString($exception);
+                $this->stderr->write($ex_trace);
             }
-
-            $ex_trace = $this->exceptionTraceBuilder->getTraceAsString($exception);
-            $this->stderr->write($ex_trace);
         }
 
         $previous = $exception->getPrevious();

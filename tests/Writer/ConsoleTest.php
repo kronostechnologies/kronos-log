@@ -47,11 +47,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     private $fileFactory;
 
     /**
-     * @var Formatter|PHPUnit_Framework_MockObject_MockObject
-     */
-    private $formatterFactory;
-
-    /**
      * @var TTY|PHPUnit_Framework_MockObject_MockObject
      */
     private $stdout;
@@ -75,7 +70,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->fileFactory = $this->getMockBuilder(FileFactory::class)->disableOriginalConstructor()->getMock();
-        $this->formatterFactory = $this->getMock(Formatter::class);
     }
 
     public function test_NewConsole_Constructor_ShouldCreateAdaptorForStdoutAndStderr()
@@ -88,16 +82,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
                 [Console::STDERR]
             );
 
-        $this->writer = new Console($this->fileFactory, $this->formatterFactory);
-    }
-
-    public function test_TTYAdaptors_Constructor_ShouldCreateExceptionsTraceBuilders()
-    {
-        $this->formatterFactory
-            ->expects(self::exactly(2))
-            ->method('createExceptionTraceBuilder');
-
-        $this->writer = new Console($this->fileFactory, $this->formatterFactory);
+        $this->writer = new Console($this->fileFactory);
     }
 
     public function test_Console_LogWithLevelBelowError_ShouldWriteInterpolatedMessageToStdout()
@@ -179,39 +164,86 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStackTrace()
+    public function test_ContextContainingExceptionAndLogLevelIsErrorAndTraceBuilder_Log_ShouldWriteExceptionMessageAndStackTrace()
     {
         $this->givenFactoryReturnFileAdaptors();
+        $this->exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             [$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
         ]);
+        $exception = new Exception(self::EXCEPTION_MESSAGE);
+        $this->exceptionTraceBuilder->expects(self::once())
+            ->method('getTraceAsString')
+            ->willReturn($exception->getTraceAsString());
 
-        $writer = new Console($this->fileFactory);
+        $writer = new Console($this->fileFactory, $this->exceptionTraceBuilder);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
-            Logger::EXCEPTION_CONTEXT => new Exception(self::EXCEPTION_MESSAGE)
+            Logger::EXCEPTION_CONTEXT => $exception
         ];
 
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException(
-    )
+    public function test_ContextContainingExceptionAndLogLevelIsErrorAndNoTraceBuilder_Log_ShouldWriteExceptionMessage()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
+        ]);
+        $exception = new Exception(self::EXCEPTION_MESSAGE);
+
+        $writer = new Console($this->fileFactory);
+        $context = [
+            self::CONTEXT_KEY => self::CONTEXT_VALUE,
+            Logger::EXCEPTION_CONTEXT => $exception
+        ];
+
+        $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
+    }
+
+    public function test_ContextContainingExceptionAndLogLevelIsErrorAndPreviouxExceptionTraceBuilder_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException(
+    )
+    {
+        $this->givenFactoryReturnFileAdaptors();
+        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
+        $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
+        $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
+            [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->anything()], // Because we can't mock exceptions, can't be sure it's really the stacktrace...
             [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
+            [$previous_exception->getTraceAsString()]
+        ]);
+        $this->previousExceptionTraceBuilder->expects(self::once())
+            ->method('getTraceAsString')
+            ->willReturn($previous_exception->getTraceAsString());
+
+        $writer = new Console($this->fileFactory, null, $this->previousExceptionTraceBuilder);
+        $context = [
+            self::CONTEXT_KEY => self::CONTEXT_VALUE,
+            Logger::EXCEPTION_CONTEXT => $exception
+        ];
+
+        $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
+    }
+
+    public function test_ContextContainingExceptionAndLogLevelIsErrorAndNoPreviouxExceptionTraceBuilder_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException(
+    )
+    {
+        $this->givenFactoryReturnFileAdaptors();
+        $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
+        $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
+        $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
+            [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
         ]);
 
         $writer = new Console($this->fileFactory);
-        $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
-        $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -231,9 +263,6 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
                 [Console::STDOUT, $this->stdout],
                 [Console::STDERR, $this->stderr],
             ]));
-
-        $this->exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
-        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
     }
 
     /**
