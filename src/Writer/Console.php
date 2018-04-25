@@ -6,8 +6,6 @@ use Kronos\Log\Adaptor\File as FileAdaptor;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
-use Kronos\Log\Factory\Formatter;
-use Kronos\Log\Traits\ExceptionTraceBuilder;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Kronos\Log\Logger;

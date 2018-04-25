@@ -5,8 +5,6 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
-use Kronos\Log\Traits\ExceptionTraceBuilder;
-use Psr\Log\LogLevel;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class LogDNA extends AbstractWriter
