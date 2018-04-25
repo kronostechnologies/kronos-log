@@ -70,7 +70,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateFileWriter()
+    public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
     {
         $settings = $this->givenRequiredSettings();
         $exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
@@ -89,7 +89,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_NullExceptionTraceBuilders_buildFromArray_ShouldCreateFileWriter()
+    public function test_NullExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
     {
         $settings = $this->givenRequiredSettings();
         $this->exceptionTraceHelper
