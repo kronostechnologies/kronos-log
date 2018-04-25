@@ -19,7 +19,6 @@ class Console extends \Kronos\Log\AbstractWriter
 {
     use PrependLogLevel;
     use PrependDateTime;
-    use ExceptionTraceBuilder;
 
     const STDOUT = 'php://stdout';
     const STDERR = 'php://stderr';
