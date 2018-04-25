@@ -50,7 +50,12 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|TraceBuilder
      */
-    private $exception_trace_builder;
+    private $exceptionTraceBuilder;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|TraceBuilder
+     */
+    private $previousExceptionTraceBuilder;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -67,7 +72,6 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->factory = $this->getMock(Factory\Guzzle::class);
         $this->factory->method('createClient')->willReturn($this->client);
 
-        $this->exception_trace_builder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
         $this->context_stringifier = $this->getMockWithoutInvokingTheOriginalConstructor(ContextStringifier::class);
     }
 
@@ -86,7 +90,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
             ]);
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            $this->exception_trace_builder, $this->context_stringifier);
+            $this->exceptionTraceBuilder, $this->context_stringifier);
     }
 
     public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions()
@@ -116,7 +120,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions,
-            $this->factory, $this->exception_trace_builder, $this->context_stringifier);
+            $this->factory, $this->exceptionTraceBuilder, $this->context_stringifier);
     }
 
     public function test_Context_log_ShouldStringifyContext()
@@ -212,10 +216,27 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
     }
 
-    public function test_ExceptionInContext_log_ShouldReplaceExceptionWithMessageAndAddStacktrace()
+    public function test_ExceptionInContext_log_ShouldReplaceExceptionWithMessage()
     {
         $exception = new TestableException('exception message');
-        $this->exception_trace_builder
+        $this->context_stringifier
+            ->expects(self::once())
+            ->method('stringifyArray')
+            ->with([
+                'exception' => [
+                    'message' => $exception->getMessage()
+                ]
+            ]);
+        $this->givenWriter();
+
+        $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
+    }
+
+    public function test_ExceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace()
+    {
+        $this->givenWriterWithExceptionTraceBuilder();
+        $exception = new TestableException('exception message');
+        $this->exceptionTraceBuilder
             ->expects(self::once())
             ->method('getTraceAsString')
             ->with($exception)
@@ -229,35 +250,67 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
                     'stacktrace' => self::EXCEPTION_TRACE
                 ]
             ]);
+
+        $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
+    }
+
+    public function test_ExceptionWithPreviousExceptionInContext_log_ShouldIncludePreviousExceptionMessage()
+    {
+        $previousException = new TestableException('previous exception message');
+        $exception = new TestableException('exception message', 0, $previousException);
+        $this->context_stringifier
+            ->expects(self::once())
+            ->method('stringifyArray')
+            ->with([
+                'exception' => [
+                    'message' => $exception->getMessage(),
+                    'previous' => [
+                        'message' => $previousException->getMessage()
+                    ]
+                ]
+            ]);
         $this->givenWriter();
+
+        $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
+    }
+
+    public function test_ExceptionWithPreviousExceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace()
+    {
+        $this->givenWriterWithPreviousExceptionTraceBuilder();
+        $previousException = new TestableException('previous exception message');
+        $exception = new TestableException('exception message', 0, $previousException);
+        $this->previousExceptionTraceBuilder
+            ->expects(self::once())
+            ->method('getTraceAsString')
+            ->with($previousException)
+            ->willReturn(self::EXCEPTION_TRACE);
+        $this->context_stringifier
+            ->expects(self::once())
+            ->method('stringifyArray')
+            ->with([
+                'exception' => [
+                    'message' => $exception->getMessage(),
+                    'previous' => [
+                        'message' => $previousException->getMessage(),
+                        'stacktrace' => self::EXCEPTION_TRACE
+                    ]
+                ]
+            ]);
 
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
     }
 
     public function test_ExceptionStringInContext_log_ShouldKeepExceptionText()
     {
-        $this->exception_trace_builder
-            ->expects(self::never())
-            ->method('getTraceAsString');
+        $this->givenWriter();
         $this->context_stringifier
             ->expects(self::once())
             ->method('stringifyArray')
             ->with([
                 'exception' => 'message'
             ]);
-        $this->givenWriter();
 
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => 'message']);
-    }
-
-    public function test_ExceptionAndIncludeExceptionArgs_log_ShouldIncludeArgs() {
-        $this->exception_trace_builder
-            ->expects(self::once())
-            ->method('includeArgs');
-        $this->givenWriter();
-        $this->writer->setIncludeExceptionArgs();
-
-        $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => new \Exception()]);
     }
 
     public function test_GuzzleClientThrowException_log_ShouldDoNothing()
@@ -273,7 +326,23 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
     private function givenWriter()
     {
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            $this->exception_trace_builder, $this->context_stringifier);
+            null, null, $this->context_stringifier);
+    }
+
+    private function givenWriterWithExceptionTraceBuilder()
+    {
+        $this->exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+
+        $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
+            $this->exceptionTraceBuilder, null, $this->context_stringifier);
+    }
+
+    private function givenWriterWithPreviousExceptionTraceBuilder()
+    {
+        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+
+        $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
+            null, $this->previousExceptionTraceBuilder, $this->context_stringifier);
     }
 
     private function buildUriRegex($uri)
