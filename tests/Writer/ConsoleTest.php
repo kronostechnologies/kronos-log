@@ -205,7 +205,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsErrorAndPreviouxExceptionTraceBuilder_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException(
+    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsErrorAndPreviouxExceptionTraceBuilder_Log_ShouldWriteMessageAndStacktraceForPreviousException(
     )
     {
         $this->givenFactoryReturnFileAdaptors();
@@ -231,7 +231,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsErrorAndNoPreviouxExceptionTraceBuilder_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException(
+    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteMessageForPreviousException(
     )
     {
         $this->givenFactoryReturnFileAdaptors();

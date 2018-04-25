@@ -4,12 +4,11 @@ namespace Kronos\Log\Writer;
 
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Formatter\ContextStringifier;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Logger;
-use Kronos\Log\Traits\ExceptionTraceBuilder;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Psr\Log\LogLevel;
-use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Exception;
 
 class File extends \Kronos\Log\AbstractWriter
@@ -17,7 +16,6 @@ class File extends \Kronos\Log\AbstractWriter
 
     use PrependDateTime;
     use PrependLogLevel;
-    use ExceptionTraceBuilder;
 
     const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
     const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
@@ -34,9 +32,14 @@ class File extends \Kronos\Log\AbstractWriter
     private $context_stringifier = null;
 
     /**
-     * @var \Kronos\Log\Formatter\Exception\TraceBuilder
+     * @var TraceBuilder
      */
-    private $traceBuilder;
+    private $exceptionTraceBuilder;
+
+    /**
+     * @var TraceBuilder
+     */
+    private $previousExceptionTraceBuilder;
 
     /**
      * @var FileFactory
@@ -47,13 +50,14 @@ class File extends \Kronos\Log\AbstractWriter
      * File constructor.
      * @param $filename
      * @param FileFactory $factory
-     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $traceBuilder
+     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $exceptionTraceBuilder
      */
-    public function __construct($filename, FileFactory $factory = null, TraceBuilder $traceBuilder = null)
+    public function __construct($filename, FileFactory $factory = null, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
     {
         $this->factory = is_null($factory) ? new FileFactory() : $factory;
         $this->file_adaptor = $this->factory->createFileAdaptor($filename);
-        $this->traceBuilder = is_null($traceBuilder) ? new TraceBuilder() : $traceBuilder;
+        $this->exceptionTraceBuilder = $exceptionTraceBuilder;
+        $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
     }
 
     /**
@@ -128,12 +132,16 @@ class File extends \Kronos\Log\AbstractWriter
         }
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
-            if($this->includeExceptionArgs) {
-                $this->traceBuilder->includeArgs();
+            if($depth > 0) {
+                if($this->previousExceptionTraceBuilder) {
+                    $ex_trace = $this->previousExceptionTraceBuilder->getTraceAsString($exception);
+                    $this->file_adaptor->write($ex_trace);
+                }
             }
-
-            $ex_trace = $this->traceBuilder->getTraceAsString($exception);
-            $this->file_adaptor->write($ex_trace);
+            elseif($this->exceptionTraceBuilder) {
+                $ex_trace = $this->exceptionTraceBuilder->getTraceAsString($exception);
+                $this->file_adaptor->write($ex_trace);
+            }
         }
 
         $previous = $exception->getPrevious();
