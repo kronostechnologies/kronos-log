@@ -16,9 +16,15 @@ class Console extends AbstractWriter
      */
     private $factory;
 
-    public function __construct(WriterFactory $factory = null)
+    /**
+     * @var ExceptionTraceHelper
+     */
+    private $exceptionTraceHelper;
+
+    public function __construct(WriterFactory $factory = null, ExceptionTraceHelper $exceptionTraceHelper = null)
     {
-        $this->factory = is_null($factory) ? new WriterFactory() : $factory;
+        $this->factory = $factory ?: new WriterFactory();
+        $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
     }
 
     /**
@@ -27,7 +33,10 @@ class Console extends AbstractWriter
      */
     public function buildFromArray(array $settings)
     {
-        $writer = $this->factory->createConsoleWriter();
+        $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
+        $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
+
+        $writer = $this->factory->createConsoleWriter($exceptionTraceBuilder, $previousExceptionTraceBuilder);
 
         $this->setCommonSettings($writer, $settings);
 

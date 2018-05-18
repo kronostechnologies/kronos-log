@@ -3,14 +3,12 @@
 namespace Kronos\Log\Writer;
 
 use Kronos\Log\AbstractWriter;
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
-use Psr\Log\LogLevel;
-use Kronos\Log\Exception\ExceptionTraceBuilder;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class LogDNA extends AbstractWriter
 {
-
     const LOGDNA_URL = 'https://logs.logdna.com/';
     const INGEST_URI = 'logs/ingest';
 
@@ -44,9 +42,15 @@ class LogDNA extends AbstractWriter
     private $guzzleClient;
 
     /**
-     * @var ExceptionTraceBuilder
+     * @var TraceBuilder
      */
-    private $trace_builder;
+    private $exceptionTraceBuilder;
+
+    /**
+     * @var TraceBuilder
+     */
+    private $previousExceptionTraceBuilder;
+
 
     /**
      * @var ContextStringifier
@@ -60,7 +64,8 @@ class LogDNA extends AbstractWriter
      * @param $ingestionKey
      * @param array $guzzleOptions
      * @param Factory\Guzzle|null $guzzleFactory
-     * @param ExceptionTraceBuilder|null $trace_builder
+     * @param TraceBuilder|null $exceptionTraceBuilder
+     * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @param ContextStringifier|null $contextStringifier
      */
     public function __construct(
@@ -69,12 +74,14 @@ class LogDNA extends AbstractWriter
         $ingestionKey,
         $guzzleOptions = [],
         Factory\Guzzle $guzzleFactory = null,
-        ExceptionTraceBuilder $trace_builder = null,
+        TraceBuilder $exceptionTraceBuilder = null,
+        TraceBuilder $previousExceptionTraceBuilder = null,
         ContextStringifier $contextStringifier = null
     ) {
         $this->hostname = $hostname;
         $this->application = $application;
-        $this->trace_builder = is_null($trace_builder) ? new ExceptionTraceBuilder() : $trace_builder;
+        $this->exceptionTraceBuilder = $exceptionTraceBuilder;
+        $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
 
         $this->contextStringifier = $contextStringifier ?: new ContextStringifier();
 
@@ -170,8 +177,36 @@ class LogDNA extends AbstractWriter
             $context['exception'] = [];
 
             $context['exception']['message'] = $exception->getMessage();
-            $context['exception']['stacktrace'] = $this->trace_builder->getTraceAsString($exception,
-                $this->include_exception_args);
+            if ($this->exceptionTraceBuilder) {
+                $context['exception']['stacktrace'] = $this->exceptionTraceBuilder->getTraceAsString($exception);
+            }
+
+            $previous = $exception->getPrevious();
+            if ($previous instanceof \Exception) {
+                $context['exception']['previous'] = $this->getPreviousExceptionContext($previous);
+            }
+        }
+
+        return $context;
+    }
+
+    /**
+     * @param \Exception $exception
+     * @return array
+     */
+    private function getPreviousExceptionContext(\Exception $exception)
+    {
+        $context = [
+            'message' => $exception->getMessage()
+        ];
+
+        if($this->previousExceptionTraceBuilder){
+            $context['stacktrace'] = $this->previousExceptionTraceBuilder->getTraceAsString($exception);
+        }
+
+        $previous = $exception->getPrevious();
+        if ($previous instanceof \Exception) {
+            $context['previous'] = $this->getPreviousExceptionContext($previous);
         }
 
         return $context;

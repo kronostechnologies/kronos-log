@@ -28,7 +28,6 @@ abstract class AbstractWriter implements WriterInterface
 
     protected $min_level = LogLevel::DEBUG;
     protected $max_level = LogLevel::EMERGENCY;
-    protected $include_exception_args = false;
     protected $can_log = true;
 
     public function canLogLevel($level)
@@ -54,11 +53,6 @@ abstract class AbstractWriter implements WriterInterface
         $this->validateLogLevel($level);
 
         $this->min_level = $level;
-    }
-
-    public function setIncludeExceptionArgs($include_exception_args = true)
-    {
-        $this->include_exception_args = $include_exception_args;
     }
 
     protected function isLevelLower($base_level, $compared_level)

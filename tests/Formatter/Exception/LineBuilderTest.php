@@ -1,8 +1,8 @@
 <?php
 
-namespace Kronos\Tests\Log;
+namespace Kronos\Tests\Log\Formatter\Exception;
 
-use \Kronos\Log\Exception\LineBuilder;
+use Kronos\Log\Formatter\Exception\LineBuilder;
 
 class LineBuilderTest extends \PHPUnit_Framework_TestCase
 {

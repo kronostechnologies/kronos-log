@@ -3,7 +3,9 @@
 namespace Kronos\Tests\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy\Console;
+use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Factory\Writer;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class ConsoleTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,6 +25,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    private $exceptionTraceHelper;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $writer;
 
     public function setUp()
@@ -30,15 +37,69 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\Console::class);
         $this->factory = $this->getMock(Writer::class);
         $this->factory->method('createConsoleWriter')->willReturn($this->writer);
+        $this->exceptionTraceHelper = $this->getMockWithoutInvokingTheOriginalConstructor(ExceptionTraceHelper::class);
 
-        $this->strategy = new Console($this->factory);
+        $this->strategy = new Console($this->factory, $this->exceptionTraceHelper);
     }
 
-    public function test_buildFromArray_ShouldCreateConsoleWriter()
+    public function test_Settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
     {
+        $settings = [
+            'some' => 'settings',
+            'details' => 'do not matter yet'
+        ];
+        $this->exceptionTraceHelper
+            ->expects(self::once())
+            ->method('getExceptionTraceBuilderForSettings')
+            ->with($settings);
+
+        $this->strategy->buildFromArray($settings);
+    }
+
+    public function test_Settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
+    {
+        $settings = [
+            'some' => 'settings',
+            'details' => 'do not matter yet'
+        ];
+        $this->exceptionTraceHelper
+            ->expects(self::once())
+            ->method('getPreviousExceptionTraceBuilderForSettings')
+            ->with($settings);
+
+        $this->strategy->buildFromArray($settings);
+    }
+
+    public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateConsoleWriter()
+    {
+        $exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->exceptionTraceHelper
+            ->method('getExceptionTraceBuilderForSettings')
+            ->willReturn($exceptionTraceBuilder);
+        $previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->exceptionTraceHelper
+            ->method('getPreviousExceptionTraceBuilderForSettings')
+            ->willReturn($previousExceptionTraceBuilder);
         $this->factory
             ->expects(self::once())
-            ->method('createConsoleWriter');
+            ->method('createConsoleWriter')
+            ->with($exceptionTraceBuilder, $previousExceptionTraceBuilder);
+
+        $this->strategy->buildFromArray([]);
+    }
+
+    public function test_NullExceptionTraceBuilders_buildFromArray_ShouldCreateConsoleWriter()
+    {
+        $this->exceptionTraceHelper
+            ->method('getExceptionTraceBuilderForSettings')
+            ->willReturn(null);
+        $this->exceptionTraceHelper
+            ->method('getPreviousExceptionTraceBuilderForSettings')
+            ->willReturn(null);
+        $this->factory
+            ->expects(self::once())
+            ->method('createConsoleWriter')
+            ->with(null, null);
 
         $this->strategy->buildFromArray([]);
     }

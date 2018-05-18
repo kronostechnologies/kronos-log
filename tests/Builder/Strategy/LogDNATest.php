@@ -2,9 +2,11 @@
 
 namespace Kronos\Tests\Log\Builder\Strategy;
 
+use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Builder\Strategy\LogDNA;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 
 class LogDNATest extends \PHPUnit_Framework_TestCase
 {
@@ -29,6 +31,11 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    private $exceptionTraceHelper;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $writer;
 
     public function setUp()
@@ -36,17 +43,65 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\LogDNA::class);
         $this->factory = $this->getMock(Writer::class);
         $this->factory->method('createLogDNAWriter')->willReturn($this->writer);
+        $this->exceptionTraceHelper = $this->getMockWithoutInvokingTheOriginalConstructor(ExceptionTraceHelper::class);
 
-        $this->strategy = new LogDNA($this->factory);
+        $this->strategy = new LogDNA($this->factory, $this->exceptionTraceHelper);
     }
 
-    public function test_RequiredSettings_buildFromArray_ShouldCreateLogDNAWriterWithSettings()
+    public function test_Settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
     {
+        $settings = $this->givenRequiredSettings();
+        $this->exceptionTraceHelper
+            ->expects(self::once())
+            ->method('getExceptionTraceBuilderForSettings')
+            ->with($settings);
+
+        $this->strategy->buildFromArray($settings);
+    }
+
+    public function test_Settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
+    {
+        $settings = $this->givenRequiredSettings();
+        $this->exceptionTraceHelper
+            ->expects(self::once())
+            ->method('getPreviousExceptionTraceBuilderForSettings')
+            ->with($settings);
+
+        $this->strategy->buildFromArray($settings);
+    }
+
+    public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
+    {
+        $settings = $this->givenRequiredSettings();
+        $exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->exceptionTraceHelper
+            ->method('getExceptionTraceBuilderForSettings')
+            ->willReturn($exceptionTraceBuilder);
+        $previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->exceptionTraceHelper
+            ->method('getPreviousExceptionTraceBuilderForSettings')
+            ->willReturn($previousExceptionTraceBuilder);
         $this->factory
             ->expects(self::once())
             ->method('createLogDNAWriter')
-            ->with(self::HOSTNAME_VALUE, self::APPLICATION_VALUE, self::INGESTION_KEY_VALUE);
+            ->with(self::HOSTNAME_VALUE, self::APPLICATION_VALUE, self::INGESTION_KEY_VALUE, $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+
+        $this->strategy->buildFromArray($settings);
+    }
+
+    public function test_NullExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
+    {
         $settings = $this->givenRequiredSettings();
+        $this->exceptionTraceHelper
+            ->method('getExceptionTraceBuilderForSettings')
+            ->willReturn(null);
+        $this->exceptionTraceHelper
+            ->method('getPreviousExceptionTraceBuilderForSettings')
+            ->willReturn(null);
+        $this->factory
+            ->expects(self::once())
+            ->method('createLogDNAWriter')
+            ->with(self::HOSTNAME_VALUE, self::APPLICATION_VALUE, self::INGESTION_KEY_VALUE, null, null);
 
         $this->strategy->buildFromArray($settings);
     }

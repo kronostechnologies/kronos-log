@@ -4,7 +4,8 @@ namespace Kronos\Log\Factory;
 
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Adaptor\Syslog As SyslogAdaptor;
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\File;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Writer\Sentry;
@@ -33,11 +34,13 @@ class Writer
 
     /**
      * @param $filename
+     * @param TraceBuilder|null $exceptionTraceBuilder
+     * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return File
      */
-    public function createFileWriter($filename)
+    public function createFileWriter($filename, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
     {
-        $writer = new File($filename, $this->getFileFactory());
+        $writer = new File($filename, $this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
         $writer->setContextStringifier($this->getContextStringifier());
@@ -57,11 +60,13 @@ class Writer
     }
 
     /**
+     * @param TraceBuilder|null $exceptionTraceBuilder
+     * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return Console
      */
-    public function createConsoleWriter()
+    public function createConsoleWriter(TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
     {
-        $writer = new Console($this->getFileFactory());
+        $writer = new Console($this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
 
@@ -103,11 +108,13 @@ class Writer
      * @param $hostname
      * @param $application
      * @param $ingestionKey
+     * @param TraceBuilder|null $exceptionTraceBuilder
+     * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return LogDNA
      */
-    public function createLogDNAWriter($hostname, $application, $ingestionKey)
+    public function createLogDNAWriter($hostname, $application, $ingestionKey, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
     {
-        return new LogDNA($hostname, $application, $ingestionKey);
+        return new LogDNA($hostname, $application, $ingestionKey, $exceptionTraceBuilder, $previousExceptionTraceBuilder);
     }
 
     /**
@@ -143,7 +150,7 @@ class Writer
     }
 
     /**
-     * @return ContextStringifier
+     * @return \Kronos\Log\Formatter\ContextStringifier
      */
     public function getContextStringifier()
     {

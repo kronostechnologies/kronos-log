@@ -1,6 +1,6 @@
 <?php
 
-namespace Kronos\Log\Exception;
+namespace Kronos\Log\Formatter\Exception;
 
 /**
  * Class LineBuilder

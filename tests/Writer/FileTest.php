@@ -3,7 +3,8 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Kronos\Log\Adaptor\FileFactory;
-use Kronos\Log\ContextStringifier;
+use Kronos\Log\Formatter\ContextStringifier;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\File;
 use Psr\Log\LogLevel;
 use \Kronos\Log\Logger;
@@ -45,7 +46,12 @@ class FileTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ExceptionTraceBuilder|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $trace_builder;
+    private $exceptionTraceBuilder;
+
+    /**
+     * @var ExceptionTraceBuilder|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $previousExceptionTraceBuilder;
 
     public function setUp()
     {
@@ -53,7 +59,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->factory = $this->getMock(\Kronos\Log\Adaptor\FileFactory::class);
 
-        $this->trace_builder = $this->getMockBuilder(\Kronos\Log\Exception\ExceptionTraceBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->exceptionTraceBuilder = $this->getMockBuilder(\Kronos\Log\Formatter\Exception\TraceBuilder::class)->disableOriginalConstructor()->getMock();
     }
 
     public function test_NewWriter_Constructor_ShouldCreateNewFile()
@@ -116,44 +122,66 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStackTrace()
+    public function test_ContextContainingExceptionAndLogLevelIsErrorAndNoTraceBuilder_Log_ShouldWriteExceptionMessage()
     {
         $this->givenFactoryReturnAdaptor();
+        $exception = new \Exception(self::EXCEPTION_MESSAGE);
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
         ]);
-        $writer = new File(self::A_FILENAME, $this->factory, $this->trace_builder);
-        $context = [
-            self::CONTEXT_KEY => self::CONTEXT_VALUE,
-            Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
-        ];
-
-        $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
-    }
-
-    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteExceptionMessageAndStacktraceForExceptionAndPreviousException(
-    )
-    {
-        $this->givenFactoryReturnAdaptor();
-        $this->expectsWriteToBeCalledWithConsecutive([
-            [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->anything()], // Because we can't mock exceptions, can't be sure it's really the stacktrace...,
-            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...,
-        ]);
-        $writer = new File(self::A_FILENAME, $this->factory, $this->trace_builder);
-        $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
-        $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
+        $writer = new File(self::A_FILENAME, $this->factory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
         ];
 
-        $this->trace_builder->expects($this->at(0))->method('getTraceAsString')->with($exception, false);
-        $this->trace_builder->expects($this->at(1))->method('getTraceAsString')->with($previous_exception, false);
+        $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
+    }
+
+    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsErrorAndPreviouxExceptionTraceBuilder_Log_ShouldWriteMessageAndStacktraceForPreviousException(
+    )
+    {
+        $this->givenFactoryReturnAdaptor();
+        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
+        $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
+        $this->expectsWriteToBeCalledWithConsecutive([
+            [self::INTERPOLATED_MESSAGE],
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+            [$previous_exception->getTraceAsString()]
+        ]);
+        $this->previousExceptionTraceBuilder->expects(self::once())
+            ->method('getTraceAsString')
+            ->willReturn($previous_exception->getTraceAsString());
+
+        $writer = new File(self::A_FILENAME, $this->factory, null, $this->previousExceptionTraceBuilder);
+        $context = [
+            self::CONTEXT_KEY => self::CONTEXT_VALUE,
+            Logger::EXCEPTION_CONTEXT => $exception
+        ];
+
+        $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
+    }
+
+    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteMessageForPreviousException(
+    )
+    {
+        $this->givenFactoryReturnAdaptor();
+        $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
+        $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
+        $this->expectsWriteToBeCalledWithConsecutive([
+            [self::INTERPOLATED_MESSAGE],
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)]
+        ]);
+
+        $writer = new File(self::A_FILENAME, $this->factory);
+        $context = [
+            self::CONTEXT_KEY => self::CONTEXT_VALUE,
+            Logger::EXCEPTION_CONTEXT => $exception
+        ];
 
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
