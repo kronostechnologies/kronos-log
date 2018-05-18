@@ -153,7 +153,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
             [self::INTERPOLATED_MESSAGE],
         ]);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            ['']
         ]);
         $writer = new Console($this->fileFactory);
         $context = [
@@ -171,7 +172,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->anything()] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
+            [$this->anything()],
+            [''] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
         ]);
         $exception = new Exception(self::EXCEPTION_MESSAGE);
         $this->exceptionTraceBuilder->expects(self::once())
@@ -192,7 +194,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            ['']
         ]);
         $exception = new Exception(self::EXCEPTION_MESSAGE);
 
@@ -215,8 +218,10 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [''],
             [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
-            [$previous_exception->getTraceAsString()]
+            [$previous_exception->getTraceAsString()],
+            ['']
         ]);
         $this->previousExceptionTraceBuilder->expects(self::once())
             ->method('getTraceAsString')
@@ -240,7 +245,9 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [''],
             [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+            ['']
         ]);
 
         $writer = new Console($this->fileFactory);

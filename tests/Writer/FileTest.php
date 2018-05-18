@@ -111,7 +111,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            ['']
         ]);
         $writer = new File(self::A_FILENAME, $this->factory);
         $context = [
@@ -128,7 +129,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $exception = new \Exception(self::EXCEPTION_MESSAGE);
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)]
+            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            ['']
         ]);
         $writer = new File(self::A_FILENAME, $this->factory);
         $context = [
@@ -149,8 +151,10 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [''],
             [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
-            [$previous_exception->getTraceAsString()]
+            [$previous_exception->getTraceAsString()],
+            ['']
         ]);
         $this->previousExceptionTraceBuilder->expects(self::once())
             ->method('getTraceAsString')
@@ -174,7 +178,9 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)]
+            [''],
+            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+            ['']
         ]);
 
         $writer = new File(self::A_FILENAME, $this->factory);

@@ -143,6 +143,8 @@ class Console extends \Kronos\Log\AbstractWriter
             }
         }
 
+        $this->stderr->write('');
+
         $previous = $exception->getPrevious();
         if ($previous instanceof Exception) {
             $this->writeException($message, $level, $previous, $depth + 1);
