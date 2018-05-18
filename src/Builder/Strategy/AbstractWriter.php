@@ -10,7 +10,6 @@ abstract class AbstractWriter implements Strategy
 
     const MIN_LEVEL = 'minLevel';
     const MAX_LEVEL = 'maxLevel';
-    const INCLUDE_EXCEPTION_ARGS = 'includeExceptionArgs';
 
     /**
      * @param \Kronos\Log\AbstractWriter $writer
@@ -24,10 +23,6 @@ abstract class AbstractWriter implements Strategy
 
         if (isset($settings[self::MAX_LEVEL])) {
             $writer->setMaxLevel($settings[self::MAX_LEVEL]);
-        }
-
-        if (isset($settings[self::INCLUDE_EXCEPTION_ARGS]) && $settings[self::INCLUDE_EXCEPTION_ARGS]) {
-            $writer->setIncludeExceptionArgs($settings[self::INCLUDE_EXCEPTION_ARGS]);
         }
     }
 }
