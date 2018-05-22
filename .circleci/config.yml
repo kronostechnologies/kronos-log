@@ -1,0 +1,42 @@
+version: 2
+aliases:
+  - &composer_install_cache_key v1-composer-install-{{ checksum "composer.lock" }}
+
+workflows:
+  version: 2
+  composer_and_phpunit:
+    jobs:
+    - build
+    - phpunit:
+        requires:
+        - build
+
+jobs:
+  build:
+    working_directory: ~/
+    docker:
+    - image: composer/composer:php5-alpine
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - *composer_install_cache_key
+    - run: apk update && apk add openssh-keysign
+    - run: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    - run: test ! -d vendor && composer install -n --prefer-dist || true
+    - save_cache:
+        key: *composer_install_cache_key
+        paths:
+          - vendor
+
+  phpunit:
+    working_directory: ~/
+    docker:
+    - image: php:5.6-cli-alpine
+      command: /sbin/init
+    steps:
+    - checkout
+    - restore_cache:
+        name: "Restoring composer install cache"
+        key: *composer_install_cache_key
+    - run: vendor/bin/phpunit
