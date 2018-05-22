@@ -1,6 +1,6 @@
 version: 2
 aliases:
-  - &composer_install_cache_key v1-composer-install-{{ checksum "composer.lock" }}
+  - &composer_install_cache_key v1-composer-install-{{ checksum "composer.json" }}
 
 workflows:
   version: 2
@@ -23,7 +23,7 @@ jobs:
         - *composer_install_cache_key
     - run: apk update && apk add openssh-keysign
     - run: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    - run: test ! -d vendor && composer install -n --prefer-dist || true
+    - run: test ! -d vendor && composer install -n --prefer-dist --dev || true
     - save_cache:
         key: *composer_install_cache_key
         paths:
