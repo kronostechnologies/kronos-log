@@ -63,7 +63,7 @@ class Console extends \Kronos\Log\AbstractWriter
      * @param string $level
      * @param string $message
      * @param array $context
-     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $trace_builder
+     * @throws Exception
      */
     public function log($level, $message, array $context = [])
     {
@@ -108,6 +108,7 @@ class Console extends \Kronos\Log\AbstractWriter
     }
 
     /**
+     * @param $message
      * @param string $level
      * @param array $context
      */
@@ -121,9 +122,11 @@ class Console extends \Kronos\Log\AbstractWriter
     }
 
     /**
+     * @param $message
      * @param string $level
      * @param Exception $exception
      * @param int $depth
+     * @throws Exception
      */
     private function writeException($message, $level, Exception $exception, $depth = 0)
     {

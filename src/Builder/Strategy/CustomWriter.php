@@ -7,6 +7,12 @@ use Kronos\Log\Builder\Strategy;
 
 class CustomWriter
 {
+    /**
+     * @param $classname
+     * @return \Kronos\Log\Builder\Strategy
+     * @throws InvalidCustomWriter
+     * @throws \ReflectionException
+     */
     public function getStrategyForClassname($classname)
     {
         if (class_exists($classname)) {

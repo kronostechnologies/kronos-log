@@ -51,6 +51,7 @@ class File extends \Kronos\Log\AbstractWriter
      * @param $filename
      * @param FileFactory $factory
      * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $exceptionTraceBuilder
+     * @param TraceBuilder|null $previousExceptionTraceBuilder
      */
     public function __construct($filename, FileFactory $factory = null, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
     {

@@ -58,7 +58,6 @@ class TraceBuilder
      * Builds the exception trace as a number of string lines separated by carriage return
      *
      * @param $exception
-     * @param bool $includeArgs
      * @return string
      */
     public function getTraceAsString($exception) // Once we support PHP 7 => $exception should be a \Throwable
@@ -151,7 +150,6 @@ class TraceBuilder
 
     /**
      * @param $stackLineNumber
-     * @param $stackHeight
      * @return bool
      */
     private function shouldBuildLine($stackLineNumber)

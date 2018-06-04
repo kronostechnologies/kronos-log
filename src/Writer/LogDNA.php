@@ -214,6 +214,7 @@ class LogDNA extends AbstractWriter
 
     /**
      * @param string $ingestionKey
+     * @param $guzzleOptions
      * @param Factory\Guzzle $guzzleFactory
      */
     private function createGuzzleClient($ingestionKey, $guzzleOptions, Factory\Guzzle $guzzleFactory = null)

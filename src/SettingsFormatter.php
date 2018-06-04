@@ -113,7 +113,6 @@ class SettingsFormatter
      * Compares active and inactive flags with allowed and unallowed flags in each of the writers' config.
      *
      * @param $settings
-     * @param $flags
      * @return mixed
      */
     private function filterSettings($settings)
