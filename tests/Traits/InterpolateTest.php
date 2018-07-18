@@ -72,4 +72,15 @@ class InterpolateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(self::MESSAGE_WITH_UNDEFINED, $interpolated_message);
     }
+
+    public function test_ZeroInContext_Interpolate_ShouldReplaceWithZero()
+    {
+        $original_message = self::A_MESSAGE;
+        $value = 0;
+        $expectedMessage = str_replace('{' . self::KEY . '}', $value, self::A_MESSAGE);
+
+        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $value]);
+
+        $this->assertEquals($expectedMessage, $interpolated_message);
+    }
 }

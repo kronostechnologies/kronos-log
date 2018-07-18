@@ -23,7 +23,7 @@ class ContextStringifierTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->context_stringifier = new \Kronos\Log\Formatter\ContextStringifier();
+        $this->context_stringifier = new ContextStringifier();
     }
 
     public function test_EmptyContext_Stringify_ShouldReturnEmptyString()
@@ -218,24 +218,5 @@ class ContextStringifierTest extends \PHPUnit_Framework_TestCase
         $stringifiedContext = $this->context_stringifier->stringifyArray($context);
 
         $this->assertEquals($expectedArray, $stringifiedContext);
-    }
-}
-
-class ObjectWithoutToString
-{
-    public $property;
-}
-
-class ObjectWithToString
-{
-
-    /**
-     * @var string
-     */
-    public $property;
-
-    public function __toString()
-    {
-        return $this->property;
     }
 }

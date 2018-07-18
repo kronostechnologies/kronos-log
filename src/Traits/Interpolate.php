@@ -40,6 +40,7 @@ trait Interpolate
      */
     private function canBeInterpolated($value)
     {
-        return $value && !is_array($value) && (!is_object($value) || method_exists($value, '__toString'));
+        return !is_null($value) && !is_array($value) && (!is_object($value) || method_exists($value, '__toString'));
     }
+
 }
