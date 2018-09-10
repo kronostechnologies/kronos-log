@@ -4,7 +4,7 @@
 namespace Kronos\Log\Factory;
 
 
-use Gelf\Logger;
+use Gelf\Logger as GraylogLogger;
 use Gelf\Publisher;
 use Gelf\PublisherInterface;
 use Gelf\Transport\AbstractTransport;
@@ -20,6 +20,8 @@ class Graylog
      */
     public function createUdpTransport($hostname, $port, $chunkSize)
     {
+        $hostname = \gethostbyname($hostname);
+
         return new UdpTransport($hostname, $port, $chunkSize);
     }
 
@@ -34,10 +36,10 @@ class Graylog
 
     /**
      * @param PublisherInterface $publisher
-     * @return Logger
+     * @return GraylogLogger
      */
     public function createLogger(PublisherInterface $publisher)
     {
-        return new Logger($publisher);
+        return new GraylogLogger($publisher);
     }
 }

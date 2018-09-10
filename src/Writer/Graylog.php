@@ -5,8 +5,6 @@ namespace Kronos\Log\Writer;
 
 
 use Gelf\Logger;
-use Gelf\Publisher;
-use Gelf\Transport\UdpTransport;
 use Kronos\Log\AbstractWriter;
 
 class Graylog extends AbstractWriter
@@ -46,6 +44,7 @@ class Graylog extends AbstractWriter
      * @param int $port
      * @param int $chunkSize
      * @param null|string $application
+     * @param \Kronos\Log\Factory\Graylog|null $factory
      */
     public function __construct($hostname, $port, $chunkSize, $application, \Kronos\Log\Factory\Graylog $factory = null)
     {
@@ -60,19 +59,17 @@ class Graylog extends AbstractWriter
     {
         $logger = $this->initializeLogger();
 
-        throw new \Exception("Not implemented");
+
     }
 
     /**
      * @param bool $force
      * @return Logger
      */
-    protected function initializeLogger($force = false)
+    protected function initializeLogger()
     {
-        if ($force || $this->logger === null) {
-            $hostname = \gethostbyname($this->hostname);
-
-            $transport = $this->factory->createUdpTransport($hostname, $this->port, $this->chunkSize);
+        if ($this->logger === null) {
+            $transport = $this->factory->createUdpTransport($this->hostname, $this->port, $this->chunkSize);
             $publisher = $this->factory->createPublisher($transport);
 
             $this->logger = $this->factory->createLogger($publisher);
