@@ -37,17 +37,23 @@ class Graylog extends AbstractWriter
     protected $logger;
 
     /**
+     * @var \Kronos\Log\Factory\Graylog
+     */
+    protected $factory;
+
+    /**
      * @param string $hostname
      * @param int $port
      * @param int $chunkSize
      * @param null|string $application
      */
-    public function __construct($hostname, $port, $chunkSize, $application)
+    public function __construct($hostname, $port, $chunkSize, $application, \Kronos\Log\Factory\Graylog $factory = null)
     {
         $this->hostname = $hostname;
         $this->port = $port;
         $this->chunkSize = $chunkSize;
         $this->application = $application;
+        $this->factory = $factory ?: new \Kronos\Log\Factory\Graylog();
     }
 
     public function log($level, $message, array $context = [])
@@ -66,10 +72,10 @@ class Graylog extends AbstractWriter
         if ($force || $this->logger === null) {
             $hostname = \gethostbyname($this->hostname);
 
-            $transport = new UdpTransport($hostname, $this->port, $this->chunkSize);
-            $publisher = new Publisher($transport);
+            $transport = $this->factory->createUdpTransport($hostname, $this->port, $this->chunkSize);
+            $publisher = $this->factory->createPublisher($transport);
 
-            $this->logger = new Logger($publisher);
+            $this->logger = $this->factory->createLogger($publisher);
         }
 
         return $this->logger;
