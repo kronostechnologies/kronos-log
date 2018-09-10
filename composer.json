@@ -26,7 +26,8 @@
 	},
 	"suggest": {
 		"guzzlehttp/guzzle": "Required for LogDNA writer",
-		"sentry/sentry": "Required for Sentry writer"
+		"sentry/sentry": "Required for Sentry writer",
+		"graylog2/gelf-php": "Required for Graylog writer"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "5.3.*",
