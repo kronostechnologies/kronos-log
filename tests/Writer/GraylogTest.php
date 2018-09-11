@@ -147,4 +147,15 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
 
         $this->writer->log(LogLevel::INFO, 'Something happened.', ['customContextValue' => 123]);
     }
+
+    public function test_exceptionWhenLogging_log_ReturnsFalse()
+    {
+        $this->writer = new Graylog('127.0.0.1', 12201, 8196, null, $this->factory);
+        $this->factory->method('createLogger')->willReturn($this->logger);
+        $this->logger->method('log')->willThrowException(new \Exception("Connection error"));
+
+        $retVal = $this->writer->log(LogLevel::INFO, "Anything");
+
+        $this->assertFalse($retVal);
+    }
 }

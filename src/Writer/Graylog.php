@@ -69,13 +69,19 @@ class Graylog extends AbstractWriter
 
     public function log($level, $message, array $context = [])
     {
-        $logger = $this->initializeLogger();
+        try {
+            $logger = $this->initializeLogger();
 
-        if ($this->application !== null) {
-            $context['_app'] = $this->application;
+            if ($this->application !== null) {
+                $context['_app'] = $this->application;
+            }
+
+            $logger->log(self::LEVEL_MAPPINGS[$level], $message, $context);
+            return true;
+        } catch (\Exception $ex) {
+            trigger_error('An error occurred while writing with the Graylog writer: ' . $ex->getMessage(), E_USER_WARNING);
+            return false;
         }
-
-        $logger->log(self::LEVEL_MAPPINGS[$level], $message, $context);
     }
 
     /**
