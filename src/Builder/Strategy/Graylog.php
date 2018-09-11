@@ -16,7 +16,7 @@ class Graylog extends AbstractWriter
 
     /**
      * @param array $settings
-     * @return WriterInterface
+     * @return WriterInterface|\Kronos\Log\Writer\Graylog
      * @throws RequiredSetting
      */
     public function buildFromArray(array $settings)

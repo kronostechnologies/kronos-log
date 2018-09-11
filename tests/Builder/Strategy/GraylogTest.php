@@ -48,4 +48,62 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
 
         $this->strategy->buildFromArray($params);
     }
+
+    public function test_hostnameSet_buildFromArray_hostnameIsSetInWriter()
+    {
+        $givenHostname = '4.4.2.2';
+        $params = ['chunkSize' => 8096, 'hostname' => $givenHostname];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame($givenHostname, $retVal->getHostname());
+    }
+
+    public function test_chunkSizeSet_buildFromArray_hostnameIsSetInWriter()
+    {
+        $givenChunkSize = 8096;
+        $params = ['chunkSize' => $givenChunkSize, 'hostname' => '4.4.2.2'];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame($givenChunkSize, $retVal->getChunkSize());
+    }
+
+    public function test_portSet_buildFromArray_portIsSetInWriter()
+    {
+        $givenPort = 12203;
+        $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2', 'port' => $givenPort];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame($givenPort, $retVal->getPort());
+    }
+
+    public function test_applicationSet_buildFromArray_applicationIsSetInWriter()
+    {
+        $givenApp = 'myapp';
+        $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2', 'application' => $givenApp];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame($givenApp, $retVal->getApplication());
+    }
+
+    public function test_portUnset_buildFromArray_portDefaultsTo12202InWriter()
+    {
+        $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2'];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame(12202, $retVal->getPort());
+    }
+
+    public function test_applicationUnset_buildFromArray_applicationDefaultsToNullInWriter()
+    {
+        $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2'];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame(null, $retVal->getApplication());
+    }
 }
