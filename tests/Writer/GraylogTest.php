@@ -9,6 +9,7 @@ use Gelf\Publisher;
 use Gelf\Transport\UdpTransport;
 use Kronos\Log\Factory\Writer;
 use Kronos\Log\Writer\Graylog;
+use Psr\Log\LogLevel;
 
 class GraylogTest extends \PHPUnit_Framework_TestCase
 {
@@ -60,6 +61,7 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $givenChunkSize = 8196;
         $this->writer = new Graylog($givenHostname, $givenPort, $givenChunkSize, null, $this->factory);
 
+        $this->factory->method('createLogger')->willReturn($this->logger);
         $this->factory->expects($this->once())
             ->method('createUdpTransport')
             ->with($givenHostname, $givenPort, $givenChunkSize)
@@ -74,7 +76,7 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->factory->expects($this->once())->method('createLogger')->with($this->publisher);
+        $this->factory->expects($this->once())->method('createLogger')->with($this->publisher)->willReturn($this->logger);
 
         $this->writer->log('INFO', 'anything');
     }
@@ -89,5 +91,60 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
 
         $this->writer->log('INFO', 'anything');
         $this->writer->log('INFO', 'anything');
+    }
+
+    public function test_logWithValidLevel_RemapsLevelToNumeric()
+    {
+        $givenLevel = LogLevel::CRITICAL;
+        $this->writer = new Graylog('127.0.0.1', 12201, 8196, null, $this->factory);
+        $this->factory->method('createLogger')->willReturn($this->logger);
+
+        $this->logger->expects($this->once())->method('log')->with(2, $this->anything(), $this->anything());
+
+        $this->writer->log($givenLevel, 'Something broke!');
+    }
+
+    public function test_logWithMessage_PassesMessageToLogger()
+    {
+        $givenMessage = 'Something is working.';
+        $this->writer = new Graylog('127.0.0.1', 12201, 8196, null, $this->factory);
+        $this->factory->method('createLogger')->willReturn($this->logger);
+
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $givenMessage, $this->anything());
+
+        $this->writer->log(LogLevel::INFO, $givenMessage);
+    }
+
+    public function test_applicationUnset_logWithAdditionalContext_PassesContextToLogger()
+    {
+        $givenContext = ['errorCode' => 23];
+        $this->writer = new Graylog('127.0.0.1', 12201, 8196, null, $this->factory);
+        $this->factory->method('createLogger')->willReturn($this->logger);
+
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), $givenContext);
+
+        $this->writer->log(LogLevel::INFO, 'Something happened.', $givenContext);
+    }
+
+    public function test_applicationSet_log_AppendsApplicationToContext()
+    {
+        $givenApplication = 'TheApp';
+        $this->writer = new Graylog('127.0.0.1', 12201, 8196, $givenApplication, $this->factory);
+        $this->factory->method('createLogger')->willReturn($this->logger);
+
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ '_app' => $givenApplication ]);
+
+        $this->writer->log(LogLevel::INFO, 'Something happened.');
+    }
+
+    public function test_applicationSetWithCustomContext_log_AppendsApplicationToContext()
+    {
+        $givenApplication = 'TheApp';
+        $this->writer = new Graylog('127.0.0.1', 12201, 8196, $givenApplication, $this->factory);
+        $this->factory->method('createLogger')->willReturn($this->logger);
+
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ '_app' => $givenApplication, 'customContextValue' => 123 ]);
+
+        $this->writer->log(LogLevel::INFO, 'Something happened.', ['customContextValue' => 123]);
     }
 }
