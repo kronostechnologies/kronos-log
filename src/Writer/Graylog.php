@@ -99,4 +99,36 @@ class Graylog extends AbstractWriter
 
         return $this->logger;
     }
+
+    /**
+     * @return string
+     */
+    public function getHostname()
+    {
+        return $this->hostname;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChunkSize()
+    {
+        return $this->chunkSize;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 }

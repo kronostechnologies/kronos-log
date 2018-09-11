@@ -28,7 +28,12 @@ class Graylog extends AbstractWriter
         $chunkSize = $settings[self::CHUNK_SIZE];
         $application = $settings[self::APPLICATION];
 
-//        return new Writer($host, $application);
+        return new \Kronos\Log\Writer\Graylog(
+            $hostname,
+            $port,
+            $chunkSize,
+            $application
+        );
     }
 
     /**
