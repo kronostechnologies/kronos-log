@@ -89,13 +89,13 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($givenApp, $retVal->getApplication());
     }
 
-    public function test_portUnset_buildFromArray_portDefaultsTo12202InWriter()
+    public function test_portUnset_buildFromArray_portDefaultsTo12201InWriter()
     {
         $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2'];
 
         $retVal = $this->strategy->buildFromArray($params);
 
-        $this->assertSame(12202, $retVal->getPort());
+        $this->assertSame(12201, $retVal->getPort());
     }
 
     public function test_applicationUnset_buildFromArray_applicationDefaultsToNullInWriter()
