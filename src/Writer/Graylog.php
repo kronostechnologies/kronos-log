@@ -36,6 +36,11 @@ class Graylog extends AbstractWriter
     protected $logger;
 
     /**
+     * @var bool
+     */
+    protected $outputVerboseLevel;
+
+    /**
      * @var \Kronos\Log\Factory\Graylog
      */
     protected $factory;
@@ -56,14 +61,16 @@ class Graylog extends AbstractWriter
      * @param int $port
      * @param int $chunkSize
      * @param null|string $application
+     * @param bool $outputVerboseLevel
      * @param \Kronos\Log\Factory\Graylog|null $factory
      */
-    public function __construct($hostname, $port, $chunkSize, $application, \Kronos\Log\Factory\Graylog $factory = null)
+    public function __construct($hostname, $port, $chunkSize, $application, $outputVerboseLevel, \Kronos\Log\Factory\Graylog $factory = null)
     {
         $this->hostname = $hostname;
         $this->port = $port;
         $this->chunkSize = $chunkSize;
         $this->application = $application;
+        $this->outputVerboseLevel = $outputVerboseLevel;
         $this->factory = $factory ?: new \Kronos\Log\Factory\Graylog();
     }
 
@@ -74,6 +81,10 @@ class Graylog extends AbstractWriter
 
             if ($this->application !== null) {
                 $context['_app'] = $this->application;
+            }
+
+            if ($this->outputVerboseLevel) {
+                $context['levelVerbose'] = $level;
             }
 
             $logger->log(self::LEVEL_MAPPINGS[$level], $message, $context);
@@ -130,5 +141,13 @@ class Graylog extends AbstractWriter
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getOutputVerboseLevel()
+    {
+        return $this->outputVerboseLevel;
     }
 }

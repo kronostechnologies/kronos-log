@@ -13,6 +13,7 @@ class Graylog extends AbstractWriter
     const HOSTNAME = 'hostname';
     const PORT = 'port';
     const CHUNK_SIZE = 'chunkSize';
+    const OUTPUT_VERBOSE_LEVEL = 'outputVerboseLevel';
 
     /**
      * @param array $settings
@@ -27,12 +28,14 @@ class Graylog extends AbstractWriter
         $port = $settings[self::PORT] ?: 12201;
         $chunkSize = $settings[self::CHUNK_SIZE];
         $application = $settings[self::APPLICATION];
+        $outputVerboseLevel = $settings[self::OUTPUT_VERBOSE_LEVEL] ?: false;
 
         return new \Kronos\Log\Writer\Graylog(
             $hostname,
             $port,
             $chunkSize,
-            $application
+            $application,
+            $outputVerboseLevel
         );
     }
 

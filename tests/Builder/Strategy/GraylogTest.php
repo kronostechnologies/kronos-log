@@ -89,6 +89,16 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($givenApp, $retVal->getApplication());
     }
 
+    public function test_outputVerboseLevelSet_buildFromArray_outputVerboseLevelIsSetInWriter()
+    {
+        $givenApp = 'myapp';
+        $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2', 'outputVerboseLevel' => true];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame(true, $retVal->getOutputVerboseLevel());
+    }
+
     public function test_portUnset_buildFromArray_portDefaultsTo12201InWriter()
     {
         $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2'];
@@ -105,5 +115,14 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $retVal = $this->strategy->buildFromArray($params);
 
         $this->assertSame(null, $retVal->getApplication());
+    }
+
+    public function test_applicationUnset_buildFromArray_outputVerboseLevelDefaultsToFalseInWriter()
+    {
+        $params = ['chunkSize' => 8096, 'hostname' => '4.4.2.2'];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertSame(false, $retVal->getOutputVerboseLevel());
     }
 }
