@@ -8,6 +8,7 @@ class WriterTypes extends Enumeration
 {
     const CONSOLE = 'console';
     const FILE = 'file';
+    const GRAYLOG = 'graylog';
     const LOGDNA = 'logdna';
     const MEMORY = 'memory';
     const SENTRY = 'sentry';
