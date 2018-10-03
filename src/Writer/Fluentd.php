@@ -35,17 +35,24 @@ class Fluentd extends AbstractWriter
     protected $logger;
 
     /**
+     * @var \Kronos\Log\Factory\Fluentd|null
+     */
+    protected $factory;
+
+    /**
      * @param string $hostname
      * @param int $port
      * @param $tag
      * @param null|string $application
+     * @param \Kronos\Log\Factory\Fluentd|null $factory
      */
-    public function __construct($hostname, $port, $tag, $application)
+    public function __construct($hostname, $port, $tag, $application, \Kronos\Log\Factory\Fluentd $factory = null)
     {
         $this->hostname = $hostname;
         $this->port = $port;
         $this->tag = $tag;
         $this->application = $application;
+        $this->factory = $factory ?: new \Kronos\Log\Factory\Fluentd();
     }
 
     public function log($level, $message, array $context = [])
@@ -74,7 +81,7 @@ class Fluentd extends AbstractWriter
     protected function initializeLogger()
     {
         if ($this->logger === null) {
-            $this->logger = new FluentLogger($this->hostname, $this->port);
+            $this->logger = $this->factory->createFluentLogger($this->hostname, $this->port);
         }
 
         return $this->logger;
