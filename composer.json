@@ -27,12 +27,14 @@
 	"suggest": {
 		"guzzlehttp/guzzle": "Required for LogDNA writer",
 		"sentry/sentry": "Required for Sentry writer",
-		"graylog2/gelf-php": "Required for Graylog writer"
+		"graylog2/gelf-php": "Required for Graylog writer",
+		"fluent/logger": "Required for Fluentd writer"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "5.3.*",
 		"guzzlehttp/guzzle": "^6.2",
 		"sentry/sentry": "^1.7",
-		"graylog2/gelf-php": "~1.5"
+		"graylog2/gelf-php": "~1.5",
+		"fluent/logger": "^1.0"
 	}
 }
