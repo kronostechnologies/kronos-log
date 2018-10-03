@@ -4,6 +4,7 @@
 namespace Kronos\Log\Builder\Strategy;
 
 
+use Fluent\Logger\FluentLogger;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\WriterInterface;
 
@@ -24,7 +25,7 @@ class Fluentd extends AbstractWriter
         $this->checkRequiredSettings($settings);
 
         $hostname = $settings[self::HOSTNAME];
-        $port = $settings[self::PORT] ?: 24224;
+        $port = $settings[self::PORT] ?: FluentLogger::DEFAULT_LISTEN_PORT;
         $application = $settings[self::APPLICATION];
         $tag = $settings[self::TAG];
 
