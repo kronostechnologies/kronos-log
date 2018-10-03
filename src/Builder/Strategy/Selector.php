@@ -39,6 +39,8 @@ class Selector
                 return $this->factory->createFileStrategy();
             case WriterTypes::GRAYLOG:
                 return $this->factory->createGraylogStrategy();
+            case WriterTypes::FLUENTD:
+                return $this->factory->createFluentdStrategy();
             case WriterTypes::LOGDNA:
                 return $this->factory->createLogDNAStrategy();
             case WriterTypes::MEMORY:
