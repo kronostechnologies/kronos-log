@@ -6,6 +6,7 @@ use Kronos\Log\Builder\Strategy\Console;
 use Kronos\Log\Builder\Strategy\CustomWriter;
 use Kronos\Log\Builder\Strategy\File;
 use Kronos\Log\Builder\Strategy\Graylog as GraylogStrategy;
+use Kronos\Log\Builder\Strategy\Fluentd as FluentdStrategy;
 use Kronos\Log\Builder\Strategy\LogDNA;
 use Kronos\Log\Builder\Strategy\Memory;
 use Kronos\Log\Builder\Strategy\Sentry;
@@ -37,6 +38,14 @@ class Strategy
     public function createGraylogStrategy()
     {
         return new GraylogStrategy();
+    }
+
+    /**
+     * @return FluentdStrategy
+     */
+    public function createFluentdStrategy()
+    {
+        return new FluentdStrategy();
     }
 
     /**
