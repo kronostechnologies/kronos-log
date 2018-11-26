@@ -40,18 +40,25 @@ class Fluentd extends AbstractWriter
     protected $factory;
 
     /**
+     * @var boolean
+     */
+    protected $wrapContextInMeta;
+
+    /**
      * @param string $hostname
      * @param int $port
      * @param $tag
      * @param null|string $application
+     * @param bool $wrapContextInMeta
      * @param \Kronos\Log\Factory\Fluentd|null $factory
      */
-    public function __construct($hostname, $port, $tag, $application, \Kronos\Log\Factory\Fluentd $factory = null)
+    public function __construct($hostname, $port, $tag, $application, $wrapContextInMeta, \Kronos\Log\Factory\Fluentd $factory = null)
     {
         $this->hostname = $hostname;
         $this->port = $port;
         $this->tag = $tag;
         $this->application = $application;
+        $this->wrapContextInMeta = $wrapContextInMeta;
         $this->factory = $factory ?: new \Kronos\Log\Factory\Fluentd();
     }
 
@@ -59,6 +66,10 @@ class Fluentd extends AbstractWriter
     {
         try {
              $logger = $this->initializeLogger();
+
+            if ($this->wrapContextInMeta) {
+                $context['meta'] = $context;
+            }
 
             $context['level'] = $level;
             if ($this->application !== null) {
