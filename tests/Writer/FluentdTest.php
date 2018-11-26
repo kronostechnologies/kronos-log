@@ -40,7 +40,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     public function test_uninitialized_log_CreatesLoggerWithHostname()
     {
         $givenHostname = "localhost";
-        $this->writer = new Fluentd($givenHostname, 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd($givenHostname, 24224, "test", null, false, $this->factory);
 
         $this->factory->expects($this->once())->method('createFluentLogger')->with($givenHostname, $this->anything());
 
@@ -50,7 +50,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     public function test_uninitialized_log_CreatesLoggerWithPort()
     {
         $givenPort = 24224;
-        $this->writer = new Fluentd("localhost", $givenPort, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", $givenPort, "test", null, false, $this->factory);
 
         $this->factory->expects($this->once())->method('createFluentLogger')->with($this->anything(), $givenPort);
 
@@ -59,7 +59,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
 
     public function test_uninitialized_logTwice_CreatesLoggerOnlyOnce()
     {
-        $this->writer = new Fluentd("localhost", 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
         $this->factory->expects($this->once())->method('createFluentLogger');
 
@@ -70,7 +70,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     public function test_log_PassesTag()
     {
         $givenTag = "test";
-        $this->writer = new Fluentd("localhost", 24224, $givenTag, null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, $givenTag, null, false, $this->factory);
 
         $this->logger->expects($this->once())->method('post')->with($givenTag, $this->anything());
 
@@ -80,7 +80,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     public function test_log_MessageSetInContext()
     {
         $givenMessage = "message";
-        $this->writer = new Fluentd("localhost", 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -94,7 +94,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     public function test_log_LevelSetInContext()
     {
         $givenLevel = LogLevel::INFO;
-        $this->writer = new Fluentd("localhost", 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -107,7 +107,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
 
     public function test_ApplicationUnset_log_DoesNotContainApp()
     {
-        $this->writer = new Fluentd("localhost", 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -121,7 +121,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     public function test_ApplicationSet_log_ContainsApp()
     {
         $givenApp = "testapp";
-        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -132,10 +132,52 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
+    public function test_DoNotWrapContextInMeta_log_ContainsAppInRoot()
+    {
+        $givenApp = "testapp";
+        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, false, $this->factory);
+
+        $this->logger->expects($this->once())
+            ->method('post')
+            ->with($this->anything(), $this->callback(function ($value) use ($givenApp) {
+                return $value['_app'] === $givenApp;
+            }));
+
+        $this->writer->log(LogLevel::INFO, "test");
+    }
+
+    public function test_WrapContextInMeta_log_ContainsAppUnderMeta()
+    {
+        $givenApp = "testapp";
+        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, true, $this->factory);
+
+        $this->logger->expects($this->once())
+            ->method('post')
+            ->with($this->anything(), $this->callback(function ($value) use ($givenApp) {
+                return $value['meta']['_app'] === $givenApp;
+            }));
+
+        $this->writer->log(LogLevel::INFO, "test");
+    }
+
+    public function test_WrapContextInMeta_log_UnderlyingMetaDoesNotContainLevelOrMessage()
+    {
+        $givenApp = "testapp";
+        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, true, $this->factory);
+
+        $this->logger->expects($this->once())
+            ->method('post')
+            ->with($this->anything(), $this->callback(function ($value) use ($givenApp) {
+                return $value['meta']['level'] === null && $value['meta']['message'] === null;
+            }));
+
+        $this->writer->log(LogLevel::INFO, "test");
+    }
+
     public function test_MessageInContext_log_MessageOverridesGivenContext()
     {
         $givenMessage = "a message";
-        $this->writer = new Fluentd("localhost", 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -150,7 +192,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     {
         $givenContextKey = "test";
         $givenContextVal = "something";
-        $this->writer = new Fluentd("localhost", 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -164,7 +206,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
     public function test_ExceptionWhenLogging_log_ReturnsFalse()
     {
         $this->logger->method('post')->willThrowException(new \Exception("Connection error"));
-        $this->writer = new Fluentd("localhost", 24224, "test", null, $this->factory);
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
         $this->writer->log(LogLevel::INFO, "test");
 

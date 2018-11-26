@@ -126,4 +126,42 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($retVal->getApplication());
     }
+
+    public function test_wrapContextInMetaUnset_buildFromArray_willWrapContextInMetaReturnsFalse()
+    {
+        $params = [
+            'hostname' => 'php.application',
+            'tag' => 'php.application',
+        ];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertFalse($retVal->willWrapContextInMeta());
+    }
+
+    public function test_wrapContextInMetaSetToFalse_buildFromArray_willWrapContextInMetaReturnsFalse()
+    {
+        $params = [
+            'hostname' => 'php.application',
+            'tag' => 'php.application',
+            'wrapContextInMeta' => 'false',
+        ];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertFalse($retVal->willWrapContextInMeta());
+    }
+
+    public function test_wrapContextInMetaSetToTrue_buildFromArray_willWrapContextInMetaReturnsTrue()
+    {
+        $params = [
+            'hostname' => 'php.application',
+            'tag' => 'php.application',
+            'wrapContextInMeta' => 'true',
+        ];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertTrue($retVal->willWrapContextInMeta());
+    }
 }
