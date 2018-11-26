@@ -26,7 +26,7 @@ class Fluentd extends AbstractWriter
         $this->checkRequiredSettings($settings);
 
         $hostname = $settings[self::HOSTNAME];
-        $port = $settings[self::PORT] ?: FluentLogger::DEFAULT_LISTEN_PORT;
+        $port = isset($settings[self::PORT]) ? $settings[self::PORT] : FluentLogger::DEFAULT_LISTEN_PORT;
         $application = $settings[self::APPLICATION];
         $tag = $settings[self::TAG];
         $wrapContextInMeta = filter_var($settings[self::WRAP_CONTEXT_IN_META], FILTER_VALIDATE_BOOLEAN);
