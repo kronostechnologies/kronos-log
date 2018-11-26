@@ -67,15 +67,18 @@ class Fluentd extends AbstractWriter
         try {
              $logger = $this->initializeLogger();
 
-            if ($this->wrapContextInMeta) {
-                $context['meta'] = $context;
-            }
-
             $context['level'] = $level;
             if ($this->application !== null) {
                 $context['_app'] = $this->application;
             }
             $context['message'] = $message;
+
+            if ($this->wrapContextInMeta) {
+                $context['meta'] = $context;
+
+                unset($context['meta']['level']);
+                unset($context['meta']['message']);
+            }
 
             $logger->post($this->tag, $context);
 
@@ -128,5 +131,13 @@ class Fluentd extends AbstractWriter
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * @return bool
+     */
+    public function willWrapContextInMeta()
+    {
+        return $this->wrapContextInMeta;
     }
 }
