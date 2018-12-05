@@ -96,22 +96,14 @@ class Fluentd extends AbstractWriter
         try {
             $logger = $this->initializeLogger();
 
-            $context = $this->processContext($context);
-
-            $context['level'] = $level;
+            $data = $this->processContext($context);
+            $data['level'] = $level;
             if ($this->application !== null) {
-                $context['_app'] = $this->application;
+                $data['_app'] = $this->application;
             }
-            $context['message'] = $this->interpolate($message, $context);
+            $data['message'] = $this->interpolate($message, $context);
 
-            if ($this->wrapContextInMeta) {
-                $context['meta'] = $context;
-
-                unset($context['meta']['level']);
-                unset($context['meta']['message']);
-            }
-
-            $logger->post($this->tag, $context);
+            $logger->post($this->tag, $data);
 
             return true;
         } catch (\Exception $ex) {
@@ -123,7 +115,15 @@ class Fluentd extends AbstractWriter
 
     private function processContext(array $context){
         $context = $this->replaceException($context);
-        return $this->contextStringifier->stringifyArray($context);
+        $context = $this->contextStringifier->stringifyArray($context);
+        if ($this->wrapContextInMeta) {
+            return  [
+                'meta' => $context
+            ];
+        }
+        else {
+            return $context;
+        }
     }
 
     /**
