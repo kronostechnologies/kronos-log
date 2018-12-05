@@ -6,9 +6,12 @@ use Kronos\Log\AbstractWriter;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
 
 class LogDNA extends AbstractWriter
 {
+    use ExceptionTraceBuilderAwareTrait;
+
     const LOGDNA_URL = 'https://logs.logdna.com/';
     const INGEST_URI = 'logs/ingest';
 
@@ -51,7 +54,6 @@ class LogDNA extends AbstractWriter
      */
     private $previousExceptionTraceBuilder;
 
-
     /**
      * @var ContextStringifier
      */
@@ -82,9 +84,7 @@ class LogDNA extends AbstractWriter
         $this->application = $application;
         $this->exceptionTraceBuilder = $exceptionTraceBuilder;
         $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
-
         $this->contextStringifier = $contextStringifier ?: new ContextStringifier();
-
         $this->createGuzzleClient($ingestionKey, $guzzleOptions, $guzzleFactory);
     }
 
@@ -167,52 +167,6 @@ class LogDNA extends AbstractWriter
     }
 
     /**
-     * @param array $context
-     * @return mixed
-     */
-    private function replaceException($context)
-    {
-        if (isset($context['exception']) && $context['exception'] instanceof \Exception) {
-            $exception = $context['exception'];
-            $context['exception'] = [];
-
-            $context['exception']['message'] = $exception->getMessage();
-            if ($this->exceptionTraceBuilder) {
-                $context['exception']['stacktrace'] = $this->exceptionTraceBuilder->getTraceAsString($exception);
-            }
-
-            $previous = $exception->getPrevious();
-            if ($previous instanceof \Exception) {
-                $context['exception']['previous'] = $this->getPreviousExceptionContext($previous);
-            }
-        }
-
-        return $context;
-    }
-
-    /**
-     * @param \Exception $exception
-     * @return array
-     */
-    private function getPreviousExceptionContext(\Exception $exception)
-    {
-        $context = [
-            'message' => $exception->getMessage()
-        ];
-
-        if($this->previousExceptionTraceBuilder){
-            $context['stacktrace'] = $this->previousExceptionTraceBuilder->getTraceAsString($exception);
-        }
-
-        $previous = $exception->getPrevious();
-        if ($previous instanceof \Exception) {
-            $context['previous'] = $this->getPreviousExceptionContext($previous);
-        }
-
-        return $context;
-    }
-
-    /**
      * @param string $ingestionKey
      * @param $guzzleOptions
      * @param Factory\Guzzle $guzzleFactory
@@ -258,5 +212,21 @@ class LogDNA extends AbstractWriter
         }
 
         return $result;
+    }
+
+    /**
+     * @return TraceBuilder
+     */
+    public function getExceptionTraceBuilder()
+    {
+        return $this->exceptionTraceBuilder;
+    }
+
+    /**
+     * @return TraceBuilder
+     */
+    public function getPreviousExceptionTraceBuilder()
+    {
+        return $this->previousExceptionTraceBuilder;
     }
 }

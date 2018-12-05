@@ -146,7 +146,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_WrapContextInMeta_log_ContainsAppUnderMeta()
+    public function test_WrapContextInMeta_log_ContainsAppInRoot()
     {
         $givenApp = "testapp";
         $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, true, $this->factory);
@@ -154,7 +154,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
         $this->logger->expects($this->once())
             ->method('post')
             ->with($this->anything(), $this->callback(function ($value) use ($givenApp) {
-                return $value['meta']['_app'] === $givenApp;
+                return $value['_app'] === $givenApp;
             }));
 
         $this->writer->log(LogLevel::INFO, "test");

@@ -25,10 +25,10 @@ class Graylog extends AbstractWriter
         $this->checkRequiredSettings($settings);
 
         $hostname = $settings[self::HOSTNAME];
-        $port = $settings[self::PORT] ?: 12201;
-        $chunkSize = $settings[self::CHUNK_SIZE];
-        $application = $settings[self::APPLICATION];
-        $outputVerboseLevel = $settings[self::OUTPUT_VERBOSE_LEVEL] ?: false;
+        $port = isset($settings[self::PORT]) ? $settings[self::PORT] : 12201;
+        $chunkSize = isset($settings[self::CHUNK_SIZE]) ? $settings[self::CHUNK_SIZE] : null;
+        $application = isset($settings[self::APPLICATION]) ? $settings[self::APPLICATION] : null;
+        $outputVerboseLevel = isset($settings[self::OUTPUT_VERBOSE_LEVEL]) ? $settings[self::OUTPUT_VERBOSE_LEVEL] : false;
 
         return new \Kronos\Log\Writer\Graylog(
             $hostname,

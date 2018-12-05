@@ -17,6 +17,17 @@ class Fluentd extends AbstractWriter
     const WRAP_CONTEXT_IN_META = 'wrapContextInMeta';
 
     /**
+     * @var ExceptionTraceHelper
+     */
+    private $exceptionTraceHelper;
+
+    public function __construct(ExceptionTraceHelper $exceptionTraceHelper = null)
+    {
+        $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
+    }
+
+
+    /**
      * @param array $settings
      * @return WriterInterface|\Kronos\Log\Writer\Fluentd
      * @throws RequiredSetting
@@ -27,17 +38,27 @@ class Fluentd extends AbstractWriter
 
         $hostname = $settings[self::HOSTNAME];
         $port = isset($settings[self::PORT]) ? $settings[self::PORT] : FluentLogger::DEFAULT_LISTEN_PORT;
-        $application = $settings[self::APPLICATION];
+        $application = isset($settings[self::APPLICATION]) ? $settings[self::APPLICATION] : null ;
         $tag = $settings[self::TAG];
-        $wrapContextInMeta = filter_var($settings[self::WRAP_CONTEXT_IN_META], FILTER_VALIDATE_BOOLEAN);
+        $wrapContextInMeta = isset($settings[self::WRAP_CONTEXT_IN_META]) ? filter_var($settings[self::WRAP_CONTEXT_IN_META], FILTER_VALIDATE_BOOLEAN) : false;
 
-        return new \Kronos\Log\Writer\Fluentd(
+        $writer = new \Kronos\Log\Writer\Fluentd(
             $hostname,
             $port,
             $tag,
             $application,
             $wrapContextInMeta
         );
+
+        $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
+        $writer->setExceptionTraceBuilder($exceptionTraceBuilder);
+
+        $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
+        $writer->setPreviousExceptionTraceBuilder($previousExceptionTraceBuilder);
+
+        $this->setCommonSettings($writer, $settings);
+
+        return $writer;
     }
 
     /**
