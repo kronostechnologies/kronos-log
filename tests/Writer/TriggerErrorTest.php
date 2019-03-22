@@ -50,14 +50,16 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
                 [self::INTERPOLATION_KEY => self::INTERPOLATED_VALUE]);
 
             $this->assertEquals(1, count($triggeredErrors));
-            $this->assertEquals(str_replace('{'.self::INTERPOLATION_KEY.'}', self::INTERPOLATED_VALUE, self::MESSAGE_WITH_INTERPOLATION), $triggeredErrors[0]['errstr']);
+            $this->assertEquals(str_replace('{' . self::INTERPOLATION_KEY . '}', self::INTERPOLATED_VALUE,
+                self::MESSAGE_WITH_INTERPOLATION), $triggeredErrors[0]['errstr']);
         }
         finally {
             set_error_handler($previousErrorHandler);
         }
     }
 
-    public function test_Emergency_log_ShouldTriggerUserWarning() {
+    public function test_Emergency_log_ShouldTriggerUserWarning()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -72,7 +74,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Alert_log_ShouldTriggerUserWarning() {
+    public function test_Alert_log_ShouldTriggerUserWarning()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -87,7 +90,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Critical_log_ShouldTriggerUserWarning() {
+    public function test_Critical_log_ShouldTriggerUserWarning()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -102,7 +106,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Error_log_ShouldTriggerUserWarning() {
+    public function test_Error_log_ShouldTriggerUserWarning()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -117,7 +122,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Warning_log_ShouldTriggerUserWarning() {
+    public function test_Warning_log_ShouldTriggerUserWarning()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -132,7 +138,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Notice_log_ShouldTriggerUserNotice() {
+    public function test_Notice_log_ShouldTriggerUserNotice()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -147,7 +154,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Info_log_ShouldTriggerUserNotice() {
+    public function test_Info_log_ShouldTriggerUserNotice()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -162,7 +170,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Debug_log_ShouldTriggerUserNotice() {
+    public function test_Debug_log_ShouldTriggerUserNotice()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 
@@ -177,7 +186,8 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_InvalidLogLevel_log_ShouldTriggerUserWarning() {
+    public function test_InvalidLogLevel_log_ShouldTriggerUserWarning()
+    {
         $triggeredErrors = [];
         $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
 

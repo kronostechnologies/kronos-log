@@ -118,7 +118,8 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             'extra' => [
                 self::CONTEXT_KEY => self::CONTEXT_VALUE,
                 self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-            ]]);
+            ]
+        ]);
 
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE,
             [Logger::EXCEPTION_CONTEXT => $exception, self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -127,10 +128,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndDebugLevel_Log_ShouldCaptureExceptionWithDebugLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($this->anything(), ['level' => \Raven_Client::DEBUG,
+        $this->expectsCaptureExceptionToBeCalledWith($this->anything(), [
+            'level' => \Raven_Client::DEBUG,
             'extra' => [
                 self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-            ]]);
+            ]
+        ]);
 
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -138,10 +141,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndInfoLevel_Log_ShouldCaptureExceptionWithInfoLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, ['level' => \Raven_Client::INFO,
+        $this->expectsCaptureExceptionToBeCalledWith($exception, [
+            'level' => \Raven_Client::INFO,
             'extra' => [
                 self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-            ]]);
+            ]
+        ]);
 
         $this->writer->log(LogLevel::INFO, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -149,10 +154,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndNoticeLevel_Log_ShouldCaptureExceptionWithInfoLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, ['level' => \Raven_Client::INFO,
+        $this->expectsCaptureExceptionToBeCalledWith($exception, [
+            'level' => \Raven_Client::INFO,
             'extra' => [
                 self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-            ]]);
+            ]
+        ]);
 
         $this->writer->log(LogLevel::NOTICE, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -160,9 +167,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndWarningLevel_Log_ShouldCaptureExceptionWithWarningLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, ['level' => \Raven_Client::WARNING, 'extra' => [
-            self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-        ]]);
+        $this->expectsCaptureExceptionToBeCalledWith($exception, [
+            'level' => \Raven_Client::WARNING,
+            'extra' => [
+                self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
+            ]
+        ]);
 
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -170,9 +180,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndErrorLevel_Log_ShouldCaptureExceptionWithErrorLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, ['level' => \Raven_Client::ERROR, 'extra' => [
-            self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-        ]]);
+        $this->expectsCaptureExceptionToBeCalledWith($exception, [
+            'level' => \Raven_Client::ERROR,
+            'extra' => [
+                self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
+            ]
+        ]);
 
         $this->writer->log(LogLevel::ERROR, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -180,9 +193,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndCriticalLevel_Log_ShouldCaptureExceptionWithErrorLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, ['level' => \Raven_Client::ERROR, 'extra' => [
-            self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-        ]]);
+        $this->expectsCaptureExceptionToBeCalledWith($exception, [
+            'level' => \Raven_Client::ERROR,
+            'extra' => [
+                self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
+            ]
+        ]);
 
         $this->writer->log(LogLevel::CRITICAL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -190,9 +206,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndAlertLevel_Log_ShouldCaptureExceptionWithFatalLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, ['level' => \Raven_Client::FATAL, 'extra' => [
-            self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-        ]]);
+        $this->expectsCaptureExceptionToBeCalledWith($exception, [
+            'level' => \Raven_Client::FATAL,
+            'extra' => [
+                self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
+            ]
+        ]);
 
         $this->writer->log(LogLevel::ALERT, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -200,9 +219,12 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function test_ContextWithExceptionAndEmergencyLevel_Log_ShouldCaptureExceptionWithFatalLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, ['level' => \Raven_Client::FATAL, 'extra' => [
-            self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
-        ]]);
+        $this->expectsCaptureExceptionToBeCalledWith($exception, [
+            'level' => \Raven_Client::FATAL,
+            'extra' => [
+                self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
+            ]
+        ]);
 
         $this->writer->log(LogLevel::EMERGENCY, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }

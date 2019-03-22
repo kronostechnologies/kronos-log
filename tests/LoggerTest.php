@@ -98,7 +98,10 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     {
         $errorHandled = 0;
         $handledTriggedError = false;
-        $previousErrorHandler = set_error_handler(function ($errno, $errstr) use (&$handledTriggedError, &$errorHandled) {
+        $previousErrorHandler = set_error_handler(function ($errno, $errstr) use (
+            &$handledTriggedError,
+            &$errorHandled
+        ) {
             $errorHandled++;
             $handledTriggedError = ($errno == E_USER_ERROR && $errstr == self::WRITER_LOG_EXCEPTION_MESSAGE);
         });

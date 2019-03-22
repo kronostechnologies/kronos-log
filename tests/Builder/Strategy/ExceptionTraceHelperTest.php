@@ -65,7 +65,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($null);
     }
 
-    public function test_IncludeArgsSetToTrue_getExceptionTraceBuilderForSettings_ShouldSetIncludeArgs() {
+    public function test_IncludeArgsSetToTrue_getExceptionTraceBuilderForSettings_ShouldSetIncludeArgs()
+    {
         $settings = [
             ExceptionTraceHelper::INCLUDE_ARGS => true
         ];
@@ -77,7 +78,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionTopLines_getExceptionTraceBuilderForSettings_ShouldSetShowTopLines() {
+    public function test_ShowExceptionTopLines_getExceptionTraceBuilderForSettings_ShouldSetShowTopLines()
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_TOP_LINES => self::TOP_LINES
         ];
@@ -90,7 +92,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneTopLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines() {
+    public function test_LowerThanOneTopLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines()
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_TOP_LINES => self::LOWER_THAN_ONE
         ];
@@ -102,7 +105,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionBottomLines_getExceptionTraceBuilderForSettings_ShouldSetShowBottomLines() {
+    public function test_ShowExceptionBottomLines_getExceptionTraceBuilderForSettings_ShouldSetShowBottomLines()
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_BOTTOM_LINES => self::BOTTOM_LINES
         ];
@@ -115,7 +119,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneBottomLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines() {
+    public function test_LowerThanOneBottomLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines()
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_BOTTOM_LINES => self::LOWER_THAN_ONE
         ];
@@ -159,7 +164,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($null);
     }
 
-    public function test_IncludeArgsSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldSetIncludeArgs() {
+    public function test_IncludeArgsSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldSetIncludeArgs()
+    {
         $settings = [
             ExceptionTraceHelper::INCLUDE_ARGS => true
         ];
@@ -171,7 +177,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowTopLines() {
+    public function test_ShowExceptionTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowTopLines()
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_PREVIOUS_EXCEPTION_TOP_LINES => self::TOP_LINES
         ];
@@ -184,7 +191,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines() {
+    public function test_LowerThanOneTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines()
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_PREVIOUS_EXCEPTION_TOP_LINES => self::LOWER_THAN_ONE
         ];
@@ -196,7 +204,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowBottomLines() {
+    public function test_ShowExceptionBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowBottomLines()
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES => self::BOTTOM_LINES
         ];
@@ -209,7 +218,9 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines() {
+    public function test_LowerThanOneBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines(
+    )
+    {
         $settings = [
             ExceptionTraceHelper::SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES => self::LOWER_THAN_ONE
         ];

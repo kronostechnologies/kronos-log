@@ -120,7 +120,8 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
         ];
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions,
-            $this->factory, $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder, $this->context_stringifier);
+            $this->factory, $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder,
+            $this->context_stringifier);
     }
 
     public function test_Context_log_ShouldStringifyContext()
@@ -274,7 +275,8 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
     }
 
-    public function test_ExceptionWithPreviousExceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace()
+    public function test_ExceptionWithPreviousExceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace(
+    )
     {
         $this->givenWriterWithPreviousExceptionTraceBuilder();
         $previousException = new TestableException('previous exception message');

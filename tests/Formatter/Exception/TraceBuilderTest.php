@@ -53,7 +53,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowTopLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesFollowedByDots() {
+    public function test_ShowTopLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesFollowedByDots()
+    {
         $exception = $this->givenException();
         $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
 #1 /path/to/file/Trace.php(478): TestClass->testSomething()
@@ -65,7 +66,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowTopHigherOrEqualsToStackHeight_getTraceAsString_shouldReturnAllLinesFormatted() {
+    public function test_ShowTopHigherOrEqualsToStackHeight_getTraceAsString_shouldReturnAllLinesFormatted()
+    {
         $exception = $this->givenException();
         $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
 #1 /path/to/file/Trace.php(478): TestClass->testSomething()
@@ -79,7 +81,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowBottomLines_getTraceAsString_shouldReturnDotsFollowedFormattedRequestedBottomLines() {
+    public function test_ShowBottomLines_getTraceAsString_shouldReturnDotsFollowedFormattedRequestedBottomLines()
+    {
         $exception = $this->givenException();
         $expectedString = "...
 #3 /path/to/file/App.php(59): App->checkSomething()
@@ -106,7 +109,9 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines() {
+    public function test_ShowTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines(
+    )
+    {
         $exception = $this->givenException();
         $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
 ...
@@ -119,7 +124,9 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_OverlappingShowTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines() {
+    public function test_OverlappingShowTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines(
+    )
+    {
         $exception = $this->givenException();
         $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
 #1 /path/to/file/Trace.php(478): TestClass->testSomething()

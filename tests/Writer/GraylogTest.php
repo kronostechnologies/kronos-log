@@ -141,7 +141,8 @@ class GraylogTest extends \PHPUnit\Framework\TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ '_app' => $givenApplication ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['_app' => $givenApplication]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.');
     }
@@ -154,7 +155,8 @@ class GraylogTest extends \PHPUnit\Framework\TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ '_app' => $givenApplication, 'customContextValue' => 123 ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['_app' => $givenApplication, 'customContextValue' => 123]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.', ['customContextValue' => 123]);
     }
@@ -166,7 +168,8 @@ class GraylogTest extends \PHPUnit\Framework\TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ 'levelVerbose' => LogLevel::INFO ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['levelVerbose' => LogLevel::INFO]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.');
     }
@@ -178,7 +181,8 @@ class GraylogTest extends \PHPUnit\Framework\TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ 'customContextValue' => 123, 'levelVerbose' => LogLevel::INFO ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['customContextValue' => 123, 'levelVerbose' => LogLevel::INFO]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.', ['customContextValue' => 123]);
     }

@@ -84,7 +84,8 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
         $this->factory
             ->expects(self::once())
             ->method('createLogDNAWriter')
-            ->with(self::HOSTNAME_VALUE, self::APPLICATION_VALUE, self::INGESTION_KEY_VALUE, $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+            ->with(self::HOSTNAME_VALUE, self::APPLICATION_VALUE, self::INGESTION_KEY_VALUE, $exceptionTraceBuilder,
+                $previousExceptionTraceBuilder);
 
         $this->strategy->buildFromArray($settings);
     }

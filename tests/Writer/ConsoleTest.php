@@ -165,7 +165,8 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
         $writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsErrorAndTraceBuilder_Log_ShouldWriteExceptionMessageAndStackTrace()
+    public function test_ContextContainingExceptionAndLogLevelIsErrorAndTraceBuilder_Log_ShouldWriteExceptionMessageAndStackTrace(
+    )
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
