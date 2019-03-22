@@ -8,7 +8,7 @@ use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Factory;
 use Psr\Log\LogLevel;
 
-class LogDNATest extends \PHPUnit_Framework_TestCase
+class LogDNATest extends \PHPUnit\Framework\TestCase
 {
     const INGESTION_KEY = 'ingestionKey';
     const HOSTNAME = 'hostname';
@@ -38,41 +38,41 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
     private $writer;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $client;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TraceBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|TraceBuilder
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TraceBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|TraceBuilder
      */
     private $previousExceptionTraceBuilder;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $context_stringifier;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = $this->getMockBuilder(\GuzzleHttp\Client::class)
             ->disableOriginalConstructor()
             ->setMethods(['post'])
             ->getMock();
 
-        $this->factory = $this->getMock(Factory\Guzzle::class);
+        $this->factory = $this->createMock(Factory\Guzzle::class);
         $this->factory->method('createClient')->willReturn($this->client);
 
-        $this->context_stringifier = $this->getMockWithoutInvokingTheOriginalConstructor(ContextStringifier::class);
+        $this->context_stringifier = $this->createMock(ContextStringifier::class);
     }
 
     public function test_constructor_ShouldCreateGuzzleClient()
@@ -313,6 +313,9 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => 'message']);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function test_GuzzleClientThrowException_log_ShouldDoNothing()
     {
         $this->client
@@ -320,7 +323,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
             ->willThrowException(new \Exception());
         $this->givenWriter();
 
-        $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
+        @$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
     }
 
     private function givenWriter()
@@ -331,7 +334,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
 
     private function givenWriterWithExceptionTraceBuilder()
     {
-        $this->exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
             $this->exceptionTraceBuilder, null, $this->context_stringifier);
@@ -339,7 +342,7 @@ class LogDNATest extends \PHPUnit_Framework_TestCase
 
     private function givenWriterWithPreviousExceptionTraceBuilder()
     {
-        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
             null, $this->previousExceptionTraceBuilder, $this->context_stringifier);

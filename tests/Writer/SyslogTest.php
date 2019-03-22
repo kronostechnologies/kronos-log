@@ -4,7 +4,7 @@ namespace Kronos\Tests\Log\Writer;
 
 use \Psr\Log\LogLevel;
 
-class SyslogTest extends \PHPUnit_Framework_TestCase
+class SyslogTest extends \PHPUnit\Framework\TestCase
 {
 
     const APPLICATION = 'application';
@@ -25,9 +25,9 @@ class SyslogTest extends \PHPUnit_Framework_TestCase
 
     private $syslog_adaptor;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->syslog_adaptor = $this->getMock(\Kronos\Log\Adaptor\Syslog::class);
+        $this->syslog_adaptor = $this->createMock(\Kronos\Log\Adaptor\Syslog::class);
 
         $this->writer = new \Kronos\Log\Writer\Syslog($this->syslog_adaptor, self::APPLICATION, self::SYSLOG_OPTION,
             self::SYSLOG_FACILITY);

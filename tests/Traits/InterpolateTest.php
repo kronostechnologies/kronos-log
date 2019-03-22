@@ -6,7 +6,7 @@ use Kronos\Log\Traits\Interpolate;
 use Kronos\Tests\Log\Formatter\ObjectWithoutToString;
 use Kronos\Tests\Log\Formatter\ObjectWithToString;
 
-class InterpolateTest extends \PHPUnit_Framework_TestCase
+class InterpolateTest extends \PHPUnit\Framework\TestCase
 {
 
     const A_MESSAGE = 'Some message {key}';
@@ -17,7 +17,7 @@ class InterpolateTest extends \PHPUnit_Framework_TestCase
 
     private $interpolator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->interpolator = $this->getMockForTrait(Interpolate::class);
     }

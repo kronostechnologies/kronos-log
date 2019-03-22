@@ -5,9 +5,8 @@
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
-	syntaxCheck="false"
-bootstrap="./vendor/autoload.php"
-verbose="true"
+	bootstrap="./vendor/autoload.php"
+	verbose="true"
 >
 <testsuites>
 	<testsuite name="Kronos-Log">

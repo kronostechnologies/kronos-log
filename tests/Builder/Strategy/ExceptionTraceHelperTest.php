@@ -6,18 +6,18 @@ use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Factory\Formatter;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 
-class ExceptionTraceHelperTest extends \PHPUnit_Framework_TestCase
+class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
 {
     const TOP_LINES = 4;
     const LOWER_THAN_ONE = -1;
     const BOTTOM_LINES = 2;
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $traceBuilder;
 
@@ -26,9 +26,9 @@ class ExceptionTraceHelperTest extends \PHPUnit_Framework_TestCase
      */
     private $helper;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->factory = $this->getMockWithoutInvokingTheOriginalConstructor(Formatter::class);
+        $this->factory = $this->createMock(Formatter::class);
 
         $this->helper = new ExceptionTraceHelper($this->factory);
     }
@@ -36,7 +36,7 @@ class ExceptionTraceHelperTest extends \PHPUnit_Framework_TestCase
     public function test_EmptySettings_getExceptionTraceBuilderForSettings_ShouldCreateAndReturnTraceBuilder()
     {
         $settings = [];
-        $expectedTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $expectedTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->factory
             ->expects(self::once())
             ->method('createExceptionTraceBuilder')
@@ -130,7 +130,7 @@ class ExceptionTraceHelperTest extends \PHPUnit_Framework_TestCase
     public function test_EmptySettings_getPreviousExceptionTraceBuilderForSettings_ShouldCreateAndReturnTraceBuilder()
     {
         $settings = [];
-        $expectedTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $expectedTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->factory
             ->expects(self::once())
             ->method('createExceptionTraceBuilder')
@@ -222,11 +222,11 @@ class ExceptionTraceHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function givenTraceBuilder()
     {
-        $traceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $traceBuilder = $this->createMock(TraceBuilder::class);
         $this->factory
             ->method('createExceptionTraceBuilder')
             ->willReturn($traceBuilder);

@@ -9,7 +9,7 @@ use Kronos\Log\Logger;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Psr\Log\LogLevel;
-use Exception;
+use Throwable;
 
 class File extends \Kronos\Log\AbstractWriter
 {
@@ -113,8 +113,8 @@ class File extends \Kronos\Log\AbstractWriter
      */
     private function writeExceptionIfGiven($message, $level, array $context)
     {
-        if (isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof Exception) {
-            /** @var Exception $exception */
+        if (isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof Throwable) {
+            /** @var Throwable $exception */
             $exception = $context[Logger::EXCEPTION_CONTEXT];
             $this->writeException($message, $level, $exception);
         }
@@ -123,10 +123,10 @@ class File extends \Kronos\Log\AbstractWriter
     /**
      * @param $message
      * @param $level
-     * @param Exception $exception
+     * @param Throwable $exception
      * @param int $depth
      */
-    private function writeException($message, $level, Exception $exception, $depth = 0)
+    private function writeException($message, $level, Throwable $exception, $depth = 0)
     {
         if ($message != $exception->getMessage()) {
             $this->writeExceptionTitle($exception, $depth);
@@ -148,16 +148,16 @@ class File extends \Kronos\Log\AbstractWriter
         $this->file_adaptor->write('');
 
         $previous = $exception->getPrevious();
-        if ($previous instanceof Exception) {
+        if ($previous instanceof Throwable) {
             $this->writeException($message, $level, $previous, $depth + 1);
         }
     }
 
     /**
-     * @param Exception $exception
+     * @param Throwable $exception
      * @param $depth
      */
-    private function writeExceptionTitle(Exception $exception, $depth)
+    private function writeExceptionTitle(Throwable $exception, $depth)
     {
         $title = ($depth === 0 ? self::EXCEPTION_TITLE_LINE : self::PREVIOUS_EXCEPTION_TITLE_LINE);
 

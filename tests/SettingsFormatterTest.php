@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log;
 use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\SettingsFormatter;
 
-class SettingsFormatterTest extends \PHPUnit_Framework_TestCase
+class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
 {
     const FIRST_WRITER_TYPE = WriterTypes::CONSOLE;
     const SECOND_WRITER_TYPE = WriterTypes::FILE;

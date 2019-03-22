@@ -11,25 +11,25 @@ use Kronos\Log\Factory\Writer;
 use Kronos\Log\Writer\Graylog;
 use Psr\Log\LogLevel;
 
-class GraylogTest extends \PHPUnit_Framework_TestCase
+class GraylogTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Kronos\Log\Factory\Graylog|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Kronos\Log\Factory\Graylog|\PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var Logger|\PHPUnit_Framework_MockObject_MockObject
+     * @var Logger|\PHPUnit\Framework\MockObject\MockObject
      */
     private $logger;
 
     /**
-     * @var Publisher|\PHPUnit_Framework_MockObject_MockObject
+     * @var Publisher|\PHPUnit\Framework\MockObject\MockObject
      */
     private $publisher;
 
     /**
-     * @var UdpTransport|\PHPUnit_Framework_MockObject_MockObject
+     * @var UdpTransport|\PHPUnit\Framework\MockObject\MockObject
      */
     private $transport;
 
@@ -38,7 +38,7 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = $this->getMockBuilder(\Kronos\Log\Factory\Graylog::class)
             ->disableOriginalConstructor()

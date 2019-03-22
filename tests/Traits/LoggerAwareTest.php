@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log\Traits;
 use Kronos\Log\Logger;
 use Kronos\Log\Traits\LoggerAware;
 
-class LoggerAwareTest extends \PHPUnit_Framework_TestCase
+class LoggerAwareTest extends \PHPUnit\Framework\TestCase
 {
 
     const A_MESSAGE = 'a message';
@@ -17,9 +17,9 @@ class LoggerAwareTest extends \PHPUnit_Framework_TestCase
 
     private $trait;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->logger = $this->getMockWithoutInvokingTheOriginalConstructor(Logger::class);
+        $this->logger = $this->createMock(Logger::class);
 
         $this->trait = new TestableLoggerAware();
     }

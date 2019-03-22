@@ -8,7 +8,7 @@ use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends \PHPUnit\Framework\TestCase
 {
     const MIN_LEVEL = 'debug';
     const MAX_LEVEL = 'emergency';
@@ -20,26 +20,26 @@ class FileTest extends \PHPUnit_Framework_TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $exceptionTraceHelper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\File::class);
-        $this->factory = $this->getMock(Writer::class);
+        $this->writer = $this->createMock(\Kronos\Log\Writer\File::class);
+        $this->factory = $this->createMock(Writer::class);
         $this->factory->method('createFileWriter')->willReturn($this->writer);
-        $this->exceptionTraceHelper = $this->getMockWithoutInvokingTheOriginalConstructor(ExceptionTraceHelper::class);
+        $this->exceptionTraceHelper = $this->createMock(ExceptionTraceHelper::class);
 
         $this->strategy = new File($this->factory, $this->exceptionTraceHelper);
     }
@@ -76,11 +76,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateFileWriter()
     {
-        $exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->exceptionTraceHelper
             ->method('getExceptionTraceBuilderForSettings')
             ->willReturn($exceptionTraceBuilder);
-        $previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->exceptionTraceHelper
             ->method('getPreviousExceptionTraceBuilderForSettings')
             ->willReturn($previousExceptionTraceBuilder);

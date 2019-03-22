@@ -6,7 +6,7 @@ use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\Traits\LogLevelToSyslogPriority;
 use Psr\Log\LogLevel;
 
-class LogLevelToSyslogPriorityTest extends \PHPUnit_Framework_TestCase
+class LogLevelToSyslogPriorityTest extends \PHPUnit\Framework\TestCase
 {
 
     const INVALID_LOG_LEVEL = 'invalid log level';
@@ -16,7 +16,7 @@ class LogLevelToSyslogPriorityTest extends \PHPUnit_Framework_TestCase
      */
     private $testableTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testableTrait = new TestableLogLevelToSyslogPriority();
     }

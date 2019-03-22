@@ -7,7 +7,7 @@ use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
 
-class SentryTest extends \PHPUnit_Framework_TestCase
+class SentryTest extends \PHPUnit\Framework\TestCase
 {
     const MIN_LEVEL = 'debug';
     const MAX_LEVEL = 'emergency';
@@ -22,27 +22,27 @@ class SentryTest extends \PHPUnit_Framework_TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $writer;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $ravenClient;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(\Kronos\Log\Writer\Syslog::class);
-        $this->factory = $this->getMock(Writer::class);
+        $this->writer = $this->createMock(\Kronos\Log\Writer\Syslog::class);
+        $this->factory = $this->createMock(Writer::class);
         $this->factory->method('createSentryWriter')->willReturn($this->writer);
 
-        $this->ravenClient = $this->getMockWithoutInvokingTheOriginalConstructor(\Raven_Client::class);
+        $this->ravenClient = $this->createMock(\Raven_Client::class);
 
         $this->strategy = new Sentry($this->factory);
     }

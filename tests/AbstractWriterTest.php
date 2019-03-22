@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log;
 use Kronos\Log\Exception\InvalidLogLevel;
 use \Psr\Log\LogLevel;
 
-class AbstractWriterTest extends \PHPUnit_Framework_TestCase
+class AbstractWriterTest extends \PHPUnit\Framework\TestCase
 {
 
     const ANY_LEVEL = LogLevel::INFO;
@@ -19,7 +19,7 @@ class AbstractWriterTest extends \PHPUnit_Framework_TestCase
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->writer = new TestableWriter();
     }

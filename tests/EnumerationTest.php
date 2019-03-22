@@ -4,7 +4,7 @@ namespace Kronos\Tests\Log;
 
 use Kronos\Log\Enumeration;
 
-class EnumerationTest extends \PHPUnit_Framework_TestCase
+class EnumerationTest extends \PHPUnit\Framework\TestCase
 {
 
     const VALID_NAME = 'FIRST_VALUE';

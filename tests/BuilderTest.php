@@ -8,7 +8,7 @@ use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\Logger as LoggerFactory;
 use Kronos\Log\Logger;
 
-class BuilderTest extends \PHPUnit_Framework_TestCase
+class BuilderTest extends \PHPUnit\Framework\TestCase
 {
     const ANY_WRITER_TYPE = 'Console';
 
@@ -20,41 +20,41 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
     private $builder;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $loggerFactory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $selector;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $logger;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $strategy;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->logger = self::getMock(Logger::class);
-        $this->loggerFactory = self::getMock(LoggerFactory::class);
+        $this->logger = $this->createMock(Logger::class);
+        $this->loggerFactory = $this->createMock(LoggerFactory::class);
         $this->loggerFactory->method('createLogger')->willReturn($this->logger);
 
-        $this->strategy = self::getMock(Builder\Strategy::class);
-        $this->selector = self::getMockWithoutInvokingTheOriginalConstructor(Builder\Strategy\Selector::class);
+        $this->strategy = $this->createMock(Builder\Strategy::class);
+        $this->selector = $this->createMock(Builder\Strategy\Selector::class);
         $this->selector->method('getStrategyForType')->willReturn($this->strategy);
 
-        $this->writer = $this->getMock(AbstractWriter::class);
+        $this->writer = $this->createMock(AbstractWriter::class);
         $this->strategy->method('buildFromArray')->willReturn($this->writer);
 
         $this->builder = new Builder($this->loggerFactory, $this->selector);

@@ -9,7 +9,7 @@ use Kronos\Log\Writer\File;
 use Psr\Log\LogLevel;
 use \Kronos\Log\Logger;
 
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends \PHPUnit\Framework\TestCase
 {
 
     const A_FILENAME = '/path/to/file';
@@ -34,30 +34,30 @@ class FileTest extends \PHPUnit_Framework_TestCase
     const STRINGIFIED_CONTEXT = 'stringified context';
 
     /**
-     * @var File|\PHPUnit_Framework_MockObject_MockObject
+     * @var File|\PHPUnit\Framework\MockObject\MockObject
      */
     private $adaptor;
 
     /**
-     * @var FileFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var FileFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var ExceptionTraceBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @var ExceptionTraceBuilder|\PHPUnit\Framework\MockObject\MockObject
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var ExceptionTraceBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @var ExceptionTraceBuilder|\PHPUnit\Framework\MockObject\MockObject
      */
     private $previousExceptionTraceBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->adaptor = $this->getMockBuilder(\Kronos\Log\Adaptor\File::class)->disableOriginalConstructor()->getMock();
 
-        $this->factory = $this->getMock(\Kronos\Log\Adaptor\FileFactory::class);
+        $this->factory = $this->createMock(\Kronos\Log\Adaptor\FileFactory::class);
 
         $this->exceptionTraceBuilder = $this->getMockBuilder(\Kronos\Log\Formatter\Exception\TraceBuilder::class)->disableOriginalConstructor()->getMock();
     }
@@ -145,7 +145,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     )
     {
         $this->givenFactoryReturnAdaptor();
-        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $this->expectsWriteToBeCalledWithConsecutive([
@@ -195,7 +195,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function test_Writer_SetContextStringify_ShouldExcludeExceptionKey()
     {
         $this->givenFactoryReturnAdaptor();
-        $context_stringifier = $this->getMock(ContextStringifier::class);
+        $context_stringifier = $this->createMock(ContextStringifier::class);
         $context_stringifier
             ->expects($this->once())
             ->method('excludeKey')
@@ -212,7 +212,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
             self::CONTEXT_KEY => self::CONTEXT_VALUE
         ];
         $this->expectsContextToBeIncludedInWriter();
-        $context_stringifier = $this->getMock(ContextStringifier::class);
+        $context_stringifier = $this->createMock(ContextStringifier::class);
         $context_stringifier
             ->expects($this->once())
             ->method('stringify')
@@ -228,7 +228,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     {
         $this->givenFactoryReturnAdaptor();
         $given_context = [];
-        $given_stringifier = $this->getMock(ContextStringifier::class);
+        $given_stringifier = $this->createMock(ContextStringifier::class);
 
         $this->expectsWriteToBeCalledOnce();
 
@@ -244,7 +244,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $given_context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE
         ];
-        $given_stringifier = $this->getMock(ContextStringifier::class);
+        $given_stringifier = $this->createMock(ContextStringifier::class);
         $given_stringifier
             ->expects($this->once())
             ->method('stringify')

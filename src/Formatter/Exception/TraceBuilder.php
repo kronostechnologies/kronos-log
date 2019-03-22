@@ -2,6 +2,8 @@
 
 namespace Kronos\Log\Formatter\Exception;
 
+use Throwable;
+
 /**
  * Class ExceptionTraceBuilder
  * @package Kronos\Log\Exception
@@ -60,7 +62,7 @@ class TraceBuilder
      * @param $exception
      * @return string
      */
-    public function getTraceAsString($exception) // Once we support PHP 7 => $exception should be a \Throwable
+    public function getTraceAsString(Throwable $exception)
     {
         $lines = [];
         $traceStack = $exception->getTrace();

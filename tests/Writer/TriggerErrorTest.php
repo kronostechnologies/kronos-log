@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log\Writer;
 use Kronos\Log\Writer\TriggerError;
 use Psr\Log\LogLevel;
 
-class TriggerErrorTest extends \PHPUnit_Framework_TestCase
+class TriggerErrorTest extends \PHPUnit\Framework\TestCase
 {
     const ANY_LOG_LEVEL = LogLevel::INFO;
     const LOG_MESSAGE = 'log message';
@@ -19,7 +19,7 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->writer = new TriggerError();
     }

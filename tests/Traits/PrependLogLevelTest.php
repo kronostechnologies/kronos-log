@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log\Traits;
 use Kronos\Log\Traits\PrependLogLevel;
 use Psr\Log\LogLevel;
 
-class PrependLogLevelTest extends \PHPUnit_Framework_TestCase
+class PrependLogLevelTest extends \PHPUnit\Framework\TestCase
 {
 
     const A_MESSAGE = 'a message';
@@ -13,7 +13,7 @@ class PrependLogLevelTest extends \PHPUnit_Framework_TestCase
 
     private $loglevel_prepender;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loglevel_prepender = $this->getMockForTrait(PrependLogLevel::class);
     }

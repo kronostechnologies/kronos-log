@@ -4,7 +4,7 @@ namespace Kronos\Tests\Log\Traits;
 
 use Kronos\Log\Traits\PrependContext;
 
-class PrependContextTest extends \PHPUnit_Framework_TestCase
+class PrependContextTest extends \PHPUnit\Framework\TestCase
 {
 
     const A_MESSAGE = 'a message';
@@ -18,7 +18,7 @@ class PrependContextTest extends \PHPUnit_Framework_TestCase
 
     private $context_prepender;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->context_prepender = $this->getMockForTrait(PrependContext::class);
     }

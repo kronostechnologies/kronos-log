@@ -4,7 +4,7 @@ namespace Kronos\Tests\Log\Formatter;
 
 use Kronos\Log\Formatter\ContextStringifier;
 
-class ContextStringifierTest extends \PHPUnit_Framework_TestCase
+class ContextStringifierTest extends \PHPUnit\Framework\TestCase
 {
 
     const KEY = 'key';
@@ -21,7 +21,7 @@ class ContextStringifierTest extends \PHPUnit_Framework_TestCase
      */
     private $context_stringifier;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->context_stringifier = new ContextStringifier();
     }
@@ -119,7 +119,7 @@ class ContextStringifierTest extends \PHPUnit_Framework_TestCase
         $stringifiedContext = $this->context_stringifier->stringifyArray($context);
 
         $this->assertEquals('123', $stringifiedContext['integer']);
-        $this->assertInternalType('string', $stringifiedContext['integer']);
+        $this->assertIsString($stringifiedContext['integer']);
     }
 
     public function test_ObjectWithToStringValue_stringifyArray_ShouldReturnStringValue()
@@ -166,15 +166,15 @@ class ContextStringifierTest extends \PHPUnit_Framework_TestCase
 
         $stringifiedContext = $this->context_stringifier->stringifyArray($context);
 
-        $this->assertInternalType('array', $stringifiedContext['array']);
-        $this->assertInternalType('string', $stringifiedContext['array']['integer']);
+        $this->assertIsArray($stringifiedContext['array']);
+        $this->assertIsString($stringifiedContext['array']['integer']);
         $this->assertEquals('123', $stringifiedContext['array']['integer']);
         $this->assertEquals('string', $stringifiedContext['array']['string']);
         $this->assertEquals($objectWithToString->__toString(), $stringifiedContext['array']['objectWithToString']);
         $this->assertEquals(print_r($objectWithoutToString, true),
             $stringifiedContext['array']['objectWithoutToString']);
-        $this->assertInternalType('array', $stringifiedContext['array']['nested array']); // Testing recursion
-        $this->assertInternalType('string', $stringifiedContext['array']['nested array']['nested integer']);
+        $this->assertIsArray($stringifiedContext['array']['nested array']); // Testing recursion
+        $this->assertIsString($stringifiedContext['array']['nested array']['nested integer']);
         $this->assertEquals('123', $stringifiedContext['array']['nested array']['nested integer']);
         $this->assertEquals('string', $stringifiedContext['array']['nested array']['nested string']);
         $this->assertEquals($objectWithToString->__toString(),

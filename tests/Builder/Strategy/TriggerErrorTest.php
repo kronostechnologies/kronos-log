@@ -6,7 +6,7 @@ use Kronos\Log\Builder\Strategy\TriggerError;
 use Kronos\Log\Factory\Writer;
 use Kronos\Log\Writer\TriggerError AS TriggerErrorWriter;
 
-class TriggerErrorTest extends \PHPUnit_Framework_TestCase
+class TriggerErrorTest extends \PHPUnit\Framework\TestCase
 {
     const MIN_LEVEL = 'debug';
     const MAX_LEVEL = 'emergency';
@@ -18,19 +18,19 @@ class TriggerErrorTest extends \PHPUnit_Framework_TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->writer = $this->getMockWithoutInvokingTheOriginalConstructor(TriggerErrorWriter::class);
-        $this->factory = $this->getMock(Writer::class);
+        $this->writer = $this->createMock(TriggerErrorWriter::class);
+        $this->factory = $this->createMock(Writer::class);
         $this->factory->method('createTriggerErrorWriter')->willReturn($this->writer);
 
         $this->strategy = new TriggerError($this->factory);

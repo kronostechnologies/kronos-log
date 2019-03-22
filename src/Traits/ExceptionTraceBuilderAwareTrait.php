@@ -5,6 +5,7 @@ namespace Kronos\Log\Traits;
 
 
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use Throwable;
 
 trait ExceptionTraceBuilderAwareTrait
 {
@@ -25,50 +26,44 @@ trait ExceptionTraceBuilderAwareTrait
      */
     protected function replaceException(array $context)
     {
-        if (isset($context['exception']) && $context['exception'] instanceof \Exception) {
+        if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
             $context['exception'] = $this->getExceptionContext($context['exception']);
         }
 
         return $context;
     }
 
-    /**
-     * @param \Exception $exception
-     * @return array
-     */
-    protected function getExceptionContext(\Exception $exception){
+
+    protected function getExceptionContext(Throwable $exception): array
+    {
         $context = [
             'message' => $exception->getMessage()
         ];
 
-        if($this->getExceptionTraceBuilder()){
+        if ($this->getExceptionTraceBuilder()) {
             $context['stacktrace'] = $this->getExceptionTraceBuilder()->getTraceAsString($exception);
         }
 
         $previous = $exception->getPrevious();
-        if ($previous instanceof \Exception) {
+        if ($previous instanceof Throwable) {
             $context['previous'] = $this->getPreviousExceptionContext($previous);
         }
 
         return $context;
     }
 
-    /**
-     * @param \Exception $exception
-     * @return array
-     */
-    protected function getPreviousExceptionContext(\Exception $exception)
+    protected function getPreviousExceptionContext(Throwable $exception): array
     {
         $context = [
             'message' => $exception->getMessage()
         ];
 
-        if($this->getPreviousExceptionTraceBuilder()){
+        if ($this->getPreviousExceptionTraceBuilder()) {
             $context['stacktrace'] = $this->getPreviousExceptionTraceBuilder()->getTraceAsString($exception);
         }
 
         $previous = $exception->getPrevious();
-        if ($previous instanceof \Exception) {
+        if ($previous instanceof Throwable) {
             $context['previous'] = $this->getPreviousExceptionContext($previous);
         }
 

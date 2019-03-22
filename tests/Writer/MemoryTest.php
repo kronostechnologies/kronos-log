@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log\Writer;
 use Kronos\Log\Writer\Memory;
 use Psr\Log\LogLevel;
 
-class MemoryTest extends \PHPUnit_Framework_TestCase
+class MemoryTest extends \PHPUnit\Framework\TestCase
 {
 
     const INFO_LOG_LEVEL = LogLevel::INFO;
@@ -20,7 +20,7 @@ class MemoryTest extends \PHPUnit_Framework_TestCase
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
 
         $this->writer = new Memory();
