@@ -14,7 +14,7 @@ workflows:
 jobs:
   build:
     docker:
-    - image: composer/composer:php5-alpine
+    - image: composer:1
     steps:
     - checkout
     - restore_cache:
