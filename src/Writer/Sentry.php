@@ -62,7 +62,7 @@ class Sentry extends AbstractWriter
         $exception = $context[Logger::EXCEPTION_CONTEXT];
         unset($context[Logger::EXCEPTION_CONTEXT]);
 
-        if($message){
+        if ($message) {
             $context['loggerMessage'] = $message;
         }
 

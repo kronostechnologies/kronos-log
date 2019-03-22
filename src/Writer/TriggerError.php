@@ -14,7 +14,7 @@ class TriggerError extends AbstractWriter
         LogLevel::ERROR => E_USER_WARNING,
         LogLevel::WARNING => E_USER_WARNING,
         LogLevel::NOTICE => E_USER_NOTICE,
-        LogLevel::INFO=> E_USER_NOTICE,
+        LogLevel::INFO => E_USER_NOTICE,
         LogLevel::DEBUG => E_USER_NOTICE
     ];
 
@@ -23,8 +23,9 @@ class TriggerError extends AbstractWriter
         trigger_error($this->interpolate($message, $context), $this->getErrorTypeFromLogLevel($level));
     }
 
-    private function getErrorTypeFromLogLevel($level) {
-        if(array_key_exists($level, self::MAP)) {
+    private function getErrorTypeFromLogLevel($level)
+    {
+        if (array_key_exists($level, self::MAP)) {
             return self::MAP[$level];
         }
 

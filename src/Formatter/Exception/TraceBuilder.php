@@ -73,14 +73,13 @@ class TraceBuilder
         if (!empty($traceStack)) {
             foreach ($traceStack as $stackLineNumber => $stackItem) {
 
-                if($this->shouldBuildLine($stackLineNumber)) {
+                if ($this->shouldBuildLine($stackLineNumber)) {
                     $this->setupLineBuilder($stackLineNumber, $stackItem);
 
                     $lines[] = $this->lineBuilder->buildExceptionString();
 
                     $this->lineBuilder->clearLine();
-                }
-                else if(!$addedLineSkip) {
+                } elseif (!$addedLineSkip) {
                     $lines[] = self::LINE_SKIP;
 
                     $addedLineSkip = true;
@@ -111,7 +110,8 @@ class TraceBuilder
     /**
      * @param $includeArgs
      */
-    public function includeArgs($includeArgs = true) {
+    public function includeArgs($includeArgs = true)
+    {
         $this->includeArgs = $includeArgs;
     }
 

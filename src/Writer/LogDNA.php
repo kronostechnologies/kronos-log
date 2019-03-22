@@ -132,7 +132,8 @@ class LogDNA extends AbstractWriter
             ]);
         } catch (\Exception $exception) {
             // A logger should never be the reason why the app crashed.
-            trigger_error('An error occurred while writing with the LogDNA writer: ' . $exception->getMessage(), E_USER_WARNING);
+            trigger_error('An error occurred while writing with the LogDNA writer: ' . $exception->getMessage(),
+                E_USER_WARNING);
         }
     }
 

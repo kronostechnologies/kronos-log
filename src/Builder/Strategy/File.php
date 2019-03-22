@@ -39,7 +39,8 @@ class File extends AbstractWriter
         $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
         $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
 
-        $writer = $this->factory->createFileWriter($settings[self::FILENAME], $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+        $writer = $this->factory->createFileWriter($settings[self::FILENAME], $exceptionTraceBuilder,
+            $previousExceptionTraceBuilder);
 
         $this->setCommonSettings($writer, $settings);
 

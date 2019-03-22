@@ -64,8 +64,14 @@ class Graylog extends AbstractWriter
      * @param bool $outputVerboseLevel
      * @param \Kronos\Log\Factory\Graylog|null $factory
      */
-    public function __construct($hostname, $port, $chunkSize, $application, $outputVerboseLevel, \Kronos\Log\Factory\Graylog $factory = null)
-    {
+    public function __construct(
+        $hostname,
+        $port,
+        $chunkSize,
+        $application,
+        $outputVerboseLevel,
+        \Kronos\Log\Factory\Graylog $factory = null
+    ) {
         $this->hostname = $hostname;
         $this->port = $port;
         $this->chunkSize = $chunkSize;
@@ -90,7 +96,8 @@ class Graylog extends AbstractWriter
             $logger->log(self::LEVEL_MAPPINGS[$level], $message, $context);
             return true;
         } catch (\Exception $ex) {
-            trigger_error('An error occurred while writing with the Graylog writer: ' . $ex->getMessage(), E_USER_WARNING);
+            trigger_error('An error occurred while writing with the Graylog writer: ' . $ex->getMessage(),
+                E_USER_WARNING);
             return false;
         }
     }

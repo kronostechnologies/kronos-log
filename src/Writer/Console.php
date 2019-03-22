@@ -50,8 +50,11 @@ class Console extends \Kronos\Log\AbstractWriter
      * @param TraceBuilder|null $exceptionTraceBuilder
      * @param TraceBuilder|null $previousExceptionTraceBuilder
      */
-    public function __construct(FileFactory $factory = null, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
-    {
+    public function __construct(
+        FileFactory $factory = null,
+        TraceBuilder $exceptionTraceBuilder = null,
+        TraceBuilder $previousExceptionTraceBuilder = null
+    ) {
         $factory = $factory ?: new FileFactory();
         $this->stdout = $factory->createTTYAdaptor(self::STDOUT);
         $this->stderr = $factory->createTTYAdaptor(self::STDERR);
@@ -137,8 +140,8 @@ class Console extends \Kronos\Log\AbstractWriter
         }
 
         if (!$this->isLevelLower(LogLevel::ERROR, $level)) {
-            if($depth > 0) {
-                if($this->previousExceptionTraceBuilder) {
+            if ($depth > 0) {
+                if ($this->previousExceptionTraceBuilder) {
                     $ex_trace = $this->previousExceptionTraceBuilder->getTraceAsString($exception);
                     $this->stderr->write($ex_trace);
                 }
