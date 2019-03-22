@@ -113,15 +113,15 @@ class Fluentd extends AbstractWriter
         }
     }
 
-    private function processContext(array $context){
+    private function processContext(array $context)
+    {
         $context = $this->replaceException($context);
         $context = $this->contextStringifier->stringifyArray($context);
         if ($this->wrapContextInMeta) {
-            return  [
+            return [
                 'meta' => $context
             ];
-        }
-        else {
+        } else {
             return $context;
         }
     }

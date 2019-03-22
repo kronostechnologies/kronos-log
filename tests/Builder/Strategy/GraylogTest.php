@@ -7,14 +7,14 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\Graylog;
 use Kronos\Log\Exception\RequiredSetting;
 
-class GraylogTest extends \PHPUnit_Framework_TestCase
+class GraylogTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Graylog
      */
     protected $strategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new Graylog();
     }

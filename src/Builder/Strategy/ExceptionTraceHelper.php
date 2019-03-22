@@ -36,52 +36,50 @@ class ExceptionTraceHelper
      */
     public function getExceptionTraceBuilderForSettings($settings)
     {
-        if($this->showExceptionStrackTrace($settings)) {
+        if ($this->showExceptionStrackTrace($settings)) {
             $traceBuilder = $this->factory->createExceptionTraceBuilder();
 
-            if($this->getSettingOrNull($settings, self::INCLUDE_ARGS)) {
+            if ($this->getSettingOrNull($settings, self::INCLUDE_ARGS)) {
                 $traceBuilder->includeArgs();
             }
 
             $count = $this->getSettingOrNull($settings, self::SHOW_EXCEPTION_TOP_LINES);
-            if($count >= 1) {
+            if ($count >= 1) {
                 $traceBuilder->showTopLines($count);
             }
 
             $count = $this->getSettingOrNull($settings, self::SHOW_EXCEPTION_BOTTOM_LINES);
-            if($count >= 1) {
+            if ($count >= 1) {
                 $traceBuilder->showBottomLines($count);
             }
 
             return $traceBuilder;
-        }
-        else {
+        } else {
             return null;
         }
     }
 
     public function getPreviousExceptionTraceBuilderForSettings($settings)
     {
-        if($this->showPreviousExceptionStrackTrace($settings)) {
+        if ($this->showPreviousExceptionStrackTrace($settings)) {
             $traceBuilder = $this->factory->createExceptionTraceBuilder();
 
-            if($this->getSettingOrNull($settings, self::INCLUDE_ARGS)) {
+            if ($this->getSettingOrNull($settings, self::INCLUDE_ARGS)) {
                 $traceBuilder->includeArgs();
             }
 
             $count = $this->getSettingOrNull($settings, self::SHOW_PREVIOUS_EXCEPTION_TOP_LINES);
-            if($count >= 1) {
+            if ($count >= 1) {
                 $traceBuilder->showTopLines($count);
             }
 
             $count = $this->getSettingOrNull($settings, self::SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES);
-            if($count >= 1) {
+            if ($count >= 1) {
                 $traceBuilder->showBottomLines($count);
             }
 
             return $traceBuilder;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -92,7 +90,8 @@ class ExceptionTraceHelper
      */
     private function showExceptionStrackTrace($settings)
     {
-        return !array_key_exists(self::SHOW_EXCEPTION_STACKTRACE, $settings) || $settings[self::SHOW_EXCEPTION_STACKTRACE];
+        return !array_key_exists(self::SHOW_EXCEPTION_STACKTRACE,
+                $settings) || $settings[self::SHOW_EXCEPTION_STACKTRACE];
     }
 
     /**
@@ -101,10 +100,12 @@ class ExceptionTraceHelper
      */
     private function showPreviousExceptionStrackTrace($settings)
     {
-        return !array_key_exists(self::SHOW_PREVIOUS_EXCEPTION_STACKTRACE, $settings) || $settings[self::SHOW_PREVIOUS_EXCEPTION_STACKTRACE];
+        return !array_key_exists(self::SHOW_PREVIOUS_EXCEPTION_STACKTRACE,
+                $settings) || $settings[self::SHOW_PREVIOUS_EXCEPTION_STACKTRACE];
     }
 
-    private function getSettingOrNull($settings, $key) {
+    private function getSettingOrNull($settings, $key)
+    {
         return (isset($settings[$key]) ? $settings[$key] : null);
     }
 }

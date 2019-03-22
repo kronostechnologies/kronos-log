@@ -2,7 +2,6 @@
 
 namespace Kronos\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
 

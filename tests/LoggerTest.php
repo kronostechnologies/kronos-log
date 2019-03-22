@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log;
 use Kronos\Log\Logger;
 use Psr\Log\LogLevel;
 
-class LoggerTest extends \PHPUnit_Framework_TestCase
+class LoggerTest extends \PHPUnit\Framework\TestCase
 {
 
     const ANY_LOG_LEVEL = LogLevel::INFO;
@@ -23,13 +23,13 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     private $logger;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->writer = $this->getMock(\Kronos\Log\WriterInterface::class);
+        $this->writer = $this->createMock(\Kronos\Log\WriterInterface::class);
 
         $this->logger = new Logger();
         $this->logger->addWriter($this->writer);
@@ -98,7 +98,10 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $errorHandled = 0;
         $handledTriggedError = false;
-        $previousErrorHandler = set_error_handler(function ($errno, $errstr) use (&$handledTriggedError, &$errorHandled) {
+        $previousErrorHandler = set_error_handler(function ($errno, $errstr) use (
+            &$handledTriggedError,
+            &$errorHandled
+        ) {
             $errorHandled++;
             $handledTriggedError = ($errno == E_USER_ERROR && $errstr == self::WRITER_LOG_EXCEPTION_MESSAGE);
         });

@@ -7,14 +7,14 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\Fluentd;
 use Kronos\Log\Exception\RequiredSetting;
 
-class FluentdTest extends \PHPUnit_Framework_TestCase
+class FluentdTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Fluentd
      */
     protected $strategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = new Fluentd();
     }

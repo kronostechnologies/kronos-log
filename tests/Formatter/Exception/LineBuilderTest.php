@@ -4,7 +4,7 @@ namespace Kronos\Tests\Log\Formatter\Exception;
 
 use Kronos\Log\Formatter\Exception\LineBuilder;
 
-class LineBuilderTest extends \PHPUnit_Framework_TestCase
+class LineBuilderTest extends \PHPUnit\Framework\TestCase
 {
 
     const A_LINE_NB = 0;

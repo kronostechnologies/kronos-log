@@ -2,6 +2,8 @@
 
 namespace Kronos\Log;
 
+use Throwable;
+
 class LogService
 {
 
@@ -111,7 +113,7 @@ class LogService
      * @param \Exception $exception
      * @param array $context
      */
-    public static function exception($message, \Exception $exception, array $context = array())
+    public static function exception($message, Throwable $exception, array $context = array())
     {
         $context[Logger::EXCEPTION_CONTEXT] = $exception;
         LogLocator::getLogger()->error($message, $context);

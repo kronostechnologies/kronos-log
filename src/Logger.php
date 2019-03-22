@@ -54,8 +54,7 @@ class Logger extends \Psr\Log\AbstractLogger
             if ($writer->canLogLevel($level)) {
                 try {
                     $writer->log($level, $message, $context + $this->context);
-                }
-                catch(\Exception $exception) {
+                } catch (\Exception $exception) {
                     trigger_error($exception->getMessage(), E_USER_ERROR);
                 }
             }

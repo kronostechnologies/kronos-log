@@ -3,6 +3,7 @@
 namespace Kronos\Log\Traits;
 
 use  Kronos\Log\Logger;
+use Throwable;
 
 trait LoggerAware
 {
@@ -134,11 +135,11 @@ trait LoggerAware
 
     /**
      * Log Error with exception context
-     * @param $message
-     * @param \Exception $exception
+     * @param string $message
+     * @param Throwable $exception
      * @param array $context
      */
-    protected function logException($message, \Exception $exception, array $context = array())
+    protected function logException($message, Throwable $exception, array $context = array())
     {
         if ($this->logger) {
             $context[Logger::EXCEPTION_CONTEXT] = $exception;

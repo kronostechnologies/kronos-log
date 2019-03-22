@@ -8,15 +8,15 @@ use Fluent\Logger\FluentLogger;
 use Kronos\Log\Writer\Fluentd;
 use Psr\Log\LogLevel;
 
-class FluentdTest extends \PHPUnit_Framework_TestCase
+class FluentdTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Kronos\Log\Factory\Fluentd|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Kronos\Log\Factory\Fluentd|\PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var FluentLogger|\PHPUnit_Framework_MockObject_MockObject
+     * @var FluentLogger|\PHPUnit\Framework\MockObject\MockObject
      */
     private $logger;
 
@@ -25,7 +25,7 @@ class FluentdTest extends \PHPUnit_Framework_TestCase
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = $this->getMockBuilder(\Kronos\Log\Factory\Fluentd::class)
             ->disableOriginalConstructor()

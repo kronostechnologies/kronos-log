@@ -16,7 +16,7 @@ use Kronos\Log\Exception\UnsupportedType;
 use Kronos\Log\Factory\Strategy;
 use Kronos\Log\Writer\Sentry;
 
-class SelectorTest extends \PHPUnit_Framework_TestCase
+class SelectorTest extends \PHPUnit\Framework\TestCase
 {
     const UNSUPPORTED_TYPE = 'unsupported';
     const CUSTOM_TYPE = 'custom type';
@@ -27,25 +27,25 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
     private $selector;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $strategy;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->factory = $this->getMockWithoutInvokingTheOriginalConstructor(Strategy::class);
+        $this->factory = $this->createMock(Strategy::class);
 
         $this->selector = new Selector($this->factory);
     }
 
     public function test_Console_getStrategyForType_ShouldCreateConsoleStrategyAndReturnIt()
     {
-        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(Console::class);
+        $this->strategy = $this->createMock(Console::class);
         $this->factory
             ->expects(self::once())
             ->method('createConsoleStrategy')
@@ -58,7 +58,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_File_getStrategyForType_ShouldCreateFileStrategyAndReturnIt()
     {
-        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(File::class);
+        $this->strategy = $this->createMock(File::class);
         $this->factory
             ->expects(self::once())
             ->method('createFileStrategy')
@@ -71,7 +71,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_LogDNA_getStrategyForType_ShouldCreateLogDNAStrategyAndReturnIt()
     {
-        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(LogDNA::class);
+        $this->strategy = $this->createMock(LogDNA::class);
         $this->factory
             ->expects(self::once())
             ->method('createLogDNAStrategy')
@@ -84,7 +84,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_Memory_getStrategyForType_ShouldCreateMemoryStrategyAndReturnIt()
     {
-        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(Memory::class);
+        $this->strategy = $this->createMock(Memory::class);
         $this->factory
             ->expects(self::once())
             ->method('createMemoryStrategy')
@@ -97,7 +97,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_Sentry_getStrategyForType_ShouldCreateSentryStrategyAndReturnIt()
     {
-        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(Sentry::class);
+        $this->strategy = $this->createMock(Sentry::class);
         $this->factory
             ->expects(self::once())
             ->method('createSentryStrategy')
@@ -110,7 +110,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_Syslog_getStrategyForType_ShouldCreateSyslogStrategyAndReturnIt()
     {
-        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(Syslog::class);
+        $this->strategy = $this->createMock(Syslog::class);
         $this->factory
             ->expects(self::once())
             ->method('createSyslogStrategy')
@@ -123,7 +123,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_TriggerError_getStrategyForType_ShouldCreateTriggerErrorStrategyAndReturnIt()
     {
-        $this->strategy = $this->getMockWithoutInvokingTheOriginalConstructor(TriggerError::class);
+        $this->strategy = $this->createMock(TriggerError::class);
         $this->factory
             ->expects(self::once())
             ->method('createTriggerErrorStrategy')
@@ -137,7 +137,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_UnknownType_getStrategyForType_ShouldCreateCustomWriter()
     {
-        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $customWriterStrategy = $this->createMock(CustomWriter::class);
         $this->factory
             ->expects(self::once())
             ->method('createCustomWriterStrategy')
@@ -148,8 +148,8 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
 
     public function test_CustomWriterStrategy_getStrategyForType_ShouldGetAndReturnStrategyForType()
     {
-        $strategy = $this->getMock(\Kronos\Log\Builder\Strategy::class);
-        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $strategy = $this->createMock(\Kronos\Log\Builder\Strategy::class);
+        $customWriterStrategy = $this->createMock(CustomWriter::class);
         $customWriterStrategy
             ->expects(self::once())
             ->method('getStrategyForClassname')
@@ -168,7 +168,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
     public function test_CustomWriterThrowsException_getStrategyForType_ShouldThrowUnsupportedTypeException()
     {
         $this->expectException(UnsupportedType::class);
-        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $customWriterStrategy = $this->createMock(CustomWriter::class);
         $customWriterStrategy
             ->expects(self::once())
             ->method('getStrategyForClassname')
@@ -185,7 +185,7 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
     public function test_InvalidCustomWriter_getStrategyForType_ShouldThrowInvalidCustomWriterException()
     {
         $this->expectException(InvalidCustomWriter::class);
-        $customWriterStrategy = $this->getMockWithoutInvokingTheOriginalConstructor(CustomWriter::class);
+        $customWriterStrategy = $this->createMock(CustomWriter::class);
         $customWriterStrategy
             ->expects(self::once())
             ->method('getStrategyForClassname')

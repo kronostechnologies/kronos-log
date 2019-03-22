@@ -11,25 +11,25 @@ use Kronos\Log\Factory\Writer;
 use Kronos\Log\Writer\Graylog;
 use Psr\Log\LogLevel;
 
-class GraylogTest extends \PHPUnit_Framework_TestCase
+class GraylogTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Kronos\Log\Factory\Graylog|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Kronos\Log\Factory\Graylog|\PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var Logger|\PHPUnit_Framework_MockObject_MockObject
+     * @var Logger|\PHPUnit\Framework\MockObject\MockObject
      */
     private $logger;
 
     /**
-     * @var Publisher|\PHPUnit_Framework_MockObject_MockObject
+     * @var Publisher|\PHPUnit\Framework\MockObject\MockObject
      */
     private $publisher;
 
     /**
-     * @var UdpTransport|\PHPUnit_Framework_MockObject_MockObject
+     * @var UdpTransport|\PHPUnit\Framework\MockObject\MockObject
      */
     private $transport;
 
@@ -38,7 +38,7 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
      */
     private $writer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = $this->getMockBuilder(\Kronos\Log\Factory\Graylog::class)
             ->disableOriginalConstructor()
@@ -141,7 +141,8 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ '_app' => $givenApplication ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['_app' => $givenApplication]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.');
     }
@@ -154,7 +155,8 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ '_app' => $givenApplication, 'customContextValue' => 123 ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['_app' => $givenApplication, 'customContextValue' => 123]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.', ['customContextValue' => 123]);
     }
@@ -166,7 +168,8 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ 'levelVerbose' => LogLevel::INFO ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['levelVerbose' => LogLevel::INFO]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.');
     }
@@ -178,7 +181,8 @@ class GraylogTest extends \PHPUnit_Framework_TestCase
         $this->factory->method('createUdpTransport')->willReturn($this->transport);
         $this->factory->method('createPublisher')->willReturn($this->publisher);
 
-        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(), [ 'customContextValue' => 123, 'levelVerbose' => LogLevel::INFO ]);
+        $this->logger->expects($this->once())->method('log')->with($this->anything(), $this->anything(),
+            ['customContextValue' => 123, 'levelVerbose' => LogLevel::INFO]);
 
         $this->writer->log(LogLevel::INFO, 'Something happened.', ['customContextValue' => 123]);
     }

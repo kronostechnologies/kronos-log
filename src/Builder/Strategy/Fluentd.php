@@ -38,9 +38,10 @@ class Fluentd extends AbstractWriter
 
         $hostname = $settings[self::HOSTNAME];
         $port = isset($settings[self::PORT]) ? $settings[self::PORT] : FluentLogger::DEFAULT_LISTEN_PORT;
-        $application = isset($settings[self::APPLICATION]) ? $settings[self::APPLICATION] : null ;
+        $application = isset($settings[self::APPLICATION]) ? $settings[self::APPLICATION] : null;
         $tag = $settings[self::TAG];
-        $wrapContextInMeta = isset($settings[self::WRAP_CONTEXT_IN_META]) ? filter_var($settings[self::WRAP_CONTEXT_IN_META], FILTER_VALIDATE_BOOLEAN) : false;
+        $wrapContextInMeta = isset($settings[self::WRAP_CONTEXT_IN_META]) ? filter_var($settings[self::WRAP_CONTEXT_IN_META],
+            FILTER_VALIDATE_BOOLEAN) : false;
 
         $writer = new \Kronos\Log\Writer\Fluentd(
             $hostname,

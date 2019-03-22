@@ -6,7 +6,7 @@ use Kronos\Log\Builder\Strategy\CustomWriter;
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\InvalidCustomWriter;
 
-class CustomWriterTest extends \PHPUnit_Framework_TestCase
+class CustomWriterTest extends \PHPUnit\Framework\TestCase
 {
 
     public function test_Classname_getStrategyFromClassname_ShouldReturnClassnameInstance()

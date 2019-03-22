@@ -60,10 +60,13 @@ class Sentry extends AbstractWriter
     private function captureException($level, $message, $context)
     {
         $exception = $context[Logger::EXCEPTION_CONTEXT];
-
         unset($context[Logger::EXCEPTION_CONTEXT]);
-        $sentry_params = $this->getSentryParams($level, $context);
 
+        if ($message) {
+            $context['loggerMessage'] = $message;
+        }
+
+        $sentry_params = $this->getSentryParams($level, $context);
         $this->raven_client->captureException($exception, $sentry_params);
     }
 

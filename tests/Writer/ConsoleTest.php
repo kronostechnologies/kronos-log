@@ -14,7 +14,7 @@ use Psr\Log\LogLevel;
 use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
 
-class ConsoleTest extends \PHPUnit_Framework_TestCase
+class ConsoleTest extends \PHPUnit\Framework\TestCase
 {
 
     const LOGLEVEL_BELOW_ERROR = LogLevel::INFO;
@@ -67,7 +67,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     private $previousExceptionTraceBuilder;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fileFactory = $this->getMockBuilder(FileFactory::class)->disableOriginalConstructor()->getMock();
     }
@@ -165,10 +165,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsErrorAndTraceBuilder_Log_ShouldWriteExceptionMessageAndStackTrace()
+    public function test_ContextContainingExceptionAndLogLevelIsErrorAndTraceBuilder_Log_ShouldWriteExceptionMessageAndStackTrace(
+    )
     {
         $this->givenFactoryReturnFileAdaptors();
-        $this->exceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
             [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
@@ -212,7 +213,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     )
     {
         $this->givenFactoryReturnFileAdaptors();
-        $this->previousExceptionTraceBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(TraceBuilder::class);
+        $this->previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [

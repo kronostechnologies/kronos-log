@@ -38,8 +38,11 @@ class Writer
      * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return File
      */
-    public function createFileWriter($filename, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
-    {
+    public function createFileWriter(
+        $filename,
+        TraceBuilder $exceptionTraceBuilder = null,
+        TraceBuilder $previousExceptionTraceBuilder = null
+    ) {
         $writer = new File($filename, $this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
@@ -64,8 +67,10 @@ class Writer
      * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return Console
      */
-    public function createConsoleWriter(TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
-    {
+    public function createConsoleWriter(
+        TraceBuilder $exceptionTraceBuilder = null,
+        TraceBuilder $previousExceptionTraceBuilder = null
+    ) {
         $writer = new Console($this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
@@ -112,9 +117,15 @@ class Writer
      * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return LogDNA
      */
-    public function createLogDNAWriter($hostname, $application, $ingestionKey, TraceBuilder $exceptionTraceBuilder = null, TraceBuilder $previousExceptionTraceBuilder = null)
-    {
-        return new LogDNA($hostname, $application, $ingestionKey, $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+    public function createLogDNAWriter(
+        $hostname,
+        $application,
+        $ingestionKey,
+        TraceBuilder $exceptionTraceBuilder = null,
+        TraceBuilder $previousExceptionTraceBuilder = null
+    ) {
+        return new LogDNA($hostname, $application, $ingestionKey, $exceptionTraceBuilder,
+            $previousExceptionTraceBuilder);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Kronos\Tests\Log\Traits;
 
 use Kronos\Log\Traits\PrependDateTime;
 
-class PrependDateTimeTest extends \PHPUnit_Framework_TestCase
+class PrependDateTimeTest extends \PHPUnit\Framework\TestCase
 {
 
     const A_MESSAGE = ' a message';
@@ -12,7 +12,7 @@ class PrependDateTimeTest extends \PHPUnit_Framework_TestCase
 
     private $datetime_prepender;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->datetime_prepender = $this->getMockForTrait(PrependDateTime::class);
     }

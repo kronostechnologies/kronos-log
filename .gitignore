@@ -9,3 +9,6 @@ nbproject
 
 composer.lock
 vendor
+
+# phpunit
+.phpunit.result.cache

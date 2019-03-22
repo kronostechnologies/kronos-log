@@ -2,6 +2,8 @@
 
 namespace Kronos\Log\Formatter\Exception;
 
+use Throwable;
+
 /**
  * Class ExceptionTraceBuilder
  * @package Kronos\Log\Exception
@@ -60,7 +62,7 @@ class TraceBuilder
      * @param $exception
      * @return string
      */
-    public function getTraceAsString($exception) // Once we support PHP 7 => $exception should be a \Throwable
+    public function getTraceAsString(Throwable $exception)
     {
         $lines = [];
         $traceStack = $exception->getTrace();
@@ -71,14 +73,13 @@ class TraceBuilder
         if (!empty($traceStack)) {
             foreach ($traceStack as $stackLineNumber => $stackItem) {
 
-                if($this->shouldBuildLine($stackLineNumber)) {
+                if ($this->shouldBuildLine($stackLineNumber)) {
                     $this->setupLineBuilder($stackLineNumber, $stackItem);
 
                     $lines[] = $this->lineBuilder->buildExceptionString();
 
                     $this->lineBuilder->clearLine();
-                }
-                else if(!$addedLineSkip) {
+                } elseif (!$addedLineSkip) {
                     $lines[] = self::LINE_SKIP;
 
                     $addedLineSkip = true;
@@ -109,7 +110,8 @@ class TraceBuilder
     /**
      * @param $includeArgs
      */
-    public function includeArgs($includeArgs = true) {
+    public function includeArgs($includeArgs = true)
+    {
         $this->includeArgs = $includeArgs;
     }
 
