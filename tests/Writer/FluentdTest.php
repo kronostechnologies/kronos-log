@@ -6,6 +6,7 @@ namespace Kronos\Tests\Log\Writer;
 
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\Writer\Fluentd;
+use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use Psr\Log\LogLevel;
 
 class FluentdTest extends \PHPUnit\Framework\TestCase
@@ -42,7 +43,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
         $givenHostname = "localhost";
         $this->writer = new Fluentd($givenHostname, 24224, "test", null, false, $this->factory);
 
-        $this->factory->expects($this->once())->method('createFluentLogger')->with($givenHostname, $this->anything());
+        $this->factory->expects($this->once())->method('createFluentLogger')->with($givenHostname, $this->anything(), $this->anything(), $this->anything());
 
         $this->writer->log(LogLevel::INFO, "test");
     }
@@ -53,6 +54,15 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
         $this->writer = new Fluentd("localhost", $givenPort, "test", null, false, $this->factory);
 
         $this->factory->expects($this->once())->method('createFluentLogger')->with($this->anything(), $givenPort);
+
+        $this->writer->log(LogLevel::INFO, "test");
+    }
+
+    public function test_uninitialized_log_CreatesLoggerWithFluentBitPacker()
+    {
+        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory, null, true);
+
+        $this->factory->expects($this->once())->method('createFluentLogger')->with($this->anything(), $this->anything(), $this->anything(), $this->isInstanceOf(FluentBitJsonPacker::class));
 
         $this->writer->log(LogLevel::INFO, "test");
     }

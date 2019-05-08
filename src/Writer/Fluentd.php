@@ -6,6 +6,7 @@ namespace Kronos\Log\Writer;
 
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\AbstractWriter;
+use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
@@ -65,6 +66,11 @@ class Fluentd extends AbstractWriter
     private $contextStringifier;
 
     /**
+     * @var bool
+     */
+    private $fluentBit;
+
+    /**
      * @param string $hostname
      * @param int $port
      * @param $tag
@@ -80,7 +86,8 @@ class Fluentd extends AbstractWriter
         $application,
         $wrapContextInMeta,
         \Kronos\Log\Factory\Fluentd $factory = null,
-        ContextStringifier $contextStringifier = null
+        ContextStringifier $contextStringifier = null,
+        $fluentBit = false
     ) {
         $this->hostname = $hostname;
         $this->port = $port;
@@ -89,6 +96,7 @@ class Fluentd extends AbstractWriter
         $this->wrapContextInMeta = $wrapContextInMeta;
         $this->factory = $factory ?: new \Kronos\Log\Factory\Fluentd();
         $this->contextStringifier = $contextStringifier ?: new ContextStringifier();
+        $this->fluentBit = $fluentBit;
     }
 
     public function log($level, $message, array $context = [])
@@ -132,7 +140,11 @@ class Fluentd extends AbstractWriter
     protected function initializeLogger()
     {
         if ($this->logger === null) {
-            $this->logger = $this->factory->createFluentLogger($this->hostname, $this->port);
+            $packer = null;
+            if ($this->fluentBit === true) {
+                $packer = new FluentBitJsonPacker();
+            }
+            $this->logger = $this->factory->createFluentLogger($this->hostname, $this->port, [], $packer);
         }
 
         return $this->logger;
@@ -176,6 +188,22 @@ class Fluentd extends AbstractWriter
     public function willWrapContextInMeta()
     {
         return $this->wrapContextInMeta;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFluentBit()
+    {
+        return $this->fluentBit;
+    }
+
+    /**
+     * @var bool $value
+     */
+    public function setFluentBit($value)
+    {
+        $this->fluentBit = $value;
     }
 
     /**
