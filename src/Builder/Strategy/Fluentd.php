@@ -15,6 +15,7 @@ class Fluentd extends AbstractWriter
     const HOSTNAME = 'hostname';
     const PORT = 'port';
     const WRAP_CONTEXT_IN_META = 'wrapContextInMeta';
+    const FLUENT_BIT = 'fluentBit';
 
     /**
      * @var ExceptionTraceHelper
@@ -42,13 +43,17 @@ class Fluentd extends AbstractWriter
         $tag = $settings[self::TAG];
         $wrapContextInMeta = isset($settings[self::WRAP_CONTEXT_IN_META]) ? filter_var($settings[self::WRAP_CONTEXT_IN_META],
             FILTER_VALIDATE_BOOLEAN) : false;
+        $fluentBit = isset($settings[self::FLUENT_BIT]) ? filter_var($settings[self::FLUENT_BIT],FILTER_VALIDATE_BOOLEAN) : false;
 
         $writer = new \Kronos\Log\Writer\Fluentd(
             $hostname,
             $port,
             $tag,
             $application,
-            $wrapContextInMeta
+            $wrapContextInMeta,
+            null,
+            null,
+            $fluentBit
         );
 
         $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);

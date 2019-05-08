@@ -164,4 +164,17 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($retVal->willWrapContextInMeta());
     }
+
+    public function test_fluentBitToTrue_buildFromArray_getFluentBitReturnsTrue()
+    {
+        $params = [
+            'hostname' => 'php.application',
+            'tag' => 'php.application',
+            'fluentBit' => true
+        ];
+
+        $retVal = $this->strategy->buildFromArray($params);
+
+        $this->assertTrue($retVal->getFluentBit());
+    }
 }
