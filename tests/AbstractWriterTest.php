@@ -31,6 +31,15 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($canLog);
     }
 
+    public function test_Writer_CanLogLevel_WhenCanLogIsFalse_ShouldReturnFalse()
+    {
+        $this->writer->setCanLog(false);
+
+        $canLog = $this->writer->canLogLevel(self::ANY_LEVEL);
+
+        $this->assertFalse($canLog);
+    }
+
     public function test_NewWriter_CanLogLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
