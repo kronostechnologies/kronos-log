@@ -1,6 +1,7 @@
 .buildpath
 .DS_Store
 .idea
+*.iml
 .project
 .settings/
 .*.sw*

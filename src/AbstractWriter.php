@@ -34,7 +34,9 @@ abstract class AbstractWriter implements WriterInterface
     {
         $this->validateLogLevel($level);
 
-        if ($this->isLevelLower($this->min_level, $level) || $this->isLevelHigher($this->max_level, $level)) {
+        if (!$this->can_log
+            || $this->isLevelLower($this->min_level, $level)
+            || $this->isLevelHigher($this->max_level, $level)) {
             return false;
         }
 
