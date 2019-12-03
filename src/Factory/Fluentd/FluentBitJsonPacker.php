@@ -15,7 +15,7 @@ class FluentBitJsonPacker implements PackerInterface
     }
 
     /**
-     * pack entity as a json string for fluent bit with the ultimate tag name encoded as a key (no time)
+     * pack entity as a json string for fluentbit, removing timestamp and tag key (no time)
      *
      * @param Entity $entity
      * @return string
@@ -23,7 +23,6 @@ class FluentBitJsonPacker implements PackerInterface
     public function pack(Entity $entity)
     {
         $data = $entity->getData();
-        $data['_tag'] = $entity->getTag();
         return json_encode($data);
     }
 }
