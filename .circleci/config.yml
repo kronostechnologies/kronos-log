@@ -1,6 +1,6 @@
 version: 2
 aliases:
-  - &composer_install_cache_key v2-composer-install-{{ checksum "composer.json" }}
+  - &composer_install_cache_key v2-composer-install-{{ checksum "composer.lock" }}
 
 workflows:
   version: 2
@@ -14,14 +14,14 @@ workflows:
 jobs:
   build:
     docker:
-    - image: composer:1
+    - image: circleci/php:7.2-cli
     steps:
     - checkout
     - restore_cache:
         keys:
         - *composer_install_cache_key
-    - run: apk update && apk add openssh-keysign
-    - run: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+#    - run: apt update && apt install -y add openssh-client
+#    - run: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     - run: test -d vendor || composer install -n --prefer-dist --dev
     - save_cache:
         key: *composer_install_cache_key
@@ -30,8 +30,7 @@ jobs:
 
   phpunit:
     docker:
-    - image: php:7.2-cli-alpine
-      command: /sbin/init
+    - image: circleci/php:7.2-cli
     steps:
     - checkout
     - restore_cache:
