@@ -3,10 +3,10 @@
 namespace Kronos\Log\Formatter\Exception;
 
 /**
- * Class LineBuilder
+ * Class LineAssembler
  * @package Kronos\Log\Exception
  */
-class LineBuilder
+class LineAssembler
 {
 
     /**

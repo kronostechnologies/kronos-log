@@ -43,17 +43,17 @@ class TraceBuilder
     private $includeArgs = false;
 
     /**
-     * @var \Kronos\Log\Formatter\Exception\LineBuilder
+     * @var LineAssembler
      */
-    private $lineBuilder;
+    private $lineAssembler;
 
     /**
      * ExceptionTraceBuilder constructor.
-     * @param LineBuilder|null $lineBuilder
+     * @param LineAssembler|null $lineAssembler
      */
-    public function __construct(LineBuilder $lineBuilder = null)
+    public function __construct(LineAssembler $lineAssembler = null)
     {
-        $this->lineBuilder = is_null($lineBuilder) ? new LineBuilder() : $lineBuilder;
+        $this->lineAssembler = is_null($lineAssembler) ? new LineAssembler() : $lineAssembler;
     }
 
     /**
@@ -76,9 +76,9 @@ class TraceBuilder
                 if ($this->shouldBuildLine($stackLineNumber)) {
                     $this->setupLineBuilder($stackLineNumber, $stackItem);
 
-                    $lines[] = $this->lineBuilder->buildExceptionString();
+                    $lines[] = $this->lineAssembler->buildExceptionString();
 
-                    $this->lineBuilder->clearLine();
+                    $this->lineAssembler->clearLine();
                 } elseif (!$addedLineSkip) {
                     $lines[] = self::LINE_SKIP;
 
@@ -122,31 +122,31 @@ class TraceBuilder
     private function setupLineBuilder($stackLineNumber, $traceElement)
     {
         if (isset($stackLineNumber)) {
-            $this->lineBuilder->setLineNb($stackLineNumber);
+            $this->lineAssembler->setLineNb($stackLineNumber);
         }
 
         if (isset($traceElement['line'])) {
-            $this->lineBuilder->setLine($traceElement['line']);
+            $this->lineAssembler->setLine($traceElement['line']);
         }
 
         if (isset($traceElement['file'])) {
-            $this->lineBuilder->setFile($traceElement['file']);
+            $this->lineAssembler->setFile($traceElement['file']);
         }
 
         if (isset($traceElement['class'])) {
-            $this->lineBuilder->setClass($traceElement['class']);
+            $this->lineAssembler->setClass($traceElement['class']);
         }
 
         if (isset($traceElement['function'])) {
-            $this->lineBuilder->setFunction($traceElement['function']);
+            $this->lineAssembler->setFunction($traceElement['function']);
         }
 
         if (isset($traceElement['type'])) {
-            $this->lineBuilder->setType($traceElement['type']);
+            $this->lineAssembler->setType($traceElement['type']);
         }
 
         if ($this->includeArgs && isset($traceElement['args'])) {
-            $this->lineBuilder->setArgs($traceElement['args']);
+            $this->lineAssembler->setArgs($traceElement['args']);
         }
     }
 

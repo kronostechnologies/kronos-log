@@ -11,7 +11,7 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject
      */
-    private $lineBuilder;
+    private $lineAssembler;
 
     /**
      * @var \Kronos\Log\Formatter\Exception\TraceBuilder
@@ -20,8 +20,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function setUp(): void
     {
-        $this->lineBuilder = new \Kronos\Log\Formatter\Exception\LineBuilder();
-        $this->traceBuilder = new \Kronos\Log\Formatter\Exception\TraceBuilder($this->lineBuilder);
+        $this->lineAssembler = new \Kronos\Log\Formatter\Exception\LineAssembler();
+        $this->traceBuilder = new \Kronos\Log\Formatter\Exception\TraceBuilder($this->lineAssembler);
     }
 
     public function test_Exception_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithoutArguments()
