@@ -2,26 +2,42 @@
 
 namespace Kronos\Tests\Log\Formatter\Exception;
 
+use Kronos\Log\Formatter\Exception\LineAssembler;
+use Kronos\Log\Formatter\Exception\LineAssemblerBuilder;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use Throwable;
 
 class TraceBuilderTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|LineAssemblerBuilder
      */
-    private $lineAssembler;
+    private $lineAssemblerBuilder;
 
     /**
-     * @var \Kronos\Log\Formatter\Exception\TraceBuilder
+     * @var TraceBuilder
      */
     private $traceBuilder;
 
     public function setUp(): void
     {
-        $this->lineAssembler = new \Kronos\Log\Formatter\Exception\LineAssembler();
-        $this->traceBuilder = new \Kronos\Log\Formatter\Exception\TraceBuilder($this->lineAssembler);
+        $this->lineAssemblerBuilder = $this->createMock(LineAssemblerBuilder::class);
+        $this->lineAssemblerBuilder->method('buildAssembler')->willReturnCallback(function() {
+            return new LineAssembler();
+        });
+
+        $this->traceBuilder = new TraceBuilder($this->lineAssemblerBuilder);
+    }
+
+    public function test_exception_getTtraceAsString_shouldBuildLineAssemblerForEachStackItem(): void
+    {
+        $exception = $this->givenException();
+        $this->lineAssemblerBuilder
+            ->expects(self::exactly(5))
+            ->method('buildAssembler');
+
+        $this->traceBuilder->getTraceAsString($exception);
     }
 
     public function test_Exception_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithoutArguments()

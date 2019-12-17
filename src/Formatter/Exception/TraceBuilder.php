@@ -43,17 +43,17 @@ class TraceBuilder
     private $includeArgs = false;
 
     /**
-     * @var LineAssembler
+     * @var LineAssemblerBuilder
      */
-    private $lineAssembler;
+    private $lineAssemblerBuilder;
 
     /**
      * ExceptionTraceBuilder constructor.
-     * @param LineAssembler|null $lineAssembler
+     * @param LineAssemblerBuilder|null $lineAssemblerBuilder
      */
-    public function __construct(LineAssembler $lineAssembler = null)
+    public function __construct(LineAssemblerBuilder $lineAssemblerBuilder = null)
     {
-        $this->lineAssembler = is_null($lineAssembler) ? new LineAssembler() : $lineAssembler;
+        $this->lineAssemblerBuilder = is_null($lineAssemblerBuilder) ? new LineAssemblerBuilder() : $lineAssemblerBuilder;
     }
 
     /**
@@ -62,8 +62,9 @@ class TraceBuilder
      * @param $exception
      * @return string
      */
-    public function getTraceAsString(Throwable $exception)
+    public function getTraceAsString(Throwable $exception): string
     {
+
         $lines = [];
         $traceStack = $exception->getTrace();
         $this->generateAcceptedLineRange(count($traceStack));
@@ -74,11 +75,9 @@ class TraceBuilder
             foreach ($traceStack as $stackLineNumber => $stackItem) {
 
                 if ($this->shouldBuildLine($stackLineNumber)) {
-                    $this->setupLineBuilder($stackLineNumber, $stackItem);
-
-                    $lines[] = $this->lineAssembler->buildExceptionString();
-
-                    $this->lineAssembler->clearLine();
+                    $lineAssembler = $this->lineAssemblerBuilder->buildAssembler();
+                    $this->setupLineBuilder($lineAssembler, $stackLineNumber, $stackItem);
+                    $lines[] = $lineAssembler->buildExceptionString();
                 } elseif (!$addedLineSkip) {
                     $lines[] = self::LINE_SKIP;
 
@@ -116,37 +115,38 @@ class TraceBuilder
     }
 
     /**
+     * @param LineAssembler $lineAssembler
      * @param $stackLineNumber
      * @param $traceElement
      */
-    private function setupLineBuilder($stackLineNumber, $traceElement)
+    private function setupLineBuilder(LineAssembler $lineAssembler, $stackLineNumber, $traceElement)
     {
         if (isset($stackLineNumber)) {
-            $this->lineAssembler->setLineNb($stackLineNumber);
+            $lineAssembler->setLineNb($stackLineNumber);
         }
 
         if (isset($traceElement['line'])) {
-            $this->lineAssembler->setLine($traceElement['line']);
+            $lineAssembler->setLine($traceElement['line']);
         }
 
         if (isset($traceElement['file'])) {
-            $this->lineAssembler->setFile($traceElement['file']);
+            $lineAssembler->setFile($traceElement['file']);
         }
 
         if (isset($traceElement['class'])) {
-            $this->lineAssembler->setClass($traceElement['class']);
+            $lineAssembler->setClass($traceElement['class']);
         }
 
         if (isset($traceElement['function'])) {
-            $this->lineAssembler->setFunction($traceElement['function']);
+            $lineAssembler->setFunction($traceElement['function']);
         }
 
         if (isset($traceElement['type'])) {
-            $this->lineAssembler->setType($traceElement['type']);
+            $lineAssembler->setType($traceElement['type']);
         }
 
         if ($this->includeArgs && isset($traceElement['args'])) {
-            $this->lineAssembler->setArgs($traceElement['args']);
+            $lineAssembler->setArgs($traceElement['args']);
         }
     }
 
