@@ -11,6 +11,7 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
     const TOP_LINES = 4;
     const LOWER_THAN_ONE = -1;
     const BOTTOM_LINES = 2;
+    const BASE_PATH = '/base/path/';
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject
      */
@@ -42,6 +43,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
             ->method('createExceptionTraceBuilder')
             ->willReturn($expectedTraceBuilder);
         $expectedTraceBuilder->expects(self::never())->method('includeArgs');
+        $expectedTraceBuilder->expects(self::never())->method('stripBasePath');
+        $expectedTraceBuilder->expects(self::never())->method('removeExtension');
         $expectedTraceBuilder->expects(self::never())->method('showTopLines');
         $expectedTraceBuilder->expects(self::never())->method('showBottomLines');
 
@@ -74,6 +77,34 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $traceBuilder
             ->expects(self::once())
             ->method('includeArgs');
+
+        $this->helper->getExceptionTraceBuilderForSettings($settings);
+    }
+
+    public function test_StripExceptionBasePath_getExceptionTraceBuilderForSettings_ShouldStripBasePath()
+    {
+        $settings = [
+            ExceptionTraceHelper::STRIP_BASE_PATH => self::BASE_PATH
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('stripBasePath')
+            ->with(self::BASE_PATH);
+
+        $this->helper->getExceptionTraceBuilderForSettings($settings);
+    }
+
+    public function test_RemoveExceptionFileExtensionSetToTrue_getExceptionTraceBuilderForSettings_ShouldRemoveExtension()
+    {
+        $settings = [
+            ExceptionTraceHelper::REMOVE_EXTENSION => true
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('removeExtension')
+            ->with(true);
 
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
@@ -141,6 +172,8 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
             ->method('createExceptionTraceBuilder')
             ->willReturn($expectedTraceBuilder);
         $expectedTraceBuilder->expects(self::never())->method('includeArgs');
+        $expectedTraceBuilder->expects(self::never())->method('stripBasePath');
+        $expectedTraceBuilder->expects(self::never())->method('removeExtension');
         $expectedTraceBuilder->expects(self::never())->method('showTopLines');
         $expectedTraceBuilder->expects(self::never())->method('showBottomLines');
 
@@ -173,6 +206,34 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $traceBuilder
             ->expects(self::once())
             ->method('includeArgs');
+
+        $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
+    }
+
+    public function test_StripExceptionBasePath_getPreviousExceptionTraceBuilderForSettings_ShouldStripBasePath()
+    {
+        $settings = [
+            ExceptionTraceHelper::STRIP_BASE_PATH => self::BASE_PATH
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('stripBasePath')
+            ->with(self::BASE_PATH);
+
+        $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
+    }
+
+    public function test_RemoveExceptionFileExtensionSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldRemoveExtension()
+    {
+        $settings = [
+            ExceptionTraceHelper::REMOVE_EXTENSION => true
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('removeExtension')
+            ->with(true);
 
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
