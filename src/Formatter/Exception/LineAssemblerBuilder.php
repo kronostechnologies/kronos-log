@@ -40,12 +40,12 @@ class LineAssemblerBuilder
     }
 
     /**
-     * @param bool $removeExtention
+     * @param bool $removeExtension
      * @return LineAssemblerBuilder
      */
-    public function removeExtension(bool $removeExtention): self
+    public function removeExtension(bool $removeExtension): self
     {
-        $this->removeFileExtension = $removeExtention;
+        $this->removeFileExtension = $removeExtension;
 
         return $this;
     }

@@ -10,6 +10,7 @@ use Throwable;
 
 class TraceBuilderTest extends \PHPUnit\Framework\TestCase
 {
+    const PATH_TO_FILE = "/path/to/file/";
     /**
      * @var MockObject|LineAssemblerBuilder
      */
@@ -28,6 +29,26 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         });
 
         $this->traceBuilder = new TraceBuilder($this->lineAssemblerBuilder);
+    }
+
+    public function test_traceBuilder_stripBasePath_shouldSendBaseBaseToLineAssemblerBuilder()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("stripBasePath")
+            ->with(self::PATH_TO_FILE);
+
+        $this->traceBuilder->stripBasePath(self::PATH_TO_FILE);
+    }
+
+    public function test_traceBuilder_removeExtension_shouldTellLineAssemblerBuilderToRemoveExtension()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("removeExtension")
+            ->with(true);
+
+        $this->traceBuilder->removeExtension(true);
     }
 
     public function test_exception_getTtraceAsString_shouldBuildLineAssemblerForEachStackItem(): void

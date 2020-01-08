@@ -115,6 +115,19 @@ class TraceBuilder
     }
 
     /**
+     * @param string $basePath
+     */
+    public function stripBasePath(string $basePath): void
+    {
+        $this->lineAssemblerBuilder->stripBasePath($basePath);
+    }
+
+    public function removeExtension(bool $removeExtension): void
+    {
+        $this->lineAssemblerBuilder->removeExtension($removeExtension);
+    }
+
+    /**
      * @param LineAssembler $lineAssembler
      * @param $stackLineNumber
      * @param $traceElement
