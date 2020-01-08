@@ -31,6 +31,16 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder = new TraceBuilder($this->lineAssemblerBuilder);
     }
 
+    public function test_traceBuilder_includeArgs_shouldTellLineAssemblerBuilderToIncludeArgs()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("includeArgs")
+            ->with(true);
+
+        $this->traceBuilder->includeArgs();
+    }
+
     public function test_traceBuilder_stripBasePath_shouldSendBaseBaseToLineAssemblerBuilder()
     {
         $this->lineAssemblerBuilder
@@ -69,21 +79,6 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
 #2 /path/to/file/App.php(197): Trace->callSomething()
 #3 /path/to/file/App.php(59): App->checkSomething()
 #4 /path/to/file/index.php(35): App->doSomething()';
-
-        $actualString = $this->traceBuilder->getTraceAsString($exception);
-
-        $this->assertEquals($expectedString, $actualString);
-    }
-
-    public function test_IncludeArgumentsOption_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithArguments()
-    {
-        $exception = $this->givenException();
-        $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction(1,2,Array)
-#1 /path/to/file/Trace.php(478): TestClass->testSomething()
-#2 /path/to/file/App.php(197): Trace->callSomething()
-#3 /path/to/file/App.php(59): App->checkSomething()
-#4 /path/to/file/index.php(35): App->doSomething()";
-        $this->traceBuilder->includeArgs();
 
         $actualString = $this->traceBuilder->getTraceAsString($exception);
 

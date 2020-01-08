@@ -111,7 +111,7 @@ class TraceBuilder
      */
     public function includeArgs($includeArgs = true)
     {
-        $this->includeArgs = $includeArgs;
+        $this->lineAssemblerBuilder->includeArgs($includeArgs);
     }
 
     /**

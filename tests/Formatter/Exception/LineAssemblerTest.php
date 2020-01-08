@@ -21,10 +21,29 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
     const ARRAY_TYPE = 'Array';
     const BASE_PATH = "/base/path/";
 
-    public function test_givenACompleteSetOfExceptionTraceElements_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndArguments(
+    public function test_givenACompleteSetOfExceptionTraceElements_buildExceptionString_shouldReturnAFormattedLineWithAllElements(
     )
     {
         $lineAssembler = new LineAssembler();
+        $lineAssembler->setLineNb(self::A_LINE_NB);
+        $lineAssembler->setFile(self::A_FILE_PATH);
+        $lineAssembler->setLine(self::A_LINE);
+        $lineAssembler->setClass(self::A_CLASS);
+        $lineAssembler->setType(self::A_TYPE);
+        $lineAssembler->setFunction(self::A_FUNCTION);
+        $lineAssembler->setArgs(self::SOME_ARGS);
+
+        $line = $lineAssembler->buildExceptionString();
+
+        $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::A_FILE_PATH . '(' . self::A_LINE . '): ' . self::A_CLASS . self::A_TYPE . self::A_FUNCTION . '()',
+            $line);
+    }
+
+    public function test_allTraceElementsAndIncludeArgs_buildExceptionString_shouldReturnAFormattedLineWithAllElementsWithArgs(
+    )
+    {
+        $lineAssembler = new LineAssembler();
+        $lineAssembler->includeArgs();
         $lineAssembler->setLineNb(self::A_LINE_NB);
         $lineAssembler->setFile(self::A_FILE_PATH);
         $lineAssembler->setLine(self::A_LINE);

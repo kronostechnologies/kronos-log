@@ -10,6 +10,11 @@ class LineAssemblerBuilder
     private $factory;
 
     /**
+     * @var bool
+     */
+    private $includeArgs = false;
+
+    /**
      * @var string
      */
     private $stripBasePath = '';
@@ -26,6 +31,16 @@ class LineAssemblerBuilder
     public function __construct(Factory $factory = null)
     {
         $this->factory = $factory ?? new Factory();
+    }
+
+    /**
+     * @param bool $includeArgs
+     */
+    public function includeArgs(bool $includeArgs): self
+    {
+        $this->includeArgs = $includeArgs;
+
+        return $this;
     }
 
     /**
@@ -54,6 +69,7 @@ class LineAssemblerBuilder
     {
         $assembler = $this->factory->createLineAssembler();
 
+        $assembler->includeArgs($this->includeArgs);
         if ($this->stripBasePath) {
             $assembler->stripBasePath($this->stripBasePath);
         }

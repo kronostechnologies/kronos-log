@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 class LineAssemblerBuilderTest extends TestCase
 {
     const BASE_PATH = "/base/path";
+    const INCLUDE_ARGS = true;
 
     /**
      * @var Factory|MockObject
@@ -48,6 +49,18 @@ class LineAssemblerBuilderTest extends TestCase
         $actualAssembler = $this->builder->buildAssembler();
 
         $this->assertSame($this->lineAssembler, $actualAssembler);
+    }
+
+    public function test_includeArgs_buildAssembler_shouldIncludeArgsOnLineAssembler(): void
+    {
+        $this->givenLineAssembler();
+        $this->lineAssembler
+            ->expects(self::once())
+            ->method('includeArgs')
+            ->with(self::INCLUDE_ARGS);
+        $this->builder->includeArgs(self::INCLUDE_ARGS);
+
+        $this->builder->buildAssembler();
     }
 
     public function test_stripBasePath_buildAssembler_shouldStripBasePathOnLineAssembler(): void

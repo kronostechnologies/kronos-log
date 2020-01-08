@@ -20,6 +20,11 @@ class LineAssembler
     private $removeExtension = false;
 
     /**
+     * @var bool
+     */
+    private $includeArgs = false;
+
+    /**
      * @var String
      */
     private $line_nb;
@@ -70,6 +75,11 @@ class LineAssembler
     public function removeExtension(bool $removeExtension): void
     {
         $this->removeExtension = $removeExtension;
+    }
+
+    public function includeArgs(bool $include = true): void
+    {
+        $this->includeArgs = $include;
     }
 
     /**
@@ -171,7 +181,7 @@ class LineAssembler
         if (!empty($this->function)) {
             $traceLine .= $this->function . '(';
 
-            if (!empty($this->args)) {
+            if ($this->includeArgs && !empty($this->args)) {
                 $arg_array = [];
 
                 foreach ($this->args as $arg) {
