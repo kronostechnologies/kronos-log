@@ -10,46 +10,67 @@ class LineAssembler
 {
 
     /**
-     * @var String
+     * @var string
      */
-    public $line_nb;
+    private $stripBasePath = '';
+
+    /**
+     * @var bool
+     */
+    private $removeExtention = false;
 
     /**
      * @var String
      */
-    public $file;
+    private $line_nb;
 
     /**
      * @var String
      */
-    public $line;
+    private $file;
 
     /**
      * @var String
      */
-    public $function;
+    private $line;
 
     /**
      * @var String
      */
-    public $class;
+    private $function;
 
     /**
      * @var String
      */
-    public $type;
+    private $class;
+
+    /**
+     * @var String
+     */
+    private $type;
 
     /**
      * @var array
      */
-    public $args = [];
-
-    /**
-     * @var string
-     */
-    public $ex_line = "";
+    private $args = [];
 
     const ARRAY_TYPE = 'Array';
+
+    /**
+     * @param string $stripBasePath
+     */
+    public function stripBasePath(string $stripBasePath): void
+    {
+        $this->stripBasePath = $stripBasePath;
+    }
+
+    /**
+     * @param bool $removeExtention
+     */
+    public function removeExtention(bool $removeExtention): void
+    {
+        $this->removeExtention = $removeExtention;
+    }
 
     /**
      * @param String $line_nb
@@ -114,30 +135,41 @@ class LineAssembler
      */
     public function buildExceptionString()
     {
+        $traceLine = '';
 
         if (is_numeric($this->line_nb) && !is_null($this->line_nb)) {
-            $this->ex_line .= "#" . $this->line_nb . ' ';
+            $traceLine .= "#" . $this->line_nb . ' ';
         }
 
         if (!empty($this->file)) {
-            $this->ex_line .= $this->file;
+            $file = $this->file;
+            if ($this->stripBasePath !== '' && strpos($file, $this->stripBasePath) === 0) {
+                $file = substr($file, strlen($this->stripBasePath));
+            }
+
+            if ($this->removeExtention) {
+                $pathinfo = pathinfo($file);
+                $file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
+            }
+
+            $traceLine .= $file;
         }
 
         if (!empty($this->line)) {
-            $this->ex_line .= '(' . $this->line . '): ';
+            $traceLine .= '(' . $this->line . '): ';
         }
 
         if (!empty($this->class)) {
-            $this->ex_line .= $this->class;
+            $traceLine .= $this->class;
         }
 
         if (!empty($this->type)) {
-            $this->ex_line .= $this->type;
+            $traceLine .= $this->type;
         }
 
         // Function and arguments parts always together
         if (!empty($this->function)) {
-            $this->ex_line .= $this->function . '(';
+            $traceLine .= $this->function . '(';
 
             if (!empty($this->args)) {
                 $arg_array = [];
@@ -152,28 +184,12 @@ class LineAssembler
                     }
                 }
 
-                $this->ex_line .= implode(',', $arg_array) . ')';
+                $traceLine .= implode(',', $arg_array) . ')';
             } else {
-                $this->ex_line .= ')';
+                $traceLine .= ')';
             }
         }
 
-        return $this->ex_line;
-    }
-
-    /**
-     * Clears the current line so that it can be written over
-     */
-    public function clearLine()
-    {
-        $this->line_nb = "";
-        $this->file = "";
-        $this->line = "";
-        $this->class = "";
-        $this->type = "";
-        $this->function = "";
-        $this->args = [];
-
-        $this->ex_line = "";
+        return $traceLine;
     }
 }

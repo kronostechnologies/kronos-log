@@ -9,6 +9,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
 
     const A_LINE_NB = 0;
     const A_FILE_PATH = '/path/to/file/TestClass.php';
+    const FILE_WITHOUT_EXTENSION = '/path/to/file/TestClass';
+    const EXTENSION = '.php';
     const A_LINE = 20;
     const A_CLASS = 'TestClass';
     const A_TYPE = '->';
@@ -17,6 +19,7 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
 
     const EMPTY_LINE = "";
     const ARRAY_TYPE = 'Array';
+    const BASE_PATH = "/base/path/";
 
     public function test_givenACompleteSetOfExceptionTraceElements_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndArguments(
     )
@@ -111,26 +114,36 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(self::EMPTY_LINE, $line);
     }
 
-    public function test_clearLine_buildExceptionString_shouldReturnAnEmptyLine()
-    {
+    public function test_stripBasePath_buildExceptionString_shouldStripBathPathFromFile() {
         $lineAssembler = new LineAssembler();
         $lineAssembler->setLineNb(self::A_LINE_NB);
-        $lineAssembler->setFile(self::A_FILE_PATH);
-        $lineAssembler->setLine(self::A_LINE);
-        $lineAssembler->setClass(self::A_CLASS);
-        $lineAssembler->setType(self::A_TYPE);
-        $lineAssembler->setFunction(self::A_FUNCTION);
-        $lineAssembler->setArgs(self::SOME_ARGS);
-        $lineAssembler->buildExceptionString();
-        $lineAssembler->clearLine();
+        $lineAssembler->setFile(self::BASE_PATH . self::A_FILE_PATH);
+        $lineAssembler->stripBasePath(self::BASE_PATH);
 
         $line = $lineAssembler->buildExceptionString();
 
-        $this->assertEquals(self::EMPTY_LINE, $line);
+        $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::A_FILE_PATH, $line);
     }
 
-}
+    public function test_nonMatchingBasePath_buildExceptionString_shouldNotStripBathPathFromFile() {
+        $lineAssembler = new LineAssembler();
+        $lineAssembler->setLineNb(self::A_LINE_NB);
+        $lineAssembler->setFile(self::BASE_PATH . self::A_FILE_PATH);
+        $lineAssembler->stripBasePath("/wrong/path/");
 
-class LineBuilderTestClass
-{
+        $line = $lineAssembler->buildExceptionString();
+
+        $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::BASE_PATH . self::A_FILE_PATH, $line);
+    }
+
+    public function test_removeExtension_buildExceptionString_shouldRemoteFileExtension() {
+        $lineAssembler = new LineAssembler();
+        $lineAssembler->setLineNb(self::A_LINE_NB);
+        $lineAssembler->setFile(self::FILE_WITHOUT_EXTENSION . self::EXTENSION);
+        $lineAssembler->removeExtention(true);
+
+        $line = $lineAssembler->buildExceptionString();
+
+        $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::FILE_WITHOUT_EXTENSION, $line);
+    }
 }
