@@ -17,7 +17,7 @@ class LineAssembler
     /**
      * @var bool
      */
-    private $removeExtention = false;
+    private $removeExtension = false;
 
     /**
      * @var String
@@ -65,11 +65,11 @@ class LineAssembler
     }
 
     /**
-     * @param bool $removeExtention
+     * @param bool $removeExtension
      */
-    public function removeExtention(bool $removeExtention): void
+    public function removeExtension(bool $removeExtension): void
     {
-        $this->removeExtention = $removeExtention;
+        $this->removeExtension = $removeExtension;
     }
 
     /**
@@ -147,7 +147,7 @@ class LineAssembler
                 $file = substr($file, strlen($this->stripBasePath));
             }
 
-            if ($this->removeExtention) {
+            if ($this->removeExtension) {
                 $pathinfo = pathinfo($file);
                 $file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
             }

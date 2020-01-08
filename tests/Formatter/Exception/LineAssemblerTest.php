@@ -140,7 +140,7 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $lineAssembler = new LineAssembler();
         $lineAssembler->setLineNb(self::A_LINE_NB);
         $lineAssembler->setFile(self::FILE_WITHOUT_EXTENSION . self::EXTENSION);
-        $lineAssembler->removeExtention(true);
+        $lineAssembler->removeExtension(true);
 
         $line = $lineAssembler->buildExceptionString();
 
