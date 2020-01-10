@@ -3,6 +3,7 @@
 namespace Kronos\Tests\Log\Formatter\Exception;
 
 use Kronos\Log\Formatter\Exception\LineAssembler;
+use Kronos\Log\Formatter\Exception\NamespaceShrinker;
 
 class LineAssemblerTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,6 +21,7 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
     const EMPTY_LINE = "";
     const ARRAY_TYPE = 'Array';
     const BASE_PATH = "/base/path/";
+    const SHRUNK_CLASSNAME = "Shrunk Classname";
 
     public function test_givenACompleteSetOfExceptionTraceElements_buildExceptionString_shouldReturnAFormattedLineWithAllElements(
     )
@@ -87,6 +89,26 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $line = $lineAssembler->buildExceptionString();
 
         $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::A_FILE_PATH . '(' . self::A_LINE . '): ' . self::A_CLASS,
+            $line);
+    }
+
+    public function test_classAndNamespaceShrinker_buildExceptionString_shouldReturnShrunkClassname()
+    {
+        $namespaceShrinker = $this->createMock(NamespaceShrinker::class);
+        $namespaceShrinker
+            ->expects(self::once())
+            ->method('shrink')
+            ->with(self::A_CLASS)
+            ->willReturn(self::SHRUNK_CLASSNAME);
+        $lineAssembler = new LineAssembler($namespaceShrinker);
+        $lineAssembler->setLineNb(self::A_LINE_NB);
+        $lineAssembler->setFile(self::A_FILE_PATH);
+        $lineAssembler->setLine(self::A_LINE);
+        $lineAssembler->setClass(self::A_CLASS);
+
+        $line = $lineAssembler->buildExceptionString();
+
+        $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::A_FILE_PATH . '(' . self::A_LINE . '): ' . self::SHRUNK_CLASSNAME,
             $line);
     }
 

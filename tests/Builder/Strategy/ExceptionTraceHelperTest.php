@@ -109,6 +109,20 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
+    public function test_ShrinkExceptionNamespacesSetToTrue_getExceptionTraceBuilderForSettings_ShouldShrinkNamespaces()
+    {
+        $settings = [
+            ExceptionTraceHelper::SHRINK_NAMESPACES => true
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('shrinkNamespaces')
+            ->with(true);
+
+        $this->helper->getExceptionTraceBuilderForSettings($settings);
+    }
+
     public function test_ShowExceptionTopLines_getExceptionTraceBuilderForSettings_ShouldSetShowTopLines()
     {
         $settings = [
@@ -233,6 +247,20 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $traceBuilder
             ->expects(self::once())
             ->method('removeExtension')
+            ->with(true);
+
+        $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
+    }
+
+    public function test_ShrinkExceptionNamespacesSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldShrinkNamespaces()
+    {
+        $settings = [
+            ExceptionTraceHelper::SHRINK_NAMESPACES => true
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('shrinkNamespaces')
             ->with(true);
 
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);

@@ -61,6 +61,16 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->removeExtension(true);
     }
 
+    public function test_traceBuilder_shrinkNamespaces_shouldTellLineAssemblerBuilderToShrinkNamespaces()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("shrinkNamespaces")
+            ->with(true);
+
+        $this->traceBuilder->shrinkNamespaces(true);
+    }
+
     public function test_exception_getTtraceAsString_shouldBuildLineAssemblerForEachStackItem(): void
     {
         $exception = $this->givenException();

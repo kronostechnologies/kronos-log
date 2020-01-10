@@ -5,6 +5,7 @@ namespace Kronos\Tests\Log\Formatter\Exception;
 use Kronos\Log\Formatter\Exception\Factory;
 use Kronos\Log\Formatter\Exception\LineAssembler;
 use Kronos\Log\Formatter\Exception\LineAssemblerBuilder;
+use Kronos\Log\Formatter\Exception\NamespaceShrinker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -83,6 +84,23 @@ class LineAssemblerBuilderTest extends TestCase
             ->method('removeExtension')
             ->with(true);
         $this->builder->removeExtension(true);
+
+        $this->builder->buildAssembler();
+    }
+
+    public function test_shrinkNamespaces_buildAssembler_shouldCreateLineAssemblerWithNamespaceShrinker(): void
+    {
+        $namespaceShrinker = $this->createMock(NamespaceShrinker::class);
+        $this->factory
+            ->expects(self::once())
+            ->method('createNamespaceShrinker')
+            ->willReturn($namespaceShrinker);
+        $this->factory
+            ->expects(self::once())
+            ->method('createLineAssembler')
+            ->with($namespaceShrinker)
+            ->willReturn($this->lineAssembler);
+        $this->builder->shrinkNamespaces(true);
 
         $this->builder->buildAssembler();
     }

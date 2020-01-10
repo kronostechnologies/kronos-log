@@ -25,6 +25,11 @@ class LineAssembler
     private $includeArgs = false;
 
     /**
+     * @var NamespaceShrinker
+     */
+    private $namespaceShrinker;
+
+    /**
      * @var String
      */
     private $line_nb;
@@ -60,6 +65,15 @@ class LineAssembler
     private $args = [];
 
     const ARRAY_TYPE = 'Array';
+
+    /**
+     * LineAssembler constructor.
+     * @param NamespaceShrinker|null $namespaceShrinker
+     */
+    public function __construct(NamespaceShrinker $namespaceShrinker = null)
+    {
+        $this->namespaceShrinker = $namespaceShrinker;
+    }
 
     /**
      * @param string $stripBasePath
@@ -170,7 +184,11 @@ class LineAssembler
         }
 
         if (!empty($this->class)) {
-            $traceLine .= $this->class;
+            if ($this->namespaceShrinker) {
+                $traceLine .= $this->namespaceShrinker->shrink($this->class);
+            } else {
+                $traceLine .= $this->class;
+            }
         }
 
         if (!empty($this->type)) {

@@ -25,6 +25,16 @@ class LineAssemblerBuilder
     private $removeFileExtension = false;
 
     /**
+     * @var bool
+     */
+    private $shrinkNamespaces = false;
+
+    /**
+     * @var NamespaceShrinker
+     */
+    private $namespaceShrinker;
+
+    /**
      * LineAssemblerBuilder constructor.
      * @param Factory|null $factory
      */
@@ -35,6 +45,7 @@ class LineAssemblerBuilder
 
     /**
      * @param bool $includeArgs
+     * @return LineAssemblerBuilder
      */
     public function includeArgs(bool $includeArgs): self
     {
@@ -65,16 +76,42 @@ class LineAssemblerBuilder
         return $this;
     }
 
+    /**
+     * @param bool $shrink
+     * @return $this
+     */
+    public function shrinkNamespaces(bool $shrink): self
+    {
+        $this->shrinkNamespaces = $shrink;
+
+        return $this;
+    }
+
     public function buildAssembler(): LineAssembler
     {
-        $assembler = $this->factory->createLineAssembler();
+        $this->createNamespaceShrinkIfEnabled();
 
+        $assembler = $this->factory->createLineAssembler($this->namespaceShrinker);
+        $this->setupAssembler($assembler);
+        return $assembler;
+    }
+
+    protected function createNamespaceShrinkIfEnabled(): void
+    {
+        if ($this->shrinkNamespaces && $this->namespaceShrinker === null) {
+            $this->namespaceShrinker = $this->factory->createNamespaceShrinker();
+        }
+    }
+
+    /**
+     * @param LineAssembler $assembler
+     */
+    protected function setupAssembler(LineAssembler $assembler): void
+    {
         $assembler->includeArgs($this->includeArgs);
         if ($this->stripBasePath) {
             $assembler->stripBasePath($this->stripBasePath);
         }
         $assembler->removeExtension($this->removeFileExtension);
-
-        return $assembler;
     }
 }

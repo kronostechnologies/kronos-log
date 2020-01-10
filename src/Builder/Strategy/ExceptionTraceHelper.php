@@ -9,6 +9,7 @@ class ExceptionTraceHelper
     const INCLUDE_ARGS = 'includeExceptionArgs';
     const STRIP_BASE_PATH = 'stripExceptionBasePath';
     const REMOVE_EXTENSION = 'removeExceptionFileExtension';
+    const SHRINK_NAMESPACES = 'shrinkExceptionNamespaces';
 
     const SHOW_EXCEPTION_STACKTRACE = 'showExceptionStackTrace';
     const SHOW_EXCEPTION_TOP_LINES = 'showExceptionTopLines';
@@ -54,6 +55,10 @@ class ExceptionTraceHelper
                 $traceBuilder->removeExtension(true);
             }
 
+            if ($this->getSettingOrNull($settings, self::SHRINK_NAMESPACES)) {
+                $traceBuilder->shrinkNamespaces(true);
+            }
+
             $count = $this->getSettingOrNull($settings, self::SHOW_EXCEPTION_TOP_LINES);
             if ($count >= 1) {
                 $traceBuilder->showTopLines($count);
@@ -86,6 +91,10 @@ class ExceptionTraceHelper
 
             if ($this->getSettingOrNull($settings, self::REMOVE_EXTENSION)) {
                 $traceBuilder->removeExtension(true);
+            }
+
+            if ($this->getSettingOrNull($settings, self::SHRINK_NAMESPACES)) {
+                $traceBuilder->shrinkNamespaces(true);
             }
 
             $count = $this->getSettingOrNull($settings, self::SHOW_PREVIOUS_EXCEPTION_TOP_LINES);

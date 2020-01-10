@@ -4,8 +4,13 @@ namespace Kronos\Log\Formatter\Exception;
 
 class Factory
 {
-    public function createLineAssembler(): LineAssembler
+    public function createNamespaceShrinker(): NamespaceShrinker
     {
-        return new LineAssembler();
+        return new NamespaceShrinker();
+    }
+
+    public function createLineAssembler(NamespaceShrinker $namespaceShrinker = null): LineAssembler
+    {
+        return new LineAssembler($namespaceShrinker);
     }
 }

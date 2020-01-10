@@ -122,9 +122,17 @@ class TraceBuilder
         $this->lineAssemblerBuilder->stripBasePath($basePath);
     }
 
+    /**
+     * @param bool $removeExtension
+     */
     public function removeExtension(bool $removeExtension): void
     {
         $this->lineAssemblerBuilder->removeExtension($removeExtension);
+    }
+
+    public function shrinkNamespaces(bool $shrink): void
+    {
+        $this->lineAssemblerBuilder->shrinkNamespaces($shrink);
     }
 
     /**
