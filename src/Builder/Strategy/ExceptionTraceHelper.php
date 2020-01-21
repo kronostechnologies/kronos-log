@@ -8,7 +8,7 @@ class ExceptionTraceHelper
 {
     const INCLUDE_ARGS = 'includeExceptionArgs';
     const STRIP_BASE_PATH = 'stripExceptionBasePath';
-    const SHRINK_PATHS = 'shinkExceptionPaths';
+    const SHRINK_PATHS = 'shrinkExceptionPaths';
     const REMOVE_EXTENSION = 'removeExceptionFileExtension';
     const SHRINK_NAMESPACES = 'shrinkExceptionNamespaces';
 
