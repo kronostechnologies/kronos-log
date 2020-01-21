@@ -18,10 +18,10 @@ class NamespaceShrinker
         }
     }
 
-    private function shrinkUsingSeparator(string $fqn, string $separator): string
+    public function shrinkUsingSeparator(string $fqn, string $separator): string
     {
         $parts = explode($separator, $fqn);
-        for ($i = 0; $i < count($parts) - 1; $i++) {
+        for ($i = 0; $i < count($parts) - 2; $i++) {
             $parts[$i] = substr($parts[$i], 0, 1);
         }
         return implode($separator, $parts);

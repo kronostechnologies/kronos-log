@@ -51,6 +51,16 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->stripBasePath(self::PATH_TO_FILE);
     }
 
+    public function test_traceBuilder_shrinkPaths_shouldTellLineAssemblerBuilderToShrinkPaths()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("shrinkPaths")
+            ->with(true);
+
+        $this->traceBuilder->shrinkPaths(true);
+    }
+
     public function test_traceBuilder_removeExtension_shouldTellLineAssemblerBuilderToRemoveExtension()
     {
         $this->lineAssemblerBuilder

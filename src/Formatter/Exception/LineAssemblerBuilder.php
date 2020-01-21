@@ -30,6 +30,11 @@ class LineAssemblerBuilder
     private $shrinkNamespaces = false;
 
     /**
+     * @var bool
+     */
+    private $shrinkPaths = false;
+
+    /**
      * @var NamespaceShrinker
      */
     private $namespaceShrinker;
@@ -87,6 +92,17 @@ class LineAssemblerBuilder
         return $this;
     }
 
+    /**
+     * @param bool $shrink
+     * @return $this
+     */
+    public function shrinkPaths(bool $shrink): self
+    {
+        $this->shrinkPaths = $shrink;
+
+        return $this;
+    }
+
     public function buildAssembler(): LineAssembler
     {
         $this->createNamespaceShrinkIfEnabled();
@@ -98,7 +114,7 @@ class LineAssemblerBuilder
 
     protected function createNamespaceShrinkIfEnabled(): void
     {
-        if ($this->shrinkNamespaces && $this->namespaceShrinker === null) {
+        if ($this->namespaceShrinker === null) {
             $this->namespaceShrinker = $this->factory->createNamespaceShrinker();
         }
     }
@@ -112,6 +128,8 @@ class LineAssemblerBuilder
         if ($this->stripBasePath) {
             $assembler->stripBasePath($this->stripBasePath);
         }
+        $assembler->shrinkPaths($this->shrinkPaths);
         $assembler->removeExtension($this->removeFileExtension);
+        $assembler->shrinkNamespaces($this->shrinkNamespaces);
     }
 }

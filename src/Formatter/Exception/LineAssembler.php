@@ -17,12 +17,22 @@ class LineAssembler
     /**
      * @var bool
      */
+    private $shrinkPaths = false;
+
+    /**
+     * @var bool
+     */
     private $removeExtension = false;
 
     /**
      * @var bool
      */
     private $includeArgs = false;
+
+    /**
+     * @var bool
+     */
+    private $shrinkNamespaces = false;
 
     /**
      * @var NamespaceShrinker
@@ -83,6 +93,11 @@ class LineAssembler
         $this->stripBasePath = $stripBasePath;
     }
 
+    public function shrinkPaths(bool $shrink = true): void
+    {
+        $this->shrinkPaths = $shrink;
+    }
+
     /**
      * @param bool $removeExtension
      */
@@ -94,6 +109,11 @@ class LineAssembler
     public function includeArgs(bool $include = true): void
     {
         $this->includeArgs = $include;
+    }
+
+    public function shrinkNamespaces(bool $shrink = true): void
+    {
+        $this->shrinkNamespaces = $shrink;
     }
 
     /**
@@ -176,6 +196,10 @@ class LineAssembler
                 $file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
             }
 
+            if ($this->shrinkPaths) {
+                $file = $this->namespaceShrinker->shrinkUsingSeparator($file, DIRECTORY_SEPARATOR);
+            }
+
             $traceLine .= $file;
         }
 
@@ -184,7 +208,7 @@ class LineAssembler
         }
 
         if (!empty($this->class)) {
-            if ($this->namespaceShrinker) {
+            if ($this->shrinkNamespaces) {
                 $traceLine .= $this->namespaceShrinker->shrink($this->class);
             } else {
                 $traceLine .= $this->class;

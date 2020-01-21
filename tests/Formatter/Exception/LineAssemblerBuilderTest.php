@@ -25,6 +25,11 @@ class LineAssemblerBuilderTest extends TestCase
     private $lineAssembler;
 
     /**
+     * @var NamespaceShrinker
+     */
+    private $namespaceShrinker;
+
+    /**
      * @var LineAssemblerBuilder
      */
     private $builder;
@@ -33,15 +38,27 @@ class LineAssemblerBuilderTest extends TestCase
     {
         $this->factory = $this->createMock(Factory::class);
         $this->lineAssembler = $this->createMock(LineAssembler::class);
+        $this->namespaceShrinker = $this->createMock(NamespaceShrinker::class);
+        $this->factory->method('createNamespaceShrinker')->willReturn($this->namespaceShrinker);
 
         $this->builder = new LineAssemblerBuilder($this->factory);
     }
 
-    public function test_builder_buildAssembler_shouldCreateAndReturnLineAssembler(): void
+    public function test_builder_buildAssembler_shouldCreateNamespaceShrinker(): void
+    {
+        $this->factory
+            ->expects(self::once())
+            ->method('createNamespaceShrinker');
+
+        $this->builder->buildAssembler();
+    }
+
+    public function test_namespaceShrinker_buildAssembler_shouldCreateAndReturnLineAssembler(): void
     {
         $this->factory
             ->expects(self::once())
             ->method('createLineAssembler')
+            ->with($this->namespaceShrinker)
             ->willReturn($this->lineAssembler);
         $this->lineAssembler
             ->expects(self::never())
@@ -76,6 +93,18 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder->buildAssembler();
     }
 
+    public function test_shrinkPath_buildAssembler_shouldShrinkPathOnLineAssembler(): void
+    {
+        $this->givenLineAssembler();
+        $this->lineAssembler
+            ->expects(self::once())
+            ->method('shrinkPaths')
+            ->with(true);
+        $this->builder->shrinkPaths(true);
+
+        $this->builder->buildAssembler();
+    }
+
     public function test_removeExtension_buildAssembler_shouldRemoveExtensionOnLineAssembler(): void
     {
         $this->givenLineAssembler();
@@ -88,18 +117,13 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder->buildAssembler();
     }
 
-    public function test_shrinkNamespaces_buildAssembler_shouldCreateLineAssemblerWithNamespaceShrinker(): void
+    public function test_shrinkNamespaces_buildAssembler_shouldShrinkNamespacesOnLineAssembler(): void
     {
-        $namespaceShrinker = $this->createMock(NamespaceShrinker::class);
-        $this->factory
+        $this->givenLineAssembler();
+        $this->lineAssembler
             ->expects(self::once())
-            ->method('createNamespaceShrinker')
-            ->willReturn($namespaceShrinker);
-        $this->factory
-            ->expects(self::once())
-            ->method('createLineAssembler')
-            ->with($namespaceShrinker)
-            ->willReturn($this->lineAssembler);
+            ->method('shrinkNamespaces')
+            ->with(true);
         $this->builder->shrinkNamespaces(true);
 
         $this->builder->buildAssembler();

@@ -95,6 +95,20 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
+    public function test_ShrinkExceptionPathsSetToTrue_getExceptionTraceBuilderForSettings_ShouldShrinkPaths()
+    {
+        $settings = [
+            ExceptionTraceHelper::SHRINK_PATHS => true
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('shrinkPaths')
+            ->with(true);
+
+        $this->helper->getExceptionTraceBuilderForSettings($settings);
+    }
+
     public function test_RemoveExceptionFileExtensionSetToTrue_getExceptionTraceBuilderForSettings_ShouldRemoveExtension()
     {
         $settings = [
@@ -234,6 +248,20 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('stripBasePath')
             ->with(self::BASE_PATH);
+
+        $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
+    }
+
+    public function test_ShrinkExceptionPathsSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldShrinkPaths()
+    {
+        $settings = [
+            ExceptionTraceHelper::SHRINK_PATHS => true
+        ];
+        $traceBuilder = $this->givenTraceBuilder();
+        $traceBuilder
+            ->expects(self::once())
+            ->method('shrinkPaths')
+            ->with(true);
 
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }

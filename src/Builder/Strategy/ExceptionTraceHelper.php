@@ -8,6 +8,7 @@ class ExceptionTraceHelper
 {
     const INCLUDE_ARGS = 'includeExceptionArgs';
     const STRIP_BASE_PATH = 'stripExceptionBasePath';
+    const SHRINK_PATHS = 'shinkExceptionPaths';
     const REMOVE_EXTENSION = 'removeExceptionFileExtension';
     const SHRINK_NAMESPACES = 'shrinkExceptionNamespaces';
 
@@ -51,6 +52,10 @@ class ExceptionTraceHelper
                 $traceBuilder->stripBasePath($stripBasePath);
             }
 
+            if ($this->getSettingOrNull($settings, self::SHRINK_PATHS)) {
+                $traceBuilder->shrinkPaths(true);
+            }
+
             if ($this->getSettingOrNull($settings, self::REMOVE_EXTENSION)) {
                 $traceBuilder->removeExtension(true);
             }
@@ -87,6 +92,10 @@ class ExceptionTraceHelper
             $stripBasePath = $this->getSettingOrNull($settings, self::STRIP_BASE_PATH);
             if ($stripBasePath) {
                 $traceBuilder->stripBasePath($stripBasePath);
+            }
+
+            if ($this->getSettingOrNull($settings, self::SHRINK_PATHS)) {
+                $traceBuilder->shrinkPaths(true);
             }
 
             if ($this->getSettingOrNull($settings, self::REMOVE_EXTENSION)) {

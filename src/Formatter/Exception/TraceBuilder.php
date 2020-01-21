@@ -122,6 +122,11 @@ class TraceBuilder
         $this->lineAssemblerBuilder->stripBasePath($basePath);
     }
 
+    public function shrinkPaths(bool $shrink): void
+    {
+        $this->lineAssemblerBuilder->shrinkPaths($shrink);
+    }
+
     /**
      * @param bool $removeExtension
      */
