@@ -10,46 +10,111 @@ class LineAssembler
 {
 
     /**
-     * @var String
+     * @var string
      */
-    public $line_nb;
+    private $stripBasePath = '';
+
+    /**
+     * @var bool
+     */
+    private $shrinkPaths = false;
+
+    /**
+     * @var bool
+     */
+    private $removeExtension = false;
+
+    /**
+     * @var bool
+     */
+    private $includeArgs = false;
+
+    /**
+     * @var bool
+     */
+    private $shrinkNamespaces = false;
+
+    /**
+     * @var NamespaceShrinker
+     */
+    private $namespaceShrinker;
 
     /**
      * @var String
      */
-    public $file;
+    private $line_nb;
 
     /**
      * @var String
      */
-    public $line;
+    private $file;
 
     /**
      * @var String
      */
-    public $function;
+    private $line;
 
     /**
      * @var String
      */
-    public $class;
+    private $function;
 
     /**
      * @var String
      */
-    public $type;
+    private $class;
+
+    /**
+     * @var String
+     */
+    private $type;
 
     /**
      * @var array
      */
-    public $args = [];
-
-    /**
-     * @var string
-     */
-    public $ex_line = "";
+    private $args = [];
 
     const ARRAY_TYPE = 'Array';
+
+    /**
+     * LineAssembler constructor.
+     * @param NamespaceShrinker|null $namespaceShrinker
+     */
+    public function __construct(NamespaceShrinker $namespaceShrinker = null)
+    {
+        $this->namespaceShrinker = $namespaceShrinker;
+    }
+
+    /**
+     * @param string $stripBasePath
+     */
+    public function stripBasePath(string $stripBasePath): void
+    {
+        $this->stripBasePath = $stripBasePath;
+    }
+
+    public function shrinkPaths(bool $shrink = true): void
+    {
+        $this->shrinkPaths = $shrink;
+    }
+
+    /**
+     * @param bool $removeExtension
+     */
+    public function removeExtension(bool $removeExtension): void
+    {
+        $this->removeExtension = $removeExtension;
+    }
+
+    public function includeArgs(bool $include = true): void
+    {
+        $this->includeArgs = $include;
+    }
+
+    public function shrinkNamespaces(bool $shrink = true): void
+    {
+        $this->shrinkNamespaces = $shrink;
+    }
 
     /**
      * @param String $line_nb
@@ -114,32 +179,51 @@ class LineAssembler
      */
     public function buildExceptionString()
     {
+        $traceLine = '';
 
         if (is_numeric($this->line_nb) && !is_null($this->line_nb)) {
-            $this->ex_line .= "#" . $this->line_nb . ' ';
+            $traceLine .= "#" . $this->line_nb . ' ';
         }
 
         if (!empty($this->file)) {
-            $this->ex_line .= $this->file;
+            $file = $this->file;
+            if ($this->stripBasePath !== '' && strpos($file, $this->stripBasePath) === 0) {
+                $file = substr($file, strlen($this->stripBasePath));
+            }
+
+            if ($this->removeExtension) {
+                $pathinfo = pathinfo($file);
+                $file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
+            }
+
+            if ($this->shrinkPaths) {
+                $file = $this->namespaceShrinker->shrinkUsingSeparator($file, DIRECTORY_SEPARATOR);
+            }
+
+            $traceLine .= $file;
         }
 
         if (!empty($this->line)) {
-            $this->ex_line .= '(' . $this->line . '): ';
+            $traceLine .= '(' . $this->line . '): ';
         }
 
         if (!empty($this->class)) {
-            $this->ex_line .= $this->class;
+            if ($this->shrinkNamespaces) {
+                $traceLine .= $this->namespaceShrinker->shrink($this->class);
+            } else {
+                $traceLine .= $this->class;
+            }
         }
 
         if (!empty($this->type)) {
-            $this->ex_line .= $this->type;
+            $traceLine .= $this->type;
         }
 
         // Function and arguments parts always together
         if (!empty($this->function)) {
-            $this->ex_line .= $this->function . '(';
+            $traceLine .= $this->function . '(';
 
-            if (!empty($this->args)) {
+            if ($this->includeArgs && !empty($this->args)) {
                 $arg_array = [];
 
                 foreach ($this->args as $arg) {
@@ -152,28 +236,12 @@ class LineAssembler
                     }
                 }
 
-                $this->ex_line .= implode(',', $arg_array) . ')';
+                $traceLine .= implode(',', $arg_array) . ')';
             } else {
-                $this->ex_line .= ')';
+                $traceLine .= ')';
             }
         }
 
-        return $this->ex_line;
-    }
-
-    /**
-     * Clears the current line so that it can be written over
-     */
-    public function clearLine()
-    {
-        $this->line_nb = "";
-        $this->file = "";
-        $this->line = "";
-        $this->class = "";
-        $this->type = "";
-        $this->function = "";
-        $this->args = [];
-
-        $this->ex_line = "";
+        return $traceLine;
     }
 }

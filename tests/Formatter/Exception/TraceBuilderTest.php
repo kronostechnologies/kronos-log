@@ -2,26 +2,93 @@
 
 namespace Kronos\Tests\Log\Formatter\Exception;
 
+use Kronos\Log\Formatter\Exception\LineAssembler;
+use Kronos\Log\Formatter\Exception\LineAssemblerBuilder;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use Throwable;
 
 class TraceBuilderTest extends \PHPUnit\Framework\TestCase
 {
-
+    const PATH_TO_FILE = "/path/to/file/";
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|LineAssemblerBuilder
      */
-    private $lineAssembler;
+    private $lineAssemblerBuilder;
 
     /**
-     * @var \Kronos\Log\Formatter\Exception\TraceBuilder
+     * @var TraceBuilder
      */
     private $traceBuilder;
 
     public function setUp(): void
     {
-        $this->lineAssembler = new \Kronos\Log\Formatter\Exception\LineAssembler();
-        $this->traceBuilder = new \Kronos\Log\Formatter\Exception\TraceBuilder($this->lineAssembler);
+        $this->lineAssemblerBuilder = $this->createMock(LineAssemblerBuilder::class);
+        $this->lineAssemblerBuilder->method('buildAssembler')->willReturnCallback(function() {
+            return new LineAssembler();
+        });
+
+        $this->traceBuilder = new TraceBuilder($this->lineAssemblerBuilder);
+    }
+
+    public function test_traceBuilder_includeArgs_shouldTellLineAssemblerBuilderToIncludeArgs()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("includeArgs")
+            ->with(true);
+
+        $this->traceBuilder->includeArgs();
+    }
+
+    public function test_traceBuilder_stripBasePath_shouldSendBaseBaseToLineAssemblerBuilder()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("stripBasePath")
+            ->with(self::PATH_TO_FILE);
+
+        $this->traceBuilder->stripBasePath(self::PATH_TO_FILE);
+    }
+
+    public function test_traceBuilder_shrinkPaths_shouldTellLineAssemblerBuilderToShrinkPaths()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("shrinkPaths")
+            ->with(true);
+
+        $this->traceBuilder->shrinkPaths(true);
+    }
+
+    public function test_traceBuilder_removeExtension_shouldTellLineAssemblerBuilderToRemoveExtension()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("removeExtension")
+            ->with(true);
+
+        $this->traceBuilder->removeExtension(true);
+    }
+
+    public function test_traceBuilder_shrinkNamespaces_shouldTellLineAssemblerBuilderToShrinkNamespaces()
+    {
+        $this->lineAssemblerBuilder
+            ->expects(self::once())
+            ->method("shrinkNamespaces")
+            ->with(true);
+
+        $this->traceBuilder->shrinkNamespaces(true);
+    }
+
+    public function test_exception_getTtraceAsString_shouldBuildLineAssemblerForEachStackItem(): void
+    {
+        $exception = $this->givenException();
+        $this->lineAssemblerBuilder
+            ->expects(self::exactly(5))
+            ->method('buildAssembler');
+
+        $this->traceBuilder->getTraceAsString($exception);
     }
 
     public function test_Exception_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithoutArguments()
@@ -32,21 +99,6 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
 #2 /path/to/file/App.php(197): Trace->callSomething()
 #3 /path/to/file/App.php(59): App->checkSomething()
 #4 /path/to/file/index.php(35): App->doSomething()';
-
-        $actualString = $this->traceBuilder->getTraceAsString($exception);
-
-        $this->assertEquals($expectedString, $actualString);
-    }
-
-    public function test_IncludeArgumentsOption_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithArguments()
-    {
-        $exception = $this->givenException();
-        $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction(1,2,Array)
-#1 /path/to/file/Trace.php(478): TestClass->testSomething()
-#2 /path/to/file/App.php(197): Trace->callSomething()
-#3 /path/to/file/App.php(59): App->checkSomething()
-#4 /path/to/file/index.php(35): App->doSomething()";
-        $this->traceBuilder->includeArgs();
 
         $actualString = $this->traceBuilder->getTraceAsString($exception);
 
