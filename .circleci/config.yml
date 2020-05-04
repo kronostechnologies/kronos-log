@@ -1,39 +1,11 @@
-version: 2
-aliases:
-  - &composer_install_cache_key v2-composer-install-{{ checksum "composer.lock" }}
+version: 2.1
+
+orbs:
+  eq: equisoft/build-tools@0.0.4
 
 workflows:
   version: 2
-  composer_and_phpunit:
+  build_and_deploy:
     jobs:
-    - build
-    - phpunit:
-        requires:
-        - build
-
-jobs:
-  build:
-    docker:
-    - image: circleci/php:7.2-cli
-    steps:
-    - checkout
-    - restore_cache:
-        keys:
-        - *composer_install_cache_key
-#    - run: apt update && apt install -y add openssh-client
-#    - run: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    - run: test -d vendor || composer install -n --prefer-dist --dev
-    - save_cache:
-        key: *composer_install_cache_key
-        paths:
-          - vendor
-
-  phpunit:
-    docker:
-    - image: circleci/php:7.2-cli
-    steps:
-    - checkout
-    - restore_cache:
-        name: "Restoring composer install cache"
-        key: *composer_install_cache_key
-    - run: vendor/bin/phpunit
+      - eq/phpunit:
+          checkout: true
