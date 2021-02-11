@@ -110,7 +110,7 @@ class LogService
     /**
      * Log Error with exception context
      * @param $message
-     * @param \Exception $exception
+     * @param Throwable $exception
      * @param array $context
      */
     public static function exception($message, Throwable $exception, array $context = array())
