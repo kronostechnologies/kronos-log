@@ -1,5 +1,8 @@
 version: 2.1
 
+variables:
+  composer_cache_version: &composer_cache_version v2
+
 orbs:
   eq: equisoft/build-tools@0.0.15
 
@@ -8,7 +11,9 @@ workflows:
   build_and_deploy:
     jobs:
       - eq/phpunit:
+          cache-version: *composer_cache_version
           checkout: true
       - eq/psalm :
           extra-build-args : --no-diff
+          composer-cache-version: *composer_cache_version
           checkout : true
