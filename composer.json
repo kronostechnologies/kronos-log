@@ -35,6 +35,7 @@
 		"sentry/sentry": "<2.0",
 		"graylog2/gelf-php": "~1.5",
 		"fluent/logger": "^1.0",
-		"phpunit/phpunit": "^8.0"
+		"phpunit/phpunit": "^8.0",
+		"vimeo/psalm": "^4.6"
 	}
 }
