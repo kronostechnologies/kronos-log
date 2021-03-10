@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  eq: equisoft/build-tools@0.0.4
+  eq: equisoft/build-tools@0.0.15
 
 workflows:
   version: 2
@@ -9,3 +9,6 @@ workflows:
     jobs:
       - eq/phpunit:
           checkout: true
+      - eq/psalm :
+          extra-build-args : --no-diff
+          checkout : true
