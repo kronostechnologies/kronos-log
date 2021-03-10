@@ -3,6 +3,8 @@
 namespace Kronos\Tests\Log;
 
 use Kronos\Log\Logger;
+use Kronos\Log\WriterInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 
 class LoggerTest extends \PHPUnit\Framework\TestCase
@@ -18,18 +20,18 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
 
     /**
-     * @var \Kronos\Log\Logger
+     * @var Logger
      */
     private $logger;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&WriterInterface
      */
     private $writer;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\WriterInterface::class);
+        $this->writer = $this->createMock(WriterInterface::class);
 
         $this->logger = new Logger();
         $this->logger->addWriter($this->writer);
@@ -38,7 +40,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     public function test_LoggerWithWriter_Log_ShouldAskWriteCanLogLevel()
     {
         $this->writer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('canLogLevel')
             ->with(self::ANY_LOG_LEVEL);
 
@@ -57,7 +59,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     public function test_LoggerWithWritterThatCannotLog_Log_ShouldNotCallLogOnWriter()
     {
         $this->writer->method('canLogLevel')->willReturn(false);
-        $this->writer->expects($this->never())->method('log');
+        $this->writer->expects(self::never())->method('log');
 
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE);
     }
@@ -112,8 +114,8 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
             $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
 
-            $this->assertEquals(1, $errorHandled);
-            $this->assertTrue($handledTriggedError);
+            self::assertEquals(1, $errorHandled);
+            self::assertTrue($handledTriggedError);
         }
         finally {
             // making sure that no matter what happens in my test, PHPUnit error handler is put back
@@ -129,7 +131,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     private function expectsWriterLogToBeCalledWith($level, $message, $context)
     {
         $this->writer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('log')
             ->with($level, $message, $context);
     }

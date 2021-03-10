@@ -6,6 +6,7 @@ use Kronos\Log\Builder\Strategy\Console;
 use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Factory\Writer;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ConsoleTest extends \PHPUnit\Framework\TestCase
 {
@@ -18,17 +19,17 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Writer
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&ExceptionTraceHelper
      */
     private $exceptionTraceHelper;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\Kronos\Log\Writer\Console
      */
     private $writer;
 

@@ -35,7 +35,7 @@ class LineAssembler
     private $shrinkNamespaces = false;
 
     /**
-     * @var NamespaceShrinker
+     * @var NamespaceShrinker|null
      */
     private $namespaceShrinker;
 
@@ -181,7 +181,7 @@ class LineAssembler
     {
         $traceLine = '';
 
-        if (is_numeric($this->line_nb) && !is_null($this->line_nb)) {
+        if (is_numeric($this->line_nb)) {
             $traceLine .= "#" . $this->line_nb . ' ';
         }
 
@@ -196,7 +196,7 @@ class LineAssembler
                 $file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
             }
 
-            if ($this->shrinkPaths) {
+            if ($this->shrinkPaths && $this->namespaceShrinker) {
                 $file = $this->namespaceShrinker->shrinkUsingSeparator($file, DIRECTORY_SEPARATOR);
             }
 
@@ -208,7 +208,7 @@ class LineAssembler
         }
 
         if (!empty($this->class)) {
-            if ($this->shrinkNamespaces) {
+            if ($this->shrinkNamespaces && $this->namespaceShrinker) {
                 $traceLine .= $this->namespaceShrinker->shrink($this->class);
             } else {
                 $traceLine .= $this->class;

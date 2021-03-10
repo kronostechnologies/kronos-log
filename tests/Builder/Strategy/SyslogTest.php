@@ -5,6 +5,7 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\Syslog;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SyslogTest extends \PHPUnit\Framework\TestCase
 {
@@ -19,12 +20,12 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Writer
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\Kronos\Log\Writer\Syslog
      */
     private $writer;
 

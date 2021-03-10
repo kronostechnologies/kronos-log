@@ -12,7 +12,7 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
 {
     const PATH_TO_FILE = "/path/to/file/";
     /**
-     * @var MockObject|LineAssemblerBuilder
+     * @var MockObject&LineAssemblerBuilder
      */
     private $lineAssemblerBuilder;
 

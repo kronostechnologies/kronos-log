@@ -7,17 +7,18 @@ namespace Kronos\Tests\Log\Writer;
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\Writer\Fluentd;
 use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 
 class FluentdTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Kronos\Log\Factory\Fluentd|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Kronos\Log\Factory\Fluentd&MockObject
      */
     private $factory;
 
     /**
-     * @var FluentLogger|\PHPUnit\Framework\MockObject\MockObject
+     * @var FluentLogger&MockObject
      */
     private $logger;
 

@@ -6,6 +6,7 @@ use Kronos\Log\Builder\Strategy\Sentry;
 use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SentryTest extends \PHPUnit\Framework\TestCase
 {
@@ -22,17 +23,17 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Writer
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\Kronos\Log\Writer\Syslog
      */
     private $writer;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\Raven_Client
      */
     private $ravenClient;
 

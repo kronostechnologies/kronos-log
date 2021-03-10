@@ -18,19 +18,19 @@ class Writer
 {
 
     /**
-     * @var SyslogAdaptor;
+     * @var SyslogAdaptor|null
      */
     private $syslog_adaptor;
 
     /**
-     * @var FileFactory;
+     * @var FileFactory|null
      */
     private $file_factory;
 
     /**
-     * @var ContextStringifier
+     * @var ContextStringifier|null
      */
-    private $context_stringifier = null;
+    private $context_stringifier;
 
     /**
      * @param $filename
@@ -124,8 +124,8 @@ class Writer
         TraceBuilder $exceptionTraceBuilder = null,
         TraceBuilder $previousExceptionTraceBuilder = null
     ) {
-        return new LogDNA($hostname, $application, $ingestionKey, $exceptionTraceBuilder,
-            $previousExceptionTraceBuilder);
+        return new LogDNA($hostname, $application, $ingestionKey, [], null,
+            $exceptionTraceBuilder, $previousExceptionTraceBuilder);
     }
 
     /**

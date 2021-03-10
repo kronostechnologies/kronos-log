@@ -15,6 +15,7 @@ use Kronos\Log\Exception\InvalidCustomWriter;
 use Kronos\Log\Exception\UnsupportedType;
 use Kronos\Log\Factory\Strategy;
 use Kronos\Log\Writer\Sentry;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SelectorTest extends \PHPUnit\Framework\TestCase
 {
@@ -27,12 +28,12 @@ class SelectorTest extends \PHPUnit\Framework\TestCase
     private $selector;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Strategy
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Console
      */
     private $strategy;
 

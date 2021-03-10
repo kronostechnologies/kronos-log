@@ -75,9 +75,9 @@ class ExceptionTraceHelper
             }
 
             return $traceBuilder;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function getPreviousExceptionTraceBuilderForSettings($settings)

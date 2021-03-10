@@ -5,22 +5,19 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Factory\Formatter;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
+class ExceptionTraceHelperTest extends TestCase
 {
     const TOP_LINES = 4;
     const LOWER_THAN_ONE = -1;
     const BOTTOM_LINES = 2;
     const BASE_PATH = '/base/path/';
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Formatter
      */
     private $factory;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    private $traceBuilder;
 
     /**
      * @var ExceptionTraceHelper
@@ -350,7 +347,7 @@ class ExceptionTraceHelperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     private function givenTraceBuilder()
     {

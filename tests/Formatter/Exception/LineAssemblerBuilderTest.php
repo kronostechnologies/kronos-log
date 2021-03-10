@@ -15,7 +15,7 @@ class LineAssemblerBuilderTest extends TestCase
     const INCLUDE_ARGS = true;
 
     /**
-     * @var Factory|MockObject
+     * @var Factory&MockObject
      */
     private $factory;
 

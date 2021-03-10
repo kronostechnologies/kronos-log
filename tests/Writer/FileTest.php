@@ -6,6 +6,7 @@ use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\File;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 use \Kronos\Log\Logger;
 
@@ -34,22 +35,22 @@ class FileTest extends \PHPUnit\Framework\TestCase
     const STRINGIFIED_CONTEXT = 'stringified context';
 
     /**
-     * @var File|\PHPUnit\Framework\MockObject\MockObject
+     * @var File&MockObject
      */
     private $adaptor;
 
     /**
-     * @var FileFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var FileFactory&MockObject
      */
     private $factory;
 
     /**
-     * @var ExceptionTraceBuilder|\PHPUnit\Framework\MockObject\MockObject
+     * @var TraceBuilder&MockObject
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var ExceptionTraceBuilder|\PHPUnit\Framework\MockObject\MockObject
+     * @var TraceBuilder&MockObject
      */
     private $previousExceptionTraceBuilder;
 
@@ -59,13 +60,13 @@ class FileTest extends \PHPUnit\Framework\TestCase
 
         $this->factory = $this->createMock(\Kronos\Log\Adaptor\FileFactory::class);
 
-        $this->exceptionTraceBuilder = $this->getMockBuilder(\Kronos\Log\Formatter\Exception\TraceBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->exceptionTraceBuilder = $this->getMockBuilder(TraceBuilder::class)->disableOriginalConstructor()->getMock();
     }
 
     public function test_NewWriter_Constructor_ShouldCreateNewFile()
     {
         $this->factory
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('createFileAdaptor')
             ->with(self::A_FILENAME);
 
@@ -85,7 +86,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
     )
     {
         $this->givenFactoryReturnAdaptor();
-        $this->expectsWriteToByCalledOnceWith($this->matchesRegularExpression('/' . self::DATETIME_REGEX . '' . self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL . '/'));
+        $this->expectsWriteToByCalledOnceWith(self::matchesRegularExpression('/' . self::DATETIME_REGEX . '' . self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL . '/'));
         $writer = new File(self::A_FILENAME, $this->factory);
         $writer->setPrependLogLevel();
         $writer->setPrependDateTime();
@@ -111,7 +112,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
         $writer = new File(self::A_FILENAME, $this->factory);
@@ -129,7 +130,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $exception = new \Exception(self::EXCEPTION_MESSAGE);
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
         $writer = new File(self::A_FILENAME, $this->factory);
@@ -150,9 +151,9 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             [''],
-            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
             [$previous_exception->getTraceAsString()],
             ['']
         ]);
@@ -177,9 +178,9 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             [''],
-            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
 
@@ -197,7 +198,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->givenFactoryReturnAdaptor();
         $context_stringifier = $this->createMock(ContextStringifier::class);
         $context_stringifier
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('excludeKey')
             ->with(Logger::EXCEPTION_CONTEXT);
         $writer = new File(self::A_FILENAME, $this->factory);
@@ -214,7 +215,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->expectsContextToBeIncludedInWriter();
         $context_stringifier = $this->createMock(ContextStringifier::class);
         $context_stringifier
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('stringify')
             ->with($context)
             ->willReturn(self::STRINGIFIED_CONTEXT);
@@ -246,7 +247,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         ];
         $given_stringifier = $this->createMock(ContextStringifier::class);
         $given_stringifier
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('stringify')
             ->with($given_context)
             ->willReturn(self::STRINGIFIED_CONTEXT);
@@ -267,7 +268,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
     private function expectsWriteToBeCalledOnce()
     {
         $this->adaptor
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('write');
     }
 
@@ -283,7 +284,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
     private function expectsWriteToByCalledOnceWith($line)
     {
         $this->adaptor
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('write')
             ->with($line);
     }
@@ -291,7 +292,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
     private function expectsWriteToBeCalledWithConsecutive(array $consecutive_args)
     {
         $method = $this->adaptor
-            ->expects($this->exactly(count($consecutive_args)))
+            ->expects(self::exactly(count($consecutive_args)))
             ->method('write');
         call_user_func_array([$method, 'withConsecutive'], $consecutive_args);
     }
