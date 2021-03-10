@@ -7,6 +7,7 @@ use Kronos\Log\Builder;
 use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\Logger as LoggerFactory;
 use Kronos\Log\Logger;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class BuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,27 +21,27 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     private $builder;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&LoggerFactory
      */
     private $loggerFactory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Builder\Strategy\Selector
      */
     private $selector;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Logger
      */
     private $logger;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Builder\Strategy
      */
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&AbstractWriter
      */
     private $writer;
 

@@ -6,6 +6,7 @@ use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Factory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 
 class LogDNATest extends \PHPUnit\Framework\TestCase
@@ -38,29 +39,29 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     private $writer;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Factory\Guzzle
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\GuzzleHttp\Client
      */
     private $client;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TraceBuilder
+     * @var MockObject&TraceBuilder
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TraceBuilder
+     * @var MockObject&TraceBuilder
      */
     private $previousExceptionTraceBuilder;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&ContextStringifier
      */
-    private $context_stringifier;
+    private $contextStringifier;
 
     public function setUp(): void
     {
@@ -72,7 +73,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
         $this->factory = $this->createMock(Factory\Guzzle::class);
         $this->factory->method('createClient')->willReturn($this->client);
 
-        $this->context_stringifier = $this->createMock(ContextStringifier::class);
+        $this->contextStringifier = $this->createMock(ContextStringifier::class);
     }
 
     public function test_constructor_ShouldCreateGuzzleClient()
@@ -90,7 +91,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             ]);
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder, $this->context_stringifier);
+            $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder, $this->contextStringifier);
     }
 
     public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions()
@@ -121,12 +122,12 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions,
             $this->factory, $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder,
-            $this->context_stringifier);
+            $this->contextStringifier);
     }
 
     public function test_Context_log_ShouldStringifyContext()
     {
-        $this->context_stringifier
+        $this->contextStringifier
             ->expects(self::once())
             ->method('stringifyArray')
             ->with(self::CONTEXT);
@@ -220,7 +221,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     public function test_ExceptionInContext_log_ShouldReplaceExceptionWithMessage()
     {
         $exception = new TestableException('exception message');
-        $this->context_stringifier
+        $this->contextStringifier
             ->expects(self::once())
             ->method('stringifyArray')
             ->with([
@@ -242,7 +243,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             ->method('getTraceAsString')
             ->with($exception)
             ->willReturn(self::EXCEPTION_TRACE);
-        $this->context_stringifier
+        $this->contextStringifier
             ->expects(self::once())
             ->method('stringifyArray')
             ->with([
@@ -259,7 +260,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     {
         $previousException = new TestableException('previous exception message');
         $exception = new TestableException('exception message', 0, $previousException);
-        $this->context_stringifier
+        $this->contextStringifier
             ->expects(self::once())
             ->method('stringifyArray')
             ->with([
@@ -286,7 +287,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             ->method('getTraceAsString')
             ->with($previousException)
             ->willReturn(self::EXCEPTION_TRACE);
-        $this->context_stringifier
+        $this->contextStringifier
             ->expects(self::once())
             ->method('stringifyArray')
             ->with([
@@ -305,7 +306,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     public function test_ExceptionStringInContext_log_ShouldKeepExceptionText()
     {
         $this->givenWriter();
-        $this->context_stringifier
+        $this->contextStringifier
             ->expects(self::once())
             ->method('stringifyArray')
             ->with([
@@ -331,7 +332,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     private function givenWriter()
     {
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            null, null, $this->context_stringifier);
+            null, null, $this->contextStringifier);
     }
 
     private function givenWriterWithExceptionTraceBuilder()
@@ -339,7 +340,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
         $this->exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            $this->exceptionTraceBuilder, null, $this->context_stringifier);
+            $this->exceptionTraceBuilder, null, $this->contextStringifier);
     }
 
     private function givenWriterWithPreviousExceptionTraceBuilder()
@@ -347,7 +348,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
         $this->previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
 
         $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            null, $this->previousExceptionTraceBuilder, $this->context_stringifier);
+            null, $this->previousExceptionTraceBuilder, $this->contextStringifier);
     }
 
     private function buildUriRegex($uri)
@@ -357,7 +358,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
 
     protected function givenStringifiedContext()
     {
-        $this->context_stringifier
+        $this->contextStringifier
             ->method('stringifyArray')
             ->willReturn(self::STINGIFYIED_CONTEXT);
     }

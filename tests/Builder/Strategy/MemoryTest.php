@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy\Memory;
 use Kronos\Log\Factory\Writer;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MemoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -16,12 +17,12 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Writer
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\Kronos\Log\Writer\Memory
      */
     private $writer;
 

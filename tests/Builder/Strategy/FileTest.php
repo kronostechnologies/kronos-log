@@ -7,6 +7,7 @@ use Kronos\Log\Builder\Strategy\File;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class FileTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,17 +21,17 @@ class FileTest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Writer
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&ExceptionTraceHelper
      */
     private $exceptionTraceHelper;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\Kronos\Log\Writer\File
      */
     private $writer;
 

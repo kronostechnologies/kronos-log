@@ -5,6 +5,7 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\TriggerError;
 use Kronos\Log\Factory\Writer;
 use Kronos\Log\Writer\TriggerError AS TriggerErrorWriter;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class TriggerErrorTest extends \PHPUnit\Framework\TestCase
 {
@@ -13,17 +14,17 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
     const FILENAME_VALUE = 'filename';
 
     /**
-     * @var File
+     * @var TriggerError
      */
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Writer
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&TriggerErrorWriter
      */
     private $writer;
 

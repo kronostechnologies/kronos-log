@@ -7,6 +7,7 @@ use Kronos\Log\Builder\Strategy\LogDNA;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class LogDNATest extends \PHPUnit\Framework\TestCase
 {
@@ -24,17 +25,17 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&Writer
      */
     private $factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&ExceptionTraceHelper
      */
     private $exceptionTraceHelper;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject&\Kronos\Log\Writer\LogDNA
      */
     private $writer;
 

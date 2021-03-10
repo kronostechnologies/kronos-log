@@ -10,6 +10,7 @@ use Kronos\Log\Factory\Formatter;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\Console;
 use \Kronos\Log\Logger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -42,27 +43,27 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     private $writer;
 
     /**
-     * @var FileFactory|PHPUnit_Framework_MockObject_MockObject
+     * @var FileFactory&MockObject
      */
     private $fileFactory;
 
     /**
-     * @var TTY|PHPUnit_Framework_MockObject_MockObject
+     * @var TTY&MockObject
      */
     private $stdout;
 
     /**
-     * @var TTY|PHPUnit_Framework_MockObject_MockObject
+     * @var TTY&MockObject
      */
     private $stderr;
 
     /**
-     * @var TraceBuilder|PHPUnit_Framework_MockObject_MockObject
+     * @var TraceBuilder&MockObject
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var TraceBuilder|PHPUnit_Framework_MockObject_MockObject
+     * @var TraceBuilder&MockObject
      */
     private $previousExceptionTraceBuilder;
 
@@ -75,7 +76,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     public function test_NewConsole_Constructor_ShouldCreateAdaptorForStdoutAndStderr()
     {
         $this->fileFactory
-            ->expects($this->exactly(2))
+            ->expects(self::exactly(2))
             ->method('createTTYAdaptor')
             ->withConsecutive(
                 [Console::STDOUT],
@@ -118,7 +119,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout,
-            $this->matchesRegularExpression('/' . self::DATETIME_REGEX . '' . self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL . '/'));
+            self::matchesRegularExpression('/' . self::DATETIME_REGEX . '' . self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL . '/'));
         $this->writer = new Console($this->fileFactory);
         $this->writer->setPrependLogLevel();
         $this->writer->setPrependDateTime();
@@ -153,7 +154,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             [self::INTERPOLATED_MESSAGE],
         ]);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
         $writer = new Console($this->fileFactory);
@@ -172,8 +173,8 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
         $this->exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
-            [$this->anything()],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::anything()],
             [''] // Because we can't mock exceptions, can't be sure it's really the stacktrace...
         ]);
         $exception = new Exception(self::EXCEPTION_MESSAGE);
@@ -195,7 +196,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
         $exception = new Exception(self::EXCEPTION_MESSAGE);
@@ -218,9 +219,9 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             [''],
-            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
             [$previous_exception->getTraceAsString()],
             ['']
         ]);
@@ -245,9 +246,9 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
             [self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE, AnsiBackgroundColor::RED],
-            [$this->matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             [''],
-            [$this->matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
+            [self::matches(self::PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
 
@@ -267,49 +268,49 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
 
         $this->fileFactory
             ->method('createTTYAdaptor')
-            ->will($this->returnValueMap([
+            ->will(self::returnValueMap([
                 [Console::STDOUT, $this->stdout],
                 [Console::STDERR, $this->stderr],
             ]));
     }
 
     /**
-     * @param TTY|PHPUnit_Framework_MockObject_MockObject $file
+     * @param TTY&MockObject $file
      * @param $message
      * @param null $text_color
      * @param null $background_color
      */
     private function expectsWriteToBeCalled($file, $message, $text_color = null, $background_color = null)
     {
-        $file->expects($this->once())->method('write')->with($message, $text_color, $background_color);
+        $file->expects(self::once())->method('write')->with($message, $text_color, $background_color);
     }
 
     /**
-     * @param TTY|PHPUnit_Framework_MockObject_MockObject $file
+     * @param TTY&MockObject $file
      * @param $with
      */
     private function expectsSetForceAnsiColorSupportToBeCalled($file, $with)
     {
-        $file->expects($this->once())->method('setForceAnsiColorSupport')->with($with);
+        $file->expects(self::once())->method('setForceAnsiColorSupport')->with($with);
     }
 
     /**
-     * @param TTY|PHPUnit_Framework_MockObject_MockObject $file
+     * @param TTY&MockObject $file
      * @param $with
      */
     private function expectsSetForceNoAnsiColorSupportToBeCalled($file, $with)
     {
-        $file->expects($this->once())->method('setForceNoAnsiColorSupport')->with($with);
+        $file->expects(self::once())->method('setForceNoAnsiColorSupport')->with($with);
     }
 
     /**
-     * @param TTY|PHPUnit_Framework_MockObject_MockObject $file
+     * @param TTY&MockObject $file
      * @param array $consecutive_args
      */
     private function expectsWriteToBeCalledWithConsecutive($file, array $consecutive_args)
     {
         $method = $file
-            ->expects($this->exactly(count($consecutive_args)))
+            ->expects(self::exactly(count($consecutive_args)))
             ->method('write');
         call_user_func_array([$method, 'withConsecutive'], $consecutive_args);
     }
