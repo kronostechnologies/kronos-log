@@ -45,12 +45,12 @@ class LogDNA extends AbstractWriter
     private $guzzleClient;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $previousExceptionTraceBuilder;
 
@@ -217,7 +217,7 @@ class LogDNA extends AbstractWriter
     }
 
     /**
-     * @return TraceBuilder
+     * @return TraceBuilder|null
      */
     public function getExceptionTraceBuilder()
     {
@@ -225,7 +225,7 @@ class LogDNA extends AbstractWriter
     }
 
     /**
-     * @return TraceBuilder
+     * @return TraceBuilder|null
      */
     public function getPreviousExceptionTraceBuilder()
     {

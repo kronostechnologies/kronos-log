@@ -27,17 +27,17 @@ class File extends \Kronos\Log\AbstractWriter
     private $file_adaptor;
 
     /**
-     * @var \Kronos\Log\Formatter\ContextStringifier
+     * @var ContextStringifier
      */
-    private $context_stringifier = null;
+    private $context_stringifier;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $previousExceptionTraceBuilder;
 

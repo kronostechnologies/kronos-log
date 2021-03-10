@@ -41,7 +41,7 @@ class Fluentd extends AbstractWriter
     protected $logger;
 
     /**
-     * @var \Kronos\Log\Factory\Fluentd|null
+     * @var \Kronos\Log\Factory\Fluentd
      */
     protected $factory;
 
@@ -51,12 +51,12 @@ class Fluentd extends AbstractWriter
     protected $wrapContextInMeta;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $previousExceptionTraceBuilder;
 
@@ -223,7 +223,7 @@ class Fluentd extends AbstractWriter
     }
 
     /**
-     * @return TraceBuilder
+     * @return TraceBuilder|null
      */
     public function getExceptionTraceBuilder()
     {
@@ -231,7 +231,7 @@ class Fluentd extends AbstractWriter
     }
 
     /**
-     * @param TraceBuilder $exceptionTraceBuilder
+     * @param TraceBuilder|null $exceptionTraceBuilder
      */
     public function setExceptionTraceBuilder($exceptionTraceBuilder)
     {
@@ -239,7 +239,7 @@ class Fluentd extends AbstractWriter
     }
 
     /**
-     * @return TraceBuilder
+     * @return TraceBuilder|null
      */
     public function getPreviousExceptionTraceBuilder()
     {

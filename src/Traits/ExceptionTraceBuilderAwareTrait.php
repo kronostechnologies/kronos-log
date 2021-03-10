@@ -11,12 +11,12 @@ trait ExceptionTraceBuilderAwareTrait
 {
 
     /**
-     * @return TraceBuilder
+     * @return TraceBuilder|null
      */
     abstract function getExceptionTraceBuilder();
 
     /**
-     * @return TraceBuilder
+     * @return TraceBuilder|null
      */
     abstract function getPreviousExceptionTraceBuilder();
 
@@ -40,8 +40,8 @@ trait ExceptionTraceBuilderAwareTrait
             'message' => $exception->getMessage()
         ];
 
-        if ($this->getExceptionTraceBuilder()) {
-            $context['stacktrace'] = $this->getExceptionTraceBuilder()->getTraceAsString($exception);
+        if ($exceptionTraceBuilder = $this->getExceptionTraceBuilder()) {
+            $context['stacktrace'] = $exceptionTraceBuilder->getTraceAsString($exception);
         }
 
         $previous = $exception->getPrevious();
@@ -58,8 +58,8 @@ trait ExceptionTraceBuilderAwareTrait
             'message' => $exception->getMessage()
         ];
 
-        if ($this->getPreviousExceptionTraceBuilder()) {
-            $context['stacktrace'] = $this->getPreviousExceptionTraceBuilder()->getTraceAsString($exception);
+        if ($previousExceptionTraceBuilder = $this->getPreviousExceptionTraceBuilder()) {
+            $context['stacktrace'] = $previousExceptionTraceBuilder->getTraceAsString($exception);
         }
 
         $previous = $exception->getPrevious();

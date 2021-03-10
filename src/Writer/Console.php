@@ -4,6 +4,7 @@ namespace Kronos\Log\Writer;
 
 use Kronos\Log\Adaptor\File as FileAdaptor;
 use Kronos\Log\Adaptor\FileFactory;
+use Kronos\Log\Adaptor\TTY;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
 use Kronos\Log\Traits\PrependDateTime;
@@ -25,22 +26,22 @@ class Console extends \Kronos\Log\AbstractWriter
     const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
 
     /**
-     * @var FileAdaptor
+     * @var TTY
      */
     private $stdout;
 
     /**
-     * @var FileAdaptor
+     * @var TTY
      */
     private $stderr;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $exceptionTraceBuilder;
 
     /**
-     * @var TraceBuilder
+     * @var TraceBuilder|null
      */
     private $previousExceptionTraceBuilder;
 

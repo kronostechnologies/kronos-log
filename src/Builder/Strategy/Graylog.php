@@ -26,7 +26,7 @@ class Graylog extends AbstractWriter
 
         $hostname = $settings[self::HOSTNAME];
         $port = isset($settings[self::PORT]) ? $settings[self::PORT] : 12201;
-        $chunkSize = isset($settings[self::CHUNK_SIZE]) ? $settings[self::CHUNK_SIZE] : null;
+        $chunkSize = isset($settings[self::CHUNK_SIZE]) ? $settings[self::CHUNK_SIZE] : 0;
         $application = isset($settings[self::APPLICATION]) ? $settings[self::APPLICATION] : null;
         $outputVerboseLevel = isset($settings[self::OUTPUT_VERBOSE_LEVEL]) ? $settings[self::OUTPUT_VERBOSE_LEVEL] : false;
 

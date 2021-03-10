@@ -9,7 +9,7 @@ class CustomWriter
 {
     /**
      * @param $classname
-     * @return \Kronos\Log\Builder\Strategy
+     * @return Strategy
      * @throws InvalidCustomWriter
      * @throws \ReflectionException
      */
@@ -18,12 +18,14 @@ class CustomWriter
         if (class_exists($classname)) {
             $reflection = new \ReflectionClass($classname);
             if ($reflection->implementsInterface(Strategy::class)) {
-                return $reflection->newInstance();
-            } else {
-                throw new InvalidCustomWriter("$classname must implement " . Strategy::class);
+                $instance = $reflection->newInstance();
+                /** @var Strategy $instance */
+                return $instance;
             }
-        } else {
-            throw new InvalidCustomWriter("$classname class does not exists");
+
+            throw new InvalidCustomWriter("$classname must implement " . Strategy::class);
         }
+
+        throw new InvalidCustomWriter("$classname class does not exists");
     }
 }
