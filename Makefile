@@ -10,7 +10,7 @@ DOCKER_PHP = docker run -it --rm \
     -e HOME=/home/circleci \
     ghcr.io/kronostechnologies/php:7.2-node
 
-.PHONY: all setup check psalm psalm.ignoreBaseline psalm.updateBaseline test
+.PHONY: all setup check psalm test
 
 all: setup check test
 
@@ -21,12 +21,6 @@ check: psalm
 
 psalm:
 	@${DOCKER_PHP} ./vendor/bin/psalm $(PSALM_ARGS)
-
-psalm.ignoreBaseline:
-	@${DOCKER_PHP} ./vendor/bin/psalm --ignore-baseline $(PSALM_ARGS)
-
-psalm.updateBaseline:
-	@${DOCKER_PHP} ./vendor/bin/psalm --no-diff --no-cache --update-baseline
 
 test:
 	@./vendor/bin/phpunit
