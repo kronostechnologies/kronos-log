@@ -36,11 +36,13 @@
 		"graylog2/gelf-php": "~1.5",
 		"fluent/logger": "^1.0",
 		"phpunit/phpunit": "^8.5",
-		"vimeo/psalm": "^4.6"
+		"vimeo/psalm": "^4.6",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+		"phpcompatibility/php-compatibility": "^9.3"
 	},
   "config": {
     "platform": {
-      "php": "7.2"
+      "php": "7.4"
     }
   }
 }
