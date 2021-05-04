@@ -22,7 +22,8 @@
 	},
 	"require": {
 		"php": ">=7.2",
-		"psr/log": "^1.0"
+		"psr/log": "^1.0",
+		"textalk/websocket": "^1.5"
 	},
 	"suggest": {
 		"guzzlehttp/guzzle": "Required for LogDNA writer",

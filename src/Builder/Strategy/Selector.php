@@ -51,6 +51,8 @@ class Selector
                 return $this->factory->createSyslogStrategy();
             case WriterTypes::TRIGGER_ERROR:
                 return $this->factory->createTriggerErrorStrategy();
+            case WriterTypes::WEBSOCKET:
+                return $this->factory->createWebsocketStrategy();
             default:
                 try {
                     $customStrategy = $this->factory->createCustomWriterStrategy();

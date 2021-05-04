@@ -12,6 +12,7 @@ use Kronos\Log\Builder\Strategy\Memory;
 use Kronos\Log\Builder\Strategy\Sentry;
 use Kronos\Log\Builder\Strategy\Syslog;
 use Kronos\Log\Builder\Strategy\TriggerError;
+use Kronos\Log\Builder\Strategy\Websocket;
 
 class Strategy
 {
@@ -86,6 +87,14 @@ class Strategy
     public function createTriggerErrorStrategy()
     {
         return new TriggerError();
+    }
+
+    /**
+     * @return Websocket
+     */
+    public function createWebsocketStrategy()
+    {
+        return new Websocket();
     }
 
     /**

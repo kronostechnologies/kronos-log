@@ -15,4 +15,5 @@ class WriterTypes extends Enumeration
     const SENTRY = 'sentry';
     const SYSLOG = 'syslog';
     const TRIGGER_ERROR = 'trigger_error';
+    const WEBSOCKET = 'websocket';
 }

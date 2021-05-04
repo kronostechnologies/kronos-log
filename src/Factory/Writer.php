@@ -13,6 +13,7 @@ use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
 use Kronos\Log\Writer\Memory;
 use Kronos\Log\Writer\TriggerError;
+use Kronos\Log\Writer\Websocket;
 
 class Writer
 {
@@ -126,6 +127,11 @@ class Writer
     ) {
         return new LogDNA($hostname, $application, $ingestionKey, [], null,
             $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+    }
+
+    public function createWebsocketWriter($websocket)
+    {
+        return new Websocket($websocket);
     }
 
     /**
