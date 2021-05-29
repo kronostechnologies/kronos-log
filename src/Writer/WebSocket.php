@@ -6,7 +6,7 @@ use Kronos\Log\AbstractWriter;
 use WebSocket\Client;
 use Kronos\Log\Traits\PrependContext;
 
-class Websocket extends AbstractWriter
+class WebSocket extends AbstractWriter
 {
     use PrependContext;
 
@@ -28,7 +28,5 @@ class Websocket extends AbstractWriter
         $prependedMessage = $this->prependContext($interpolatedMessage, $context);
 
         $this->client->text($prependedMessage);
-
-        $this->client->close();
     }
 }

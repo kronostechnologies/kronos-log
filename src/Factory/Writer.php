@@ -13,7 +13,7 @@ use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
 use Kronos\Log\Writer\Memory;
 use Kronos\Log\Writer\TriggerError;
-use Kronos\Log\Writer\Websocket;
+use Kronos\Log\Writer\WebSocket;
 
 class Writer
 {
@@ -131,7 +131,7 @@ class Writer
 
     public function createWebsocketWriter($websocket)
     {
-        return new Websocket($websocket);
+        return new WebSocket($websocket);
     }
 
     /**

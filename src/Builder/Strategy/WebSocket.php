@@ -6,7 +6,7 @@ namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Factory\Writer as WriterFactory;
 
-class Websocket extends AbstractWriter
+class WebSocket extends AbstractWriter
 {
 
     /**
@@ -21,9 +21,9 @@ class Websocket extends AbstractWriter
 
     /**
      * @param array $settings
-     * @return \Kronos\Log\Writer\Websocket
+     * @return \Kronos\Log\Writer\WebSocket
      */
-    public function buildFromArray(array $settings): \Kronos\Log\Writer\Websocket
+    public function buildFromArray(array $settings): \Kronos\Log\Writer\WebSocket
     {
         $writer = $this->factory->createWebsocketWriter($settings['websocket']);
 
