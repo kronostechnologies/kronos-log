@@ -22,7 +22,8 @@
 	},
 	"require": {
 		"php": ">=7.2",
-		"psr/log": "^1.0"
+		"psr/log": "^1.0",
+		"php-http/guzzle6-adapter": "^2.0"
 	},
 	"suggest": {
 		"guzzlehttp/guzzle": "Required for LogDNA writer",
@@ -32,7 +33,7 @@
 	},
 	"require-dev": {
 		"guzzlehttp/guzzle": "^6.2",
-		"sentry/sentry": "<2.0",
+    "sentry/sentry": "^3.3",
 		"graylog2/gelf-php": "~1.5",
 		"fluent/logger": "^1.0",
 		"phpunit/phpunit": "^8.5",

@@ -13,6 +13,9 @@ use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
 use Kronos\Log\Writer\Memory;
 use Kronos\Log\Writer\TriggerError;
+use Sentry\ClientBuilder;
+use Sentry\ClientInterface;
+use Sentry\Options;
 
 class Writer
 {
@@ -86,27 +89,22 @@ class Writer
         return new Memory();
     }
 
-    /**
-     * @param \Raven_Client $client
-     * @return Sentry
-     */
-    public function createSentryWriter(\Raven_Client $client)
+    public function createSentryWriter(ClientInterface $client): Sentry
     {
         return new Sentry($client);
     }
 
-    /**
-     * @param string $key
-     * @param string $secret
-     * @param string $projectId
-     * @param array $options
-     * @return Sentry
-     */
-    public function createSentryWriterAndRavenClient($key, $secret, $projectId, $options = [])
-    {
-        $ravenClient = new \Raven_Client('https://' . $key . ':' . $secret . '@app.getsentry.com/' . $projectId,
-            $options);
-        return new Sentry($ravenClient);
+    public function createSentryWriterAndSentryClient(
+        string $key,
+        string $secret,
+        string $projectId,
+        array $configs = []
+    ): Sentry {
+        $configs['dsn'] = 'https://' . $key . ':' . $secret . '@app.getsentry.com/' . $projectId;
+        $options = new Options($configs);
+        $clientBuilder = new ClientBuilder($options);
+        $sentryClient = $clientBuilder->getClient();
+        return new Sentry($sentryClient);
     }
 
     /**
