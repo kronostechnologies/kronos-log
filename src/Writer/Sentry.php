@@ -6,24 +6,12 @@ use Kronos\Log\AbstractWriter;
 use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\Logger;
 use Psr\Log\LogLevel;
-use Sentry\Client;
 use Sentry\ClientInterface;
 use Sentry\Severity;
 use Sentry\State\Scope;
 
 class Sentry extends AbstractWriter
 {
-
-    private $logLevelMap = [
-        LogLevel::EMERGENCY => Severity::FATAL,
-        LogLevel::ALERT => Severity::FATAL,
-        LogLevel::CRITICAL => Severity::ERROR,
-        LogLevel::ERROR => Severity::ERROR,
-        LogLevel::WARNING => Severity::WARNING,
-        LogLevel::NOTICE => Severity::INFO,
-        LogLevel::INFO => Severity::INFO,
-        LogLevel::DEBUG => Severity::DEBUG
-    ];
 
     /**
      * @var ClientInterface
@@ -91,12 +79,24 @@ class Sentry extends AbstractWriter
     /**
      * @throws InvalidLogLevel
      */
-    private function getSentryLevelFromLogLevel($level): string
+    private function getSentryLevelFromLogLevel($level): Severity
     {
-        if (isset($this->logLevelMap[$level])) {
-            return $this->logLevelMap[$level];
-        } else {
-            throw new InvalidLogLevel($level);
+        switch ($level) {
+            case LogLevel::DEBUG:
+                return Severity::debug();
+            case LogLevel::WARNING:
+                return Severity::warning();
+            case LogLevel::ERROR:
+                return Severity::error();
+            case LogLevel::CRITICAL:
+            case LogLevel::ALERT:
+            case LogLevel::EMERGENCY:
+                return Severity::fatal();
+            case LogLevel::INFO:
+            case LogLevel::NOTICE:
+                return Severity::info();
+            default:
+                throw new InvalidLogLevel($level);
         }
     }
 }

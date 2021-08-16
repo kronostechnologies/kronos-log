@@ -6,7 +6,9 @@ use Kronos\Log\Builder\Strategy\Sentry;
 use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer;
+use Kronos\Log\Writer\Sentry as SentryWriter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Sentry\ClientInterface;
 
 class SentryTest extends \PHPUnit\Framework\TestCase
 {
@@ -23,47 +25,47 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var MockObject&Writer
+     * @var Writer&MockObject
      */
     private $factory;
 
     /**
-     * @var MockObject&\Kronos\Log\Writer\Syslog
+     * @var SentryWriter&MockObject
      */
     private $writer;
 
     /**
-     * @var MockObject&\Raven_Client
+     * @var ClientInterface&MockObject
      */
-    private $ravenClient;
+    private $sentryClient;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\Writer\Syslog::class);
+        $this->writer = $this->createMock(SentryWriter::class);
         $this->factory = $this->createMock(Writer::class);
         $this->factory->method('createSentryWriter')->willReturn($this->writer);
 
-        $this->ravenClient = $this->createMock(\Raven_Client::class);
+        $this->sentryClient = $this->createMock(ClientInterface::class);
 
         $this->strategy = new Sentry($this->factory);
     }
 
-    public function test_RavenClient_buildFromArray_ShouldCreateSentryWriter()
+    public function test_SentryClient_buildFromArray_ShouldCreateSentryWriter()
     {
         $this->factory
             ->expects(self::once())
             ->method('createSentryWriter')
-            ->with($this->ravenClient);
-        $settings = [Sentry::CLIENT => $this->ravenClient];
+            ->with($this->sentryClient);
+        $settings = [Sentry::CLIENT => $this->sentryClient];
 
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_RavenClientConfiguration_buildFromArray_ShouldCreateSentryWriterAndRavenClient()
+    public function test_SentryClientConfiguration_buildFromArray_ShouldCreateSentryWriterAndSentryClient()
     {
         $this->factory
             ->expects(self::once())
-            ->method('createSentryWriterAndRavenClient')
+            ->method('createSentryWriterAndSentryClient')
             ->with(self::SENTRY_KEY, self::SENTRY_SECRET, self::SENTRY_PROJECT_ID, self::SENTRY_OPTIONS)
             ->willReturn($this->writer);
         $settings = [
@@ -83,7 +85,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             ->method('setMinLevel')
             ->with(self::MIN_LEVEL);
         $settings = [
-            Sentry::CLIENT => $this->ravenClient,
+            Sentry::CLIENT => $this->sentryClient,
             Sentry::MIN_LEVEL => self::MIN_LEVEL
         ];
 
@@ -97,7 +99,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             ->method('setMaxLevel')
             ->with(self::MAX_LEVEL);
         $settings = [
-            Sentry::CLIENT => $this->ravenClient,
+            Sentry::CLIENT => $this->sentryClient,
             Sentry::MAX_LEVEL => self::MAX_LEVEL
         ];
 
@@ -106,19 +108,19 @@ class SentryTest extends \PHPUnit\Framework\TestCase
 
     public function test_buildFromArray_ShouldReturnWriter()
     {
-        $settings = [Sentry::CLIENT => $this->ravenClient];
+        $settings = [Sentry::CLIENT => $this->sentryClient];
 
         $actualWriter = $this->strategy->buildFromArray($settings);
 
         $this->assertSame($this->writer, $actualWriter);
     }
 
-    public function test_ClientSettingNotRavenClient_buildFromArray_ShouldThrowInvalidSettingException()
+    public function test_ClientSettingNotSentryClient_buildFromArray_ShouldThrowInvalidSettingException()
     {
-        $notRavenClient = new \stdClass();
+        $notSentryClient = new \stdClass();
         $this->expectException(InvalidSetting::class);
-        $this->expectExceptionMessage(Sentry::CLIENT . ' setting must be an instance of Raven_Client, instance of ' . get_class($notRavenClient) . ' given');
-        $settings = [Sentry::CLIENT => $notRavenClient];
+        $this->expectExceptionMessage(Sentry::CLIENT . ' setting must be an instance of Sentry Client, instance of ' . get_class($notSentryClient) . ' given');
+        $settings = [Sentry::CLIENT => $notSentryClient];
         $this->factory
             ->expects(self::never())
             ->method('createSentryWriter');
@@ -126,11 +128,11 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MissingSentryOption_buildFromArray_ShouldCreateWriterAndRavenClientWithEmptyArrayOptions()
+    public function test_MissingSentryOption_buildFromArray_ShouldCreateWriterAndSentryClientWithEmptyArrayOptions()
     {
         $this->factory
             ->expects(self::once())
-            ->method('createSentryWriterAndRavenClient')
+            ->method('createSentryWriterAndSentryClient')
             ->with(self::SENTRY_KEY, self::SENTRY_SECRET, self::SENTRY_PROJECT_ID, [])
             ->willReturn($this->writer);
         $settings = [
@@ -148,7 +150,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(Sentry::CLIENT . ' setting or ' . Sentry::KEY . ' setting must given');
         $this->factory
             ->expects(self::never())
-            ->method('createSentryWriterAndRavenClient');
+            ->method('createSentryWriterAndSentryClient');
         $settings = [
             Sentry::SECRET => self::SENTRY_SECRET,
             Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
@@ -163,7 +165,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(Sentry::SECRET . ' setting is required with ' . Sentry::KEY);
         $this->factory
             ->expects(self::never())
-            ->method('createSentryWriterAndRavenClient');
+            ->method('createSentryWriterAndSentryClient');
         $settings = [
             Sentry::KEY => self::SENTRY_KEY,
             Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
@@ -178,7 +180,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(Sentry::PROJECT_ID . ' setting is required with ' . Sentry::KEY);
         $this->factory
             ->expects(self::never())
-            ->method('createSentryWriterAndRavenClient');
+            ->method('createSentryWriterAndSentryClient');
         $settings = [
             Sentry::KEY => self::SENTRY_KEY,
             Sentry::SECRET => self::SENTRY_SECRET

@@ -8,6 +8,7 @@ use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
 use SebastianBergmann\GlobalState\RuntimeException;
 use Sentry\Client;
+use Sentry\ClientInterface;
 
 class Sentry extends AbstractWriter
 {
@@ -38,7 +39,7 @@ class Sentry extends AbstractWriter
     public function buildFromArray(array $settings)
     {
         if (isset($settings[self::CLIENT]) && $settings[self::CLIENT]) {
-            if ($settings[self::CLIENT] instanceof Client) {
+            if ($settings[self::CLIENT] instanceof ClientInterface) {
                 $writer = $this->factory->createSentryWriter($settings[self::CLIENT]);
             } else {
                 throw new InvalidSetting(self::CLIENT . ' setting must be an instance of Sentry Client, instance of ' . get_class($settings[self::CLIENT]) . ' given');
