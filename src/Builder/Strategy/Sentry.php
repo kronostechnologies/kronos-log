@@ -7,6 +7,8 @@ use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
 use SebastianBergmann\GlobalState\RuntimeException;
+use Sentry\Client;
+use Sentry\ClientInterface;
 
 class Sentry extends AbstractWriter
 {
@@ -37,10 +39,10 @@ class Sentry extends AbstractWriter
     public function buildFromArray(array $settings)
     {
         if (isset($settings[self::CLIENT]) && $settings[self::CLIENT]) {
-            if ($settings[self::CLIENT] instanceof \Raven_Client) {
+            if ($settings[self::CLIENT] instanceof ClientInterface) {
                 $writer = $this->factory->createSentryWriter($settings[self::CLIENT]);
             } else {
-                throw new InvalidSetting(self::CLIENT . ' setting must be an instance of Raven_Client, instance of ' . get_class($settings[self::CLIENT]) . ' given');
+                throw new InvalidSetting(self::CLIENT . ' setting must be an instance of Sentry Client, instance of ' . get_class($settings[self::CLIENT]) . ' given');
             }
         } elseif (isset($settings[self::KEY])) {
             if (!isset($settings[self::SECRET])) {
@@ -48,7 +50,7 @@ class Sentry extends AbstractWriter
             } elseif (!isset($settings[self::PROJECT_ID])) {
                 throw new RequiredSetting(self::PROJECT_ID . ' setting is required with ' . self::KEY);
             } else {
-                $writer = $this->factory->createSentryWriterAndRavenClient($settings[self::KEY],
+                $writer = $this->factory->createSentryWriterAndSentryClient($settings[self::KEY],
                     $settings[self::SECRET], $settings[self::PROJECT_ID], $this->getOptions($settings));
             }
         } else {

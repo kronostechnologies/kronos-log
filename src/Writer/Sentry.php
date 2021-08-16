@@ -6,37 +6,32 @@ use Kronos\Log\AbstractWriter;
 use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\Logger;
 use Psr\Log\LogLevel;
+use Sentry\ClientInterface;
+use Sentry\Severity;
+use Sentry\State\Scope;
 
 class Sentry extends AbstractWriter
 {
 
-    private $log_level_map = [
-        LogLevel::EMERGENCY => \Raven_Client::FATAL,
-        LogLevel::ALERT => \Raven_Client::FATAL,
-        LogLevel::CRITICAL => \Raven_Client::ERROR,
-        LogLevel::ERROR => \Raven_Client::ERROR,
-        LogLevel::WARNING => \Raven_Client::WARNING,
-        LogLevel::NOTICE => \Raven_Client::INFO,
-        LogLevel::INFO => \Raven_Client::INFO,
-        LogLevel::DEBUG => \Raven_Client::DEBUG
-    ];
-
     /**
-     * @var \Raven_Client
+     * @var ClientInterface
      */
-    private $raven_client;
+    private $sentryClient;
 
     /**
      * Sentry constructor.
-     * @param \Raven_Client $raven_client
      */
-    public function __construct(\Raven_Client $raven_client)
+    public function __construct(ClientInterface $sentryClient)
     {
-        $this->raven_client = $raven_client;
+        $this->sentryClient = $sentryClient;
     }
 
+    /**
+     * @throws InvalidLogLevel
+     */
     public function log($level, $message, array $context = [])
     {
+        $level = $this->getSentryLevelFromLogLevel($level);
         if ($this->hasExceptionInContext($context)) {
             $this->captureException($level, $message, $context);
         } else {
@@ -44,17 +39,17 @@ class Sentry extends AbstractWriter
         }
     }
 
-    private function hasExceptionInContext($context)
+    private function hasExceptionInContext($context): bool
     {
         return isset($context[Logger::EXCEPTION_CONTEXT]);
     }
 
     private function captureMessage($level, $message, $context)
     {
-        $interpolated_message = $this->interpolate($message, $context);
-        $sentry_params = $this->getSentryParams($level, $context);
+        $interpolatedMessage = $this->interpolate($message, $context);
+        $sentryScope = $this->getSentryScope($level, $context);
 
-        $this->raven_client->captureMessage($interpolated_message, [], $sentry_params);
+        $this->sentryClient->captureMessage($interpolatedMessage, $level, $sentryScope);
     }
 
     private function captureException($level, $message, $context)
@@ -66,30 +61,42 @@ class Sentry extends AbstractWriter
             $context['loggerMessage'] = $message;
         }
 
-        $sentry_params = $this->getSentryParams($level, $context);
-        $this->raven_client->captureException($exception, $sentry_params);
+        $sentryScope = $this->getSentryScope($level, $context);
+        $this->sentryClient->captureException($exception, $sentryScope);
     }
 
-    private function getSentryParams($level, $context)
+    private function getSentryScope($level, $context): Scope
     {
-        $sentry_params = [
-            'level' => $this->getSentryLevelFromLogLevel($level)
-        ];
-
+        $scope = new Scope();
+        $scope->setLevel($level);
         if (count($context)) {
-            $sentry_params['extra'] = $context;
+            $scope->setExtras($context);
         }
 
-        return $sentry_params;
+        return $scope;
     }
 
-    private function getSentryLevelFromLogLevel($level)
+    /**
+     * @throws InvalidLogLevel
+     */
+    private function getSentryLevelFromLogLevel($level): Severity
     {
-        if (isset($this->log_level_map[$level])) {
-            return $this->log_level_map[$level];
-        } else {
-            throw new InvalidLogLevel($level);
+        switch ($level) {
+            case LogLevel::DEBUG:
+                return Severity::debug();
+            case LogLevel::WARNING:
+                return Severity::warning();
+            case LogLevel::ERROR:
+                return Severity::error();
+            case LogLevel::CRITICAL:
+            case LogLevel::ALERT:
+            case LogLevel::EMERGENCY:
+                return Severity::fatal();
+            case LogLevel::INFO:
+            case LogLevel::NOTICE:
+                return Severity::info();
+            default:
+                throw new InvalidLogLevel($level);
         }
     }
-
 }
