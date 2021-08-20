@@ -16,6 +16,7 @@ use Kronos\Log\Writer\TriggerError;
 use Sentry\ClientBuilder;
 use Sentry\ClientInterface;
 use Sentry\Options;
+use Sentry\SentrySdk;
 
 class Writer
 {
@@ -96,14 +97,14 @@ class Writer
 
     public function createSentryWriterAndSentryClient(
         string $key,
-        string $secret,
         string $projectId,
         array $configs = []
     ): Sentry {
-        $configs['dsn'] = 'https://' . $key . ':' . $secret . '@app.getsentry.com/' . $projectId;
+        $configs['dsn'] = 'https://' . $key . '@sentry.io/' . $projectId;
         $options = new Options($configs);
         $clientBuilder = new ClientBuilder($options);
         $sentryClient = $clientBuilder->getClient();
+        SentrySdk::init()->bindClient($sentryClient);
         return new Sentry($sentryClient);
     }
 
