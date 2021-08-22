@@ -16,7 +16,6 @@ class Sentry extends AbstractWriter
     const CLIENT = 'client';
 
     const KEY = 'key';
-    const SECRET = 'secret';
     const PROJECT_ID = 'projectId';
     const OPTIONS = 'options';
 
@@ -45,13 +44,14 @@ class Sentry extends AbstractWriter
                 throw new InvalidSetting(self::CLIENT . ' setting must be an instance of Sentry Client, instance of ' . get_class($settings[self::CLIENT]) . ' given');
             }
         } elseif (isset($settings[self::KEY])) {
-            if (!isset($settings[self::SECRET])) {
-                throw new RequiredSetting(self::SECRET . ' setting is required with ' . self::KEY);
-            } elseif (!isset($settings[self::PROJECT_ID])) {
+            if (!isset($settings[self::PROJECT_ID])) {
                 throw new RequiredSetting(self::PROJECT_ID . ' setting is required with ' . self::KEY);
             } else {
-                $writer = $this->factory->createSentryWriterAndSentryClient($settings[self::KEY],
-                    $settings[self::SECRET], $settings[self::PROJECT_ID], $this->getOptions($settings));
+                $writer = $this->factory->createSentryWriterAndSentryClient(
+                    $settings[self::KEY],
+                    $settings[self::PROJECT_ID],
+                    $this->getOptions($settings)
+                );
             }
         } else {
             throw new RequiredSetting(self::CLIENT . ' setting or ' . self::KEY . ' setting must given');

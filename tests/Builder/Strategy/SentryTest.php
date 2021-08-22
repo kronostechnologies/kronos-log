@@ -15,7 +15,6 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     const MIN_LEVEL = 'debug';
     const MAX_LEVEL = 'emergency';
     const SENTRY_KEY = 'key';
-    const SENTRY_SECRET = 'secret';
     const SENTRY_PROJECT_ID = 'project_id';
     const SENTRY_OPTIONS = ['sentry' => 'options'];
 
@@ -66,11 +65,10 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         $this->factory
             ->expects(self::once())
             ->method('createSentryWriterAndSentryClient')
-            ->with(self::SENTRY_KEY, self::SENTRY_SECRET, self::SENTRY_PROJECT_ID, self::SENTRY_OPTIONS)
+            ->with(self::SENTRY_KEY, self::SENTRY_PROJECT_ID, self::SENTRY_OPTIONS)
             ->willReturn($this->writer);
         $settings = [
             Sentry::KEY => self::SENTRY_KEY,
-            Sentry::SECRET => self::SENTRY_SECRET,
             Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID,
             Sentry::OPTIONS => self::SENTRY_OPTIONS
         ];
@@ -133,11 +131,10 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         $this->factory
             ->expects(self::once())
             ->method('createSentryWriterAndSentryClient')
-            ->with(self::SENTRY_KEY, self::SENTRY_SECRET, self::SENTRY_PROJECT_ID, [])
+            ->with(self::SENTRY_KEY, self::SENTRY_PROJECT_ID, [])
             ->willReturn($this->writer);
         $settings = [
             Sentry::KEY => self::SENTRY_KEY,
-            Sentry::SECRET => self::SENTRY_SECRET,
             Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
         ];
 
@@ -152,22 +149,6 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             ->expects(self::never())
             ->method('createSentryWriterAndSentryClient');
         $settings = [
-            Sentry::SECRET => self::SENTRY_SECRET,
-            Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
-        ];
-
-        $this->strategy->buildFromArray($settings);
-    }
-
-    public function test_KeySettingAndNoSecret_buildFromArray_ShouldThrowRequiredSettingException()
-    {
-        $this->expectException(RequiredSetting::class);
-        $this->expectExceptionMessage(Sentry::SECRET . ' setting is required with ' . Sentry::KEY);
-        $this->factory
-            ->expects(self::never())
-            ->method('createSentryWriterAndSentryClient');
-        $settings = [
-            Sentry::KEY => self::SENTRY_KEY,
             Sentry::PROJECT_ID => self::SENTRY_PROJECT_ID
         ];
 
@@ -183,7 +164,6 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             ->method('createSentryWriterAndSentryClient');
         $settings = [
             Sentry::KEY => self::SENTRY_KEY,
-            Sentry::SECRET => self::SENTRY_SECRET
         ];
 
         $this->strategy->buildFromArray($settings);
