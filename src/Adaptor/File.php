@@ -4,9 +4,7 @@ namespace Kronos\Log\Adaptor;
 
 class File
 {
-
     private $filename;
-
     private $ressource;
 
     public function __construct($filename)
@@ -14,7 +12,7 @@ class File
         if ($this->fileExistsAndWriteable($filename)) {
             $this->filename = $filename;
         } else {
-            throw new \Exception('File is not writeable : ' . $filename);
+            trigger_error('File is not writeable : ' . $filename, E_USER_WARNING);
         }
     }
 
@@ -29,11 +27,18 @@ class File
 
     public function write($line, $add_eol = true)
     {
-        if (!$this->ressource) {
-            $this->open($this->filename);
-        }
+        try {
+            if (!$this->ressource) {
+                $this->open($this->filename);
+            }
 
-        fwrite($this->ressource, $line . ($add_eol ? "\n" : ''));
+            fwrite($this->ressource, $line . ($add_eol ? "\n" : ''));
+        } catch (\Exception $exception) {
+            trigger_error(
+                'An error occured while writing to file ' . $this->filename . ': ' . $exception->getMessage(),
+                E_USER_WARNING
+            );
+        }
     }
 
     public function __destruct()
