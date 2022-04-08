@@ -39,7 +39,8 @@
 		"phpunit/phpunit": "^8.5",
 		"vimeo/psalm": "^4.6",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
-		"phpcompatibility/php-compatibility": "^9.3"
+		"phpcompatibility/php-compatibility": "^9.3",
+		"cyclonedx/cyclonedx-php-composer": "^3.10"
 	},
   "config": {
     "platform": {
@@ -47,7 +48,8 @@
     },
 		"allow-plugins": {
 			"composer/package-versions-deprecated": true,
-			"dealerdirect/phpcodesniffer-composer-installer": true
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"cyclonedx/cyclonedx-php-composer": true
 		}
   }
 }

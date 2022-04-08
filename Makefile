@@ -24,3 +24,9 @@ psalm:
 
 test:
 	@./vendor/bin/phpunit
+
+.PHONY: bom
+bom:
+	@rm -f build/reports/bom.json
+	@mkdir -p build/reports
+	composer make-bom --output-format=JSON --output-file=build/reports/bom.json --no-interaction
