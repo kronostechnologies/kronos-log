@@ -34,11 +34,11 @@
 	"require-dev": {
 		"guzzlehttp/guzzle": "6.5.5",
 		"sentry/sentry": "3.3.2",
-		"graylog2/gelf-php": "1.7.0",
+		"graylog2/gelf-php": "1.7.1",
 		"fluent/logger": "1.0.1",
 		"phpunit/phpunit": "9.5.20",
 		"vimeo/psalm": "4.6.2",
-		"dealerdirect/phpcodesniffer-composer-installer": "0.7.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "0.7.2",
 		"phpcompatibility/php-compatibility": "9.3.5",
 		"cyclonedx/cyclonedx-php-composer": "3.10.0"
 	},
