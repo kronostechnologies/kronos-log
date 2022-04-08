@@ -41,8 +41,10 @@ class Logger extends \Psr\Log\AbstractLogger
 
     public function setWriterCanLog($writer_name, $can_log = true)
     {
+        /** @var class-string $writerClassName */
+        $writerClassName = self::WRITER_PATH . ucfirst($writer_name);
         foreach ($this->writers as $writer) {
-            if (is_a($writer, self::WRITER_PATH . ucfirst($writer_name), true)) {
+            if (is_a($writer, $writerClassName, true)) {
                 $writer->setCanLog($can_log);
             }
         }
