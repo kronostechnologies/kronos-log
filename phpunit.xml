@@ -8,10 +8,14 @@
 	bootstrap="./vendor/autoload.php"
 	verbose="true"
 >
-<testsuites>
-	<testsuite name="Kronos-Log">
-		<directory>./tests</directory>
-	</testsuite>
-</testsuites>
-
+    <testsuites>
+        <testsuite name="Kronos-Log">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false" addUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">./src/</directory>
+        </whitelist>
+    </filter>
 </phpunit>
