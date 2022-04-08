@@ -7,6 +7,8 @@
 .*.sw*
 .*.un~
 nbproject
+build
+reports
 
 vendor
 

@@ -1,0 +1,23 @@
+name: Psalm Taint analysis
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  psalm-taint-analysis:
+    uses: equisoft-actions/php-workflows/.github/workflows/php-security.yml@v2.1.0
+    with:
+      publish-reports: true
+      defectdojo-engagement: 11
+      dependency-track-project-name: "kronos-log"
+      dependency-track-project-version: "master"
+      php-version: '7.4'
+      extensions: pcov
+    secrets:
+      gpr-key: ${{ secrets.GPR_KEY }}
+      defectdojo-url: ${{ secrets.DEFECTDOJO_URL }}
+      defectdojo-token: ${{ secrets.DEFECTDOJO_TOKEN }}
+      dependency-track-url: ${{ secrets.DEPENDENCY_TRACK_URL }}
+      dependency-track-api-key: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
