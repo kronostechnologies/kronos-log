@@ -36,7 +36,7 @@
 		"sentry/sentry": "3.3.2",
 		"graylog2/gelf-php": "1.7.0",
 		"fluent/logger": "1.0.1",
-		"phpunit/phpunit": "8.5.14",
+		"phpunit/phpunit": "9.5.20",
 		"vimeo/psalm": "4.6.2",
 		"dealerdirect/phpcodesniffer-composer-installer": "0.7.1",
 		"phpcompatibility/php-compatibility": "9.3.5",
