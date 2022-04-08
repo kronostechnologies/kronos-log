@@ -199,7 +199,7 @@ class Fluentd extends AbstractWriter
     }
 
     /**
-     * @var bool $value
+     * @param bool $value
      */
     public function setFluentBit($value)
     {
