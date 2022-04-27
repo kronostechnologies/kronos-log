@@ -7,7 +7,7 @@ on:
 
 jobs:
   psalm-taint-analysis:
-    uses: equisoft-actions/php-workflows/.github/workflows/php-security.yml@v2.1.0
+    uses: equisoft-actions/php-workflows/.github/workflows/php-security.yml@v2
     with:
       publish-reports: true
       defectdojo-engagement: 11
