@@ -1,4 +1,4 @@
-name: Psalm Taint analysis
+name: PHP Security
 
 on:
   push:
@@ -16,8 +16,8 @@ jobs:
       php-version: '7.4'
       extensions: pcov
     secrets:
-      gpr-key: ${{ secrets.GPR_KEY }}
-      defectdojo-url: ${{ secrets.DEFECTDOJO_URL }}
-      defectdojo-token: ${{ secrets.DEFECTDOJO_TOKEN }}
-      dependency-track-url: ${{ secrets.DEPENDENCY_TRACK_URL }}
-      dependency-track-api-key: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
+      GPR_KEY: ${{ secrets.GPR_KEY }}
+      DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
+      DEFECTDOJO_TOKEN: ${{ secrets.DEFECTDOJO_TOKEN }}
+      DEPENDENCY_TRACK_URL: ${{ secrets.DEPENDENCY_TRACK_URL }}
+      DEPENDENCY_TRACK_API_KEY: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
