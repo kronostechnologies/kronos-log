@@ -19,7 +19,7 @@ jobs:
       GPR_KEY: ${{ secrets.GPR_KEY }}
 
   php-library-8-1:
-    uses: equisoft-actions/php-workflows/.github/workflows/php-library.yml@112682481cbecebd9687c2da402a2e2de4c8e7ca
+    uses: equisoft-actions/php-workflows/.github/workflows/php-library.yml@v2
     with:
       checks: phpunit,psalm,qodana
       php-version: '8.1'
