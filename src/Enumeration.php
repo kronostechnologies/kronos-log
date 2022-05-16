@@ -10,17 +10,16 @@ namespace Kronos\Log;
  */
 abstract class  Enumeration
 {
-
     private static $cache = null;
 
-    final private static function initialiseCache()
+    private static function initialiseCache()
     {
         if (self::$cache === null) {
             self::$cache = array();
         }
     }
 
-    final private static function getConstants()
+    private static function getConstants()
     {
         self::initialiseCache();
 
@@ -33,12 +32,12 @@ abstract class  Enumeration
         return self::$cache[$classname];
     }
 
-    final static public function isValidName($name)
+    final public static function isValidName($name)
     {
         return array_key_exists($name, self::getConstants());
     }
 
-    final static public function isValidValue($value)
+    final public static function isValidValue($value)
     {
         return in_array($value, self::getConstants());
     }

@@ -30,6 +30,6 @@ class PrependDateTimeTest extends \PHPUnit\Framework\TestCase
 
         $returned_message = $this->datetime_prepender->prependDateTime(self::A_MESSAGE);
 
-        $this->assertRegExp('/' . self::DATETIME_REGEX . '' . self::A_MESSAGE . '/', $returned_message);
+        $this->assertMatchesRegularExpression('/' . self::DATETIME_REGEX . '' . self::A_MESSAGE . '/', $returned_message);
     }
 }
