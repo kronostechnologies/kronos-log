@@ -24,6 +24,5 @@ jobs:
       checks: phpunit,psalm,qodana
       php-version: '8.1'
       extensions: pcov
-      psalm-extra-args: '--no-diff --no-cache --php-version=8.1'
     secrets:
       GPR_KEY: ${{ secrets.GPR_KEY }}
