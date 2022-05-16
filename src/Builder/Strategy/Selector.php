@@ -58,7 +58,7 @@ class Selector
                 } catch (InvalidCustomWriter $exception) {
                     throw $exception;
                 } catch (\Exception $exception) {
-                    throw new UnsupportedType('Unsupported writer type : ' . $type);
+                    throw new UnsupportedType('Unsupported writer type : ' . $type, 0, $exception);
                 }
         }
     }
