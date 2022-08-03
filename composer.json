@@ -33,11 +33,11 @@
 	},
 	"require-dev": {
 		"guzzlehttp/guzzle": "6.5.8",
-		"sentry/sentry": "3.6.0",
+		"sentry/sentry": "3.7.0",
 		"graylog2/gelf-php": "1.7.1",
 		"fluent/logger": "1.0.1",
 		"phpunit/phpunit": "9.5.21",
-		"vimeo/psalm": "4.23.0",
+		"vimeo/psalm": "4.26.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "0.7.2",
 		"phpcompatibility/php-compatibility": "9.3.5",
 		"cyclonedx/cyclonedx-php-composer": "3.10.0"
