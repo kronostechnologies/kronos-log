@@ -31,7 +31,7 @@
 		"fluent/logger": "Required for Fluentd writer"
 	},
 	"require-dev": {
-		"guzzlehttp/guzzle": "6.5.8",
+		"guzzlehttp/guzzle": "7.5.0",
 		"sentry/sentry": "3.7.0",
 		"fluent/logger": "1.0.1",
 		"phpunit/phpunit": "9.5.25",
