@@ -50,7 +50,7 @@ class Logger extends \Psr\Log\AbstractLogger
         }
     }
 
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = array()): void
     {
         foreach ($this->writers as $writer) {
             if ($writer->canLogLevel($level)) {
