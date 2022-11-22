@@ -14,7 +14,6 @@ trait LoggerAware
      *
      * @param string $message
      * @param array $context
-     * @return null
      */
     protected function logEmergency($message, array $context = array())
     {
@@ -31,7 +30,6 @@ trait LoggerAware
      *
      * @param string $message
      * @param array $context
-     * @return null
      */
     protected function logAlert($message, array $context = array())
     {
@@ -47,7 +45,6 @@ trait LoggerAware
      *
      * @param string $message
      * @param array $context
-     * @return null
      */
     protected function logCritical($message, array $context = array())
     {
@@ -79,7 +76,6 @@ trait LoggerAware
      *
      * @param string $message
      * @param array $context
-     * @return null
      */
     protected function logWarning($message, array $context = array())
     {
@@ -109,7 +105,6 @@ trait LoggerAware
      *
      * @param string $message
      * @param array $context
-     * @return null
      */
     protected function logInfo($message, array $context = array())
     {
