@@ -2,12 +2,13 @@
 
 namespace Kronos\Log\Traits;
 
-use  Kronos\Log\Logger;
+use Kronos\Log\Logger;
 use Throwable;
+use Psr\Log\LoggerAwareTrait;
 
 trait LoggerAware
 {
-    use \Psr\Log\LoggerAwareTrait;
+    use LoggerAwareTrait;
 
     /**
      * System is unusable.
