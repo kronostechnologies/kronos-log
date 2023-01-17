@@ -1,9 +1,12 @@
 name: PHP Security
 
 on:
+  pull_request: {}
   push:
     branches:
       - master
+    tags:
+      - v*.*.*
 
 jobs:
   psalm-taint-analysis:
