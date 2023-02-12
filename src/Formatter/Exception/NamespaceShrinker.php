@@ -18,6 +18,9 @@ class NamespaceShrinker
         }
     }
 
+    /**
+     * @param non-empty-string $separator
+     */
     public function shrinkUsingSeparator(string $fqn, string $separator): string
     {
         $parts = explode($separator, $fqn);
