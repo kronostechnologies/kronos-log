@@ -79,6 +79,7 @@ class Syslog
      */
     private function switchToLog($ident, $option, $facility)
     {
+        /** @psalm-suppress RedundantCondition Always true in php 8.2 but no clear documentation found */
         if (openlog($ident, $option, $facility)) {
             self::$current_ident = $ident;
             self::$current_facility = $facility;
