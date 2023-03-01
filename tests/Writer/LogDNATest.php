@@ -2,14 +2,17 @@
 
 namespace Kronos\Tests\Log\Writer;
 
+use Exception;
+use GuzzleHttp\Client;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\LogDNA;
 use Kronos\Log\Factory;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
-class LogDNATest extends \PHPUnit\Framework\TestCase
+class LogDNATest extends TestCase
 {
     const INGESTION_KEY = 'ingestionKey';
     const HOSTNAME = 'hostname';
@@ -33,41 +36,18 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     const STINGIFYIED_CONTEXT = ['field' => 'stringified value'];
     const EXCEPTION_TRACE = 'exception trace';
 
-    /**
-     * @var LogDNA
-     */
-    private $writer;
-
-    /**
-     * @var MockObject&Factory\Guzzle
-     */
-    private $factory;
-
-    /**
-     * @var MockObject&\GuzzleHttp\Client
-     */
-    private $client;
-
-    /**
-     * @var MockObject&TraceBuilder
-     */
-    private $exceptionTraceBuilder;
-
-    /**
-     * @var MockObject&TraceBuilder
-     */
-    private $previousExceptionTraceBuilder;
-
-    /**
-     * @var MockObject&ContextStringifier
-     */
-    private $contextStringifier;
+    private LogDNA $writer;
+    private Factory\Guzzle&MockObject $factory;
+    private Client&MockObject $client;
+    private TraceBuilder&MockObject $exceptionTraceBuilder;
+    private TraceBuilder&MockObject $previousExceptionTraceBuilder;
+    private ContextStringifier&MockObject $contextStringifier;
 
     public function setUp(): void
     {
-        $this->client = $this->getMockBuilder(\GuzzleHttp\Client::class)
+        $this->client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
-            ->setMethods(['post'])
+            ->onlyMethods(['post'])
             ->getMock();
 
         $this->factory = $this->createMock(Factory\Guzzle::class);
@@ -90,8 +70,16 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
                 'base_uri' => LogDNA::LOGDNA_URL
             ]);
 
-        $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
-            $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder, $this->contextStringifier);
+        $this->writer = new LogDNA(
+            self::HOSTNAME,
+            self::APPLICATION,
+            self::INGESTION_KEY,
+            [],
+            $this->factory,
+            null,
+            null,
+            $this->contextStringifier
+        );
     }
 
     public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions()
@@ -120,9 +108,16 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             'timeout' => self::TIMEOUT
         ];
 
-        $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, $guzzleOptions,
-            $this->factory, $this->exceptionTraceBuilder, $this->previousExceptionTraceBuilder,
-            $this->contextStringifier);
+        $this->writer = new LogDNA(
+            self::HOSTNAME,
+            self::APPLICATION,
+            self::INGESTION_KEY,
+            $guzzleOptions,
+            $this->factory,
+            null,
+            null,
+            $this->contextStringifier
+        );
     }
 
     public function test_Context_log_ShouldStringifyContext()
@@ -323,7 +318,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     {
         $this->client
             ->method('post')
-            ->willThrowException(new \Exception());
+            ->willThrowException(new Exception());
         $this->givenWriter();
 
         @$this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
@@ -351,7 +346,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             null, $this->previousExceptionTraceBuilder, $this->contextStringifier);
     }
 
-    private function buildUriRegex($uri)
+    private function buildUriRegex($uri): string
     {
         return '/' . str_replace(['?', '/', '.'], ['\?', '\/', '\.'], $uri) . '/';
     }
@@ -364,66 +359,6 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class TestableException extends \Exception
+class TestableException extends Exception
 {
-
-    public function getExceptionTrace()
-    {
-        return [
-            0 => [
-                'file' => '/path/to/file/TestClass.php',
-                'line' => 20,
-                'function' => 'testFunction',
-                'class' => 'TestClass',
-                'type' => '->',
-                'args' => [
-                    0 => 1,
-                    1 => 2,
-                    2 => [
-                        'test' => 'test_value'
-                    ],
-                ],
-            ],
-            1 => [
-                'file' => '/path/to/file/Tool.php',
-                'line' => 478,
-                'function' => 'runTool',
-                'class' => 'TestClass',
-                'type' => '->',
-                'args' => [],
-            ],
-            2 => [
-                'file' => '/path/to/file/CLI.php',
-                'line' => 197,
-                'function' => 'run',
-                'class' => 'Tool',
-                'type' => '->',
-                'args' => [],
-            ],
-            3 => [
-                'file' => '/path/to/file/CLI.php',
-                'line' => 59,
-                'function' => 'runTool',
-                'class' => 'CLI',
-                'type' => '->',
-                'args' => [],
-            ],
-            4 => [
-                'file' => '/path/to/file/tool.php',
-                'line' => 35,
-                'function' => 'run',
-                'class' => 'CLI',
-                'type' => '->',
-                'args' => [],
-            ],
-            5 => [
-                'file' => '/path/to/file/tool',
-                'line' => 4,
-                'function' => 'includeTest',
-                'args' => [
-                    0 => '/path/to/file/tool.php'
-                ],
-            ]
-        ];
-    }
 }
