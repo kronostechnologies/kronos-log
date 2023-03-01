@@ -31,7 +31,7 @@ class LogLevelHelperTest extends TestCase
         LogLevelHelper::validateLogLevel('unknown level');
     }
 
-    public function provideLevels(): array
+    public static function provideLevels(): array
     {
         return [
             [LogLevel::ALERT, LogLevel::EMERGENCY],
