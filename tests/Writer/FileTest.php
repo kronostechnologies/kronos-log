@@ -6,13 +6,13 @@ use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\File;
+use Kronos\Tests\Log\ExtendedTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
-use \Kronos\Log\Logger;
+use Kronos\Log\Logger;
 
-class FileTest extends \PHPUnit\Framework\TestCase
+class FileTest extends ExtendedTestCase
 {
-
     const A_FILENAME = '/path/to/file';
     const ANY_LOG_LEVEL = LogLevel::INFO;
     const LOGLEVEL_BELOW_ERROR = LogLevel::INFO;
@@ -34,33 +34,13 @@ class FileTest extends \PHPUnit\Framework\TestCase
 
     const STRINGIFIED_CONTEXT = 'stringified context';
 
-    /**
-     * @var File&MockObject
-     */
-    private $adaptor;
-
-    /**
-     * @var FileFactory&MockObject
-     */
-    private $factory;
-
-    /**
-     * @var TraceBuilder&MockObject
-     */
-    private $exceptionTraceBuilder;
-
-    /**
-     * @var TraceBuilder&MockObject
-     */
-    private $previousExceptionTraceBuilder;
+    private File|MockObject $adaptor;
+    private FileFactory&MockObject $factory;
 
     public function setUp(): void
     {
         $this->adaptor = $this->getMockBuilder(\Kronos\Log\Adaptor\File::class)->disableOriginalConstructor()->getMock();
-
-        $this->factory = $this->createMock(\Kronos\Log\Adaptor\FileFactory::class);
-
-        $this->exceptionTraceBuilder = $this->getMockBuilder(TraceBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->factory = $this->createMock(FileFactory::class);
     }
 
     public function test_NewWriter_Constructor_ShouldCreateNewFile()
@@ -146,7 +126,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
     )
     {
         $this->givenFactoryReturnAdaptor();
-        $this->previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
+        $previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $previous_exception = new \Exception(self::PREVIOUS_EXCEPTION_MESSAGE);
         $exception = new \Exception(self::EXCEPTION_MESSAGE, 0, $previous_exception);
         $this->expectsWriteToBeCalledWithConsecutive([
@@ -157,11 +137,11 @@ class FileTest extends \PHPUnit\Framework\TestCase
             [$previous_exception->getTraceAsString()],
             ['']
         ]);
-        $this->previousExceptionTraceBuilder->expects(self::once())
+        $previousExceptionTraceBuilder->expects(self::once())
             ->method('getTraceAsString')
             ->willReturn($previous_exception->getTraceAsString());
 
-        $writer = new File(self::A_FILENAME, $this->factory, null, $this->previousExceptionTraceBuilder);
+        $writer = new File(self::A_FILENAME, $this->factory, null, $previousExceptionTraceBuilder);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -291,9 +271,13 @@ class FileTest extends \PHPUnit\Framework\TestCase
 
     private function expectsWriteToBeCalledWithConsecutive(array $consecutive_args)
     {
-        $method = $this->adaptor
+        $this->adaptor
             ->expects(self::exactly(count($consecutive_args)))
-            ->method('write');
-        call_user_func_array([$method, 'withConsecutive'], $consecutive_args);
+            ->method('write')
+            ->with(
+                ...self::withConsecutive(
+                    ...$consecutive_args
+                )
+            );
     }
 }

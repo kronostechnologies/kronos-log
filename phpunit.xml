@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phpunit backupGlobals="false"
-	backupStaticAttributes="false"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	bootstrap="./vendor/autoload.php"
-	verbose="true"
->
-    <testsuites>
-        <testsuite name="Kronos-Log">
-            <directory>./tests</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="false" addUncoveredFilesFromWhitelist="false">
-            <directory suffix=".php">./src/</directory>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" colors="true" bootstrap="./vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <coverage includeUncoveredFiles="false">
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="Kronos-Log">
+      <directory>./tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>
