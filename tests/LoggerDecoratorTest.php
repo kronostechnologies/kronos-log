@@ -45,7 +45,7 @@ class LoggerDecoratorTest extends TestCase
         $this->loggerDecorator->log($levelOfMessage, 'a message');
     }
 
-    public function provideLowerLogLevels(): array
+    public static function provideLowerLogLevels(): array
     {
         return [
             [LogLevel::INFO, LogLevel::DEBUG],
