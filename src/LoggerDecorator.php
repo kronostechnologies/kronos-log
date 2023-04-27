@@ -2,27 +2,23 @@
 
 namespace Kronos\Log;
 
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface as PsrLoggerInterface;
 use Psr\Log\LogLevel;
+use Throwable;
 
 class LoggerDecorator implements LoggerInterface
 {
-    /**
-     * @var string
-     */
-    private $level = LogLevel::DEBUG;
-    /**
-     * @var LoggerInterface
-     */
-    private $delegate;
+    private string $level = LogLevel::DEBUG;
+
+    private PsrLoggerInterface $delegate;
 
     public function __construct(
-        LoggerInterface $delegate
+        LoggerInterface|PsrLoggerInterface $delegate
     ) {
         $this->delegate = $delegate;
     }
 
-    public function setLevel(string $level)
+    public function setLevel(string $level): void
     {
         $this->level = $level;
     }
@@ -72,5 +68,25 @@ class LoggerDecorator implements LoggerInterface
         if (!LogLevelHelper::isLower($this->level, (string)$level)) {
             $this->delegate->log($level, $message, $context);
         }
+    }
+
+    public function addContext(string $key, mixed $value): void
+    {
+        if($this->delegate instanceof LoggerInterface) {
+            $this->delegate->addContext($key, $value);
+        }
+    }
+
+    public function addContextArray(array $context): void
+    {
+        if($this->delegate instanceof LoggerInterface) {
+            $this->delegate->addContextArray($context);
+        }
+    }
+
+    public function exception(string $message, Throwable $exception, array $context = array()): void
+    {
+        $context[Logger::EXCEPTION_CONTEXT] = $exception;
+        $this->error($message, $context);
     }
 }
