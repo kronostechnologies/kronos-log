@@ -3,55 +3,44 @@
 namespace Kronos\Log;
 
 use Kronos\Log\Writer\TriggerError;
+use Psr\Log\LoggerInterface as PsrLoggerInterface;
 
 class LogLocator
 {
+    private static ?LoggerInterface $logger = null;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private static $logger;
-
-    /**
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param bool $force
-     */
-    public static function setLogger(\Psr\Log\LoggerInterface $logger, $force = false)
+    public static function setLogger(LoggerInterface|PsrLoggerInterface $logger, bool $force = false): void
     {
+        if (!$logger instanceof LoggerInterface) {
+            $logger = new LoggerDecorator($logger);
+        }
+
         if (!self::isLoggerSet() || $force) {
             self::$logger = $logger;
         }
     }
 
-    /**
-     * @return bool
-     */
-    public static function isLoggerSet()
+    public static function isLoggerSet(): bool
     {
-        return isset(self::$logger);
+        return self::$logger !== null;
     }
 
-    /**
-     * @return \Psr\Log\LoggerInterface
-     */
-    public static function getLogger()
+    public static function getLogger(): LoggerInterface
     {
         if (!self::isLoggerSet()) {
             self::setLogger(self::createDefaultLogger());
         }
 
+        /** @psalm-var LoggerInterface self::$logger */
         return self::$logger;
     }
 
-    public static function unsetLogger()
+    public static function unsetLogger(): void
     {
         self::$logger = null;
     }
 
-    /**
-     * @return Logger
-     */
-    public static function createDefaultLogger()
+    public static function createDefaultLogger(): Logger
     {
         $logger = new Logger();
         $logger->addWriter(new TriggerError());

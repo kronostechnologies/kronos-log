@@ -2,9 +2,9 @@
 
 namespace Kronos\Log;
 
-use Kronos\Log\Writer\Console;
+use Throwable;
 
-class Logger extends \Psr\Log\AbstractLogger
+class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
 
     const EXCEPTION_CONTEXT = 'exception';
@@ -20,26 +20,22 @@ class Logger extends \Psr\Log\AbstractLogger
     /**
      * @param WriterInterface $writer
      */
-    public function addWriter(WriterInterface $writer)
+    public function addWriter(WriterInterface $writer): void
     {
         $this->writers[] = $writer;
     }
 
-    /**
-     * @param $key String
-     * @param $value Mixed
-     */
-    public function addContext($key, $value)
+    public function addContext(string $key, mixed $value): void
     {
         $this->context[$key] = $value;
     }
 
-    public function addContextArray(array $context)
+    public function addContextArray(array $context): void
     {
         $this->context = array_merge($this->context, $context);
     }
 
-    public function setWriterCanLog($writer_name, $can_log = true)
+    public function setWriterCanLog($writer_name, $can_log = true): void
     {
         /** @var class-string $writerClassName */
         $writerClassName = self::WRITER_PATH . ucfirst($writer_name);
@@ -61,5 +57,14 @@ class Logger extends \Psr\Log\AbstractLogger
                 }
             }
         }
+    }
+
+    /**
+     * Log Error with exception context
+     */
+    public function exception(string $message, Throwable $exception, array $context = array()): void
+    {
+        $context[self::EXCEPTION_CONTEXT] = $exception;
+        $this->error($message, $context);
     }
 }
