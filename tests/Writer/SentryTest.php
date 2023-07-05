@@ -8,6 +8,9 @@ use Psr\Log\LogLevel;
 use Sentry\ClientInterface;
 use Sentry\Severity;
 use Sentry\State\Scope;
+use Sentry\Tracing\PropagationContext;
+use Sentry\Tracing\SpanId;
+use Sentry\Tracing\TraceId;
 
 class SentryTest extends \PHPUnit\Framework\TestCase
 {
@@ -109,7 +112,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::debug(), [self::LOGGER_MESSAGE_KEY => self::A_MESSAGE]);
 
-        $this->writer->log(self::ANY_LEVEL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(self::ANY_LEVEL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndOtherKeys_Log_ShouldCaptureExceptionWithContextAsExtraWithoutException()
@@ -121,7 +124,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE,
-            [Logger::EXCEPTION_CONTEXT => $exception, self::CONTEXT_KEY => self::CONTEXT_VALUE]);
+            [Logger::EXCEPTION_CONTEXT => $exception, self::CONTEXT_KEY => self::CONTEXT_VALUE, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndDebugLevel_Log_ShouldCaptureExceptionWithDebugLevel()
@@ -131,7 +134,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndInfoLevel_Log_ShouldCaptureExceptionWithInfoLevel()
@@ -141,7 +144,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::INFO, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::INFO, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndNoticeLevel_Log_ShouldCaptureExceptionWithInfoLevel()
@@ -151,7 +154,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::NOTICE, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::NOTICE, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndWarningLevel_Log_ShouldCaptureExceptionWithWarningLevel()
@@ -161,7 +164,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::WARNING, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::WARNING, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndErrorLevel_Log_ShouldCaptureExceptionWithErrorLevel()
@@ -171,7 +174,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::ERROR, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::ERROR, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndCriticalLevel_Log_ShouldCaptureExceptionWithErrorLevel()
@@ -181,7 +184,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::CRITICAL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::CRITICAL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndAlertLevel_Log_ShouldCaptureExceptionWithFatalLevel()
@@ -191,7 +194,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::ALERT, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::ALERT, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     public function test_ContextWithExceptionAndEmergencyLevel_Log_ShouldCaptureExceptionWithFatalLevel()
@@ -201,7 +204,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
             self::LOGGER_MESSAGE_KEY => self::A_MESSAGE
         ]);
 
-        $this->writer->log(LogLevel::EMERGENCY, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
+        $this->writer->log(LogLevel::EMERGENCY, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception, 'test' => 'test']);
     }
 
     private function expectsCaptureMessageToBeCalledWith($message, $level)
@@ -219,6 +222,13 @@ class SentryTest extends \PHPUnit\Framework\TestCase
         if (count($params)) {
             $scope->setExtras($params);
         }
+
+        $propagationContext = PropagationContext::fromDefaults();
+        $propagationContext->setSpanId(new SpanId(Sentry::SPAN_ID));
+        $propagationContext->setTraceId(new TraceId(Sentry::TRACE_ID));
+
+        $scope->setPropagationContext($propagationContext);
+
         $this->sentryClient
             ->expects($this->once())
             ->method('captureException')
