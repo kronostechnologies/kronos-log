@@ -30,7 +30,7 @@
 		"fluent/logger": "Required for Fluentd writer"
 	},
 	"require-dev": {
-		"guzzlehttp/guzzle": "7.7.0",
+		"guzzlehttp/guzzle": "7.8.0",
 		"fluent/logger": "1.0.1",
 		"phpunit/phpunit": "10.3.2",
 		"vimeo/psalm": "5.15.0",
