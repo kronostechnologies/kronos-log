@@ -8,14 +8,13 @@ use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\File;
 use Kronos\Log\Writer\LogDNA;
-use Kronos\Log\Writer\Sentry;
+use Kronos\Log\Writer\Sentry as SentryWriter;
 use Kronos\Log\Writer\Syslog;
 use Kronos\Log\Writer\Console;
 use Kronos\Log\Writer\Memory;
 use Kronos\Log\Writer\TriggerError;
-use Sentry\ClientBuilder;
+use Sentry;
 use Sentry\ClientInterface;
-use Sentry\Options;
 use Sentry\SentrySdk;
 
 class Writer
@@ -90,22 +89,20 @@ class Writer
         return new Memory();
     }
 
-    public function createSentryWriter(ClientInterface $client): Sentry
+    public function createSentryWriter(ClientInterface $client): SentryWriter
     {
-        return new Sentry($client);
+        return new SentryWriter($client);
     }
 
     public function createSentryWriterAndSentryClient(
         string $key,
         string $projectId,
-        array $configs = []
-    ): Sentry {
-        $configs['dsn'] = 'https://' . $key . '@sentry.io/' . $projectId;
-        $options = new Options($configs);
-        $clientBuilder = new ClientBuilder($options);
-        $sentryClient = $clientBuilder->getClient();
-        SentrySdk::init()->bindClient($sentryClient);
-        return new Sentry($sentryClient);
+        array $options = []
+    ): SentryWriter {
+        $options['dsn'] = 'https://' . $key . '@sentry.io/' . $projectId;
+        Sentry\init($options);
+        $sentryClient = SentrySdk::getCurrentHub()->getClient();
+        return new SentryWriter($sentryClient);
     }
 
     /**
