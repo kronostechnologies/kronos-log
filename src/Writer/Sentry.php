@@ -13,16 +13,11 @@ use Sentry\State\Scope;
 class Sentry extends AbstractWriter
 {
     /**
-     * @var ClientInterface
-     */
-    private $sentryClient;
-
-    /**
      * Sentry constructor.
      */
-    public function __construct(ClientInterface $sentryClient)
-    {
-        $this->sentryClient = $sentryClient;
+    public function __construct(
+        private readonly ?ClientInterface $sentryClient
+    ) {
     }
 
     /**
@@ -48,7 +43,9 @@ class Sentry extends AbstractWriter
         $interpolatedMessage = $this->interpolate($message, $context);
         $sentryScope = $this->getSentryScope($level, $context);
 
-        $this->sentryClient->captureMessage($interpolatedMessage, $level, $sentryScope);
+        if (isset($this->sentryClient)) {
+            $this->sentryClient->captureMessage($interpolatedMessage, $level, $sentryScope);
+        }
     }
 
     private function captureException($level, $message, $context)
@@ -61,7 +58,9 @@ class Sentry extends AbstractWriter
         }
 
         $sentryScope = $this->getSentryScope($level, $context);
-        $this->sentryClient->captureException($exception, $sentryScope);
+        if (isset($this->sentryClient)) {
+            $this->sentryClient->captureException($exception, $sentryScope);
+        }
     }
 
     protected function getSentryScope($level, $context): Scope
