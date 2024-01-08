@@ -32,13 +32,13 @@
 	"require-dev": {
 		"guzzlehttp/guzzle": "7.8.1",
 		"fluent/logger": "1.0.1",
-		"phpunit/phpunit": "10.5.3",
+		"phpunit/phpunit": "10.5.5",
 		"vimeo/psalm": "5.18.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "1.0.0",
 		"phpcompatibility/php-compatibility": "9.3.5",
 		"cyclonedx/cyclonedx-php-composer": "5.0.0",
 		"php-http/guzzle7-adapter": "1.0.0",
-		"sentry/sentry": "4.1.0"
+		"sentry/sentry": "4.3.1"
 	},
   "config": {
     "platform": {
