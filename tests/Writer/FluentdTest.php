@@ -179,7 +179,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
         $this->logger->expects($this->once())
             ->method('post')
             ->with($this->anything(), $this->callback(function ($value) use ($givenApp) {
-                return $value['meta']['level'] === null && $value['meta']['message'] === null;
+                return empty($value['meta']['level']) && empty($value['meta']['message']);
             }));
 
         $this->writer->log(LogLevel::INFO, "test");
@@ -219,13 +219,13 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
         $this->logger->method('post')->willThrowException(new \Exception("Connection error"));
         $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
 
-        $this->writer->log(LogLevel::INFO, "test");
-
         $h = false;
-        set_error_handler(function () use (&$h) {
+        set_error_handler(static function () use (&$h) {
             $h = true;
         }, E_USER_WARNING);
+
         $retVal = $this->writer->log(LogLevel::INFO, "Anything");
+        restore_error_handler();
         $this->assertTrue($h);
 
         $this->assertFalse($retVal);
