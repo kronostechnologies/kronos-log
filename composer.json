@@ -32,7 +32,7 @@
 	"require-dev": {
 		"guzzlehttp/guzzle": "7.8.1",
 		"fluent/logger": "1.0.1",
-		"phpunit/phpunit": "10.5.15",
+		"phpunit/phpunit": "10.5.16",
 		"vimeo/psalm": "5.23.1",
 		"dealerdirect/phpcodesniffer-composer-installer": "1.0.0",
 		"phpcompatibility/php-compatibility": "9.3.5",
