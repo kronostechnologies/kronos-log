@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "547058a604d967c19f46092d7ca47502",
+    "content-hash": "abf94bceb5502cbd2655451e14ecf07d",
     "packages": [
         {
             "name": "psr/log",
@@ -518,16 +518,16 @@
         },
         {
             "name": "cyclonedx/cyclonedx-library",
-            "version": "v3.2.0",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-library.git",
-                "reference": "660d554d972656171f137093a9cc77256b7dee0c"
+                "reference": "34fb57c387abe57d3926e05511475ed4a04c1ed7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/660d554d972656171f137093a9cc77256b7dee0c",
-                "reference": "660d554d972656171f137093a9cc77256b7dee0c",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/34fb57c387abe57d3926e05511475ed4a04c1ed7",
+                "reference": "34fb57c387abe57d3926e05511475ed4a04c1ed7",
                 "shasum": ""
             },
             "require": {
@@ -602,32 +602,31 @@
                     "type": "other"
                 }
             ],
-            "time": "2024-04-10T12:54:28+00:00"
+            "time": "2024-04-26T14:30:47+00:00"
         },
         {
             "name": "cyclonedx/cyclonedx-php-composer",
-            "version": "v5.0.1",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-composer.git",
-                "reference": "b5ff6da5c81452537244e42791b831bf40a0bab8"
+                "reference": "d1d5ceb9ec3bbb695aa9a1a4f4a310bf24620185"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/b5ff6da5c81452537244e42791b831bf40a0bab8",
-                "reference": "b5ff6da5c81452537244e42791b831bf40a0bab8",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/d1d5ceb9ec3bbb695aa9a1a4f4a310bf24620185",
+                "reference": "d1d5ceb9ec3bbb695aa9a1a4f4a310bf24620185",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.3",
-                "cyclonedx/cyclonedx-library": "^3.1",
+                "cyclonedx/cyclonedx-library": "^3.2",
                 "package-url/packageurl-php": "^1.0",
                 "php": "^8.1"
             },
             "require-dev": {
                 "composer/composer": "^2.3.0",
-                "roave/security-advisories": "dev-latest",
-                "symfony/console": "<7"
+                "roave/security-advisories": "dev-latest"
             },
             "type": "composer-plugin",
             "extra": {
@@ -679,7 +678,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2024-02-05T11:56:38+00:00"
+            "time": "2024-04-23T13:03:11+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -2764,16 +2763,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.19",
+            "version": "10.5.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c726f0de022368f6ed103e452a765d3304a996a4"
+                "reference": "547d314dc24ec1e177720d45c6263fb226cc2ae3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c726f0de022368f6ed103e452a765d3304a996a4",
-                "reference": "c726f0de022368f6ed103e452a765d3304a996a4",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/547d314dc24ec1e177720d45c6263fb226cc2ae3",
+                "reference": "547d314dc24ec1e177720d45c6263fb226cc2ae3",
                 "shasum": ""
             },
             "require": {
@@ -2845,7 +2844,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.19"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.20"
             },
             "funding": [
                 {
@@ -2861,7 +2860,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-17T14:06:18+00:00"
+            "time": "2024-04-24T06:32:35+00:00"
         },
         {
             "name": "psr/container",
