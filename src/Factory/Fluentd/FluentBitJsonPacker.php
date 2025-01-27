@@ -20,9 +20,9 @@ class FluentBitJsonPacker implements PackerInterface
      * @param Entity $entity
      * @return string
      */
-    public function pack(Entity $entity)
+    public function pack(Entity $entity): string
     {
         $data = $entity->getData();
-        return json_encode($data);
+        return json_encode($data)?: '';
     }
 }
