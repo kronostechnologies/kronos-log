@@ -36,7 +36,7 @@
 		"vimeo/psalm": "5.26.1",
 		"dealerdirect/phpcodesniffer-composer-installer": "1.0.0",
 		"phpcompatibility/php-compatibility": "9.3.5",
-		"cyclonedx/cyclonedx-php-composer": "5.2.0",
+		"cyclonedx/cyclonedx-php-composer": "5.2.1",
 		"php-http/guzzle7-adapter": "1.1.0",
 		"sentry/sentry": "4.10.0"
 	},
