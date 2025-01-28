@@ -14,13 +14,5 @@ jobs:
     secrets: inherit
     with:
       checks: phpunit,psalm
-      php-version: '8.1'
-      extensions: pcov
-
-  php-library-8-3:
-    uses: equisoft-actions/php-workflows/.github/workflows/php-library.yml@v8
-    secrets: inherit
-    with:
-      checks: phpunit,psalm
       php-version: '8.3'
       extensions: pcov
