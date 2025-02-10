@@ -16,11 +16,6 @@ class InterpolateTest extends TestCase
     const VALUE = 'value';
     const MESSAGE_WITH_UNDEFINED = 'Some message ~UNDEFINED~';
 
-
-    public function setUp(): void
-    {
-    }
-
     public function test_MessageWithPlaceholder_Interpolate_ShouldReplacePlaceholderWithContextValue()
     {
         $original_message = self::A_MESSAGE;
