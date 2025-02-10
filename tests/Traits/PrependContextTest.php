@@ -3,9 +3,11 @@
 namespace Kronos\Tests\Log\Traits;
 
 use Kronos\Log\Traits\PrependContext;
+use PHPUnit\Framework\TestCase;
 
-class PrependContextTest extends \PHPUnit\Framework\TestCase
+class PrependContextTest extends TestCase
 {
+    use PrependContext;
 
     const A_MESSAGE = 'a message';
     const CONTEXT_KEY = 'key';
@@ -18,14 +20,9 @@ class PrependContextTest extends \PHPUnit\Framework\TestCase
 
     private $context_prepender;
 
-    public function setUp(): void
-    {
-        $this->context_prepender = $this->getMockForTrait(PrependContext::class);
-    }
-
     public function test_NewPrependContext_PrependContext_ShouldReturnMessageUnchanged()
     {
-        $returned_message = $this->context_prepender->prependContext(self::A_MESSAGE, []);
+        $returned_message = $this->prependContext(self::A_MESSAGE, []);
 
         $this->assertEquals(self::A_MESSAGE, $returned_message);
     }
@@ -35,9 +32,9 @@ class PrependContextTest extends \PHPUnit\Framework\TestCase
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE
         ];
-        $this->context_prepender->addContextKeyToPrepend(self::CONTEXT_KEY);
+        $this->addContextKeyToPrepend(self::CONTEXT_KEY);
 
-        $returned_message = $this->context_prepender->prependContext(self::A_MESSAGE, $context);
+        $returned_message = $this->prependContext(self::A_MESSAGE, $context);
 
         $this->assertEquals(self::CONTEXT_VALUE . ' ' . self::A_MESSAGE, $returned_message);
     }
@@ -47,9 +44,9 @@ class PrependContextTest extends \PHPUnit\Framework\TestCase
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE
         ];
-        $this->context_prepender->addContextKeyToPrepend(self::ANOTHER_CONTEXT_KEY);
+        $this->addContextKeyToPrepend(self::ANOTHER_CONTEXT_KEY);
 
-        $returned_message = $this->context_prepender->prependContext(self::A_MESSAGE, $context);
+        $returned_message = $this->prependContext(self::A_MESSAGE, $context);
 
         $this->assertEquals(self::A_MESSAGE, $returned_message);
     }
@@ -60,10 +57,10 @@ class PrependContextTest extends \PHPUnit\Framework\TestCase
             self::FIRST_KEY => self::FIRST_VALUE,
             self::SECOND_KEY => self::SECOND_VALUE
         ];
-        $this->context_prepender->addContextKeyToPrepend(self::FIRST_KEY);
-        $this->context_prepender->addContextKeyToPrepend(self::SECOND_KEY);
+        $this->addContextKeyToPrepend(self::FIRST_KEY);
+        $this->addContextKeyToPrepend(self::SECOND_KEY);
 
-        $returned_message = $this->context_prepender->prependContext(self::A_MESSAGE, $context);
+        $returned_message = $this->prependContext(self::A_MESSAGE, $context);
 
         $expected_message = self::FIRST_VALUE . ' ' . self::SECOND_VALUE . ' ' . self::A_MESSAGE;
         $this->assertEquals($expected_message, $returned_message);

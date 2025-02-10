@@ -242,10 +242,10 @@ class ConsoleTest extends ExtendedTestCase
 
         $this->fileFactory
             ->method('createTTYAdaptor')
-            ->will(self::returnValueMap([
+            ->willReturnMap([
                 [Console::STDOUT, $this->stdout],
                 [Console::STDERR, $this->stderr],
-            ]));
+            ]);
     }
 
     private function expectsWriteToBeCalled(TTY&MockObject $file, $message, $text_color = null, $background_color = null)
