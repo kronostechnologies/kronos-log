@@ -3,6 +3,7 @@
 use Kronos\Log\Logger;
 use Kronos\Log\LoggerDecorator;
 use Kronos\Log\LoggerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
@@ -28,9 +29,7 @@ class LoggerDecoratorTest extends TestCase
         $decorator->log(LogLevel::WARNING, 'a message');
     }
 
-    /**
-     * @dataProvider  provideLowerLogLevels
-     */
+    #[DataProvider('provideLowerLogLevels')]
     public function test_shouldNotLogWhenLoggerLevelIsHigherThanMessage($loggerLevel, $levelOfMessage): void
     {
         $decorator = $this->givenDecoratorForPsrLoggerInterface();

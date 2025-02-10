@@ -1,32 +1,31 @@
 <?php
 
-namespace Kronos\Tests\Log;
+namespace Kronos\Tests\Log\Traits;
 
 use Kronos\Log\Traits\Interpolate;
 use Kronos\Tests\Log\Formatter\ObjectWithoutToString;
 use Kronos\Tests\Log\Formatter\ObjectWithToString;
+use PHPUnit\Framework\TestCase;
 
-class InterpolateTest extends \PHPUnit\Framework\TestCase
+class InterpolateTest extends TestCase
 {
-
+    use Interpolate;
     const A_MESSAGE = 'Some message {key}';
     const INTERPOLATED_MESSAGE = 'Some message value';
     const KEY = 'key';
     const VALUE = 'value';
     const MESSAGE_WITH_UNDEFINED = 'Some message ~UNDEFINED~';
 
-    private $interpolator;
 
     public function setUp(): void
     {
-        $this->interpolator = $this->getMockForTrait(Interpolate::class);
     }
 
     public function test_MessageWithPlaceholder_Interpolate_ShouldReplacePlaceholderWithContextValue()
     {
         $original_message = self::A_MESSAGE;
 
-        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => self::VALUE]);
+        $interpolated_message = $this->interpolate($original_message, [self::KEY => self::VALUE]);
 
         $this->assertEquals(self::INTERPOLATED_MESSAGE, $interpolated_message);
     }
@@ -35,7 +34,7 @@ class InterpolateTest extends \PHPUnit\Framework\TestCase
     {
         $original_message = self::A_MESSAGE;
 
-        $interpolated_message = $this->interpolator->interpolate($original_message, []);
+        $interpolated_message = $this->interpolate($original_message, []);
 
         $this->assertEquals(self::MESSAGE_WITH_UNDEFINED, $interpolated_message);
     }
@@ -46,7 +45,7 @@ class InterpolateTest extends \PHPUnit\Framework\TestCase
         $object = new ObjectWithoutToString();
         $object->property = 'value';
 
-        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $object]);
+        $interpolated_message = $this->interpolate($original_message, [self::KEY => $object]);
 
         $this->assertEquals(self::MESSAGE_WITH_UNDEFINED, $interpolated_message);
     }
@@ -58,7 +57,7 @@ class InterpolateTest extends \PHPUnit\Framework\TestCase
         $object->property = 'value';
         $expectedMessage = str_replace('{' . self::KEY . '}', (string)$object, self::A_MESSAGE);
 
-        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $object]);
+        $interpolated_message = $this->interpolate($original_message, [self::KEY => $object]);
 
         $this->assertEquals($expectedMessage, $interpolated_message);
     }
@@ -68,7 +67,7 @@ class InterpolateTest extends \PHPUnit\Framework\TestCase
         $original_message = self::A_MESSAGE;
         $array = ['index' => 'value'];
 
-        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $array]);
+        $interpolated_message = $this->interpolate($original_message, [self::KEY => $array]);
 
         $this->assertEquals(self::MESSAGE_WITH_UNDEFINED, $interpolated_message);
     }
@@ -79,7 +78,7 @@ class InterpolateTest extends \PHPUnit\Framework\TestCase
         $value = 0;
         $expectedMessage = str_replace('{' . self::KEY . '}', $value, self::A_MESSAGE);
 
-        $interpolated_message = $this->interpolator->interpolate($original_message, [self::KEY => $value]);
+        $interpolated_message = $this->interpolate($original_message, [self::KEY => $value]);
 
         $this->assertEquals($expectedMessage, $interpolated_message);
     }
