@@ -33,7 +33,7 @@
     "guzzlehttp/guzzle": "7.9.2",
     "fluent/logger": "1.0.1",
     "phpunit/phpunit": "12.0.2",
-    "vimeo/psalm": "6.5.0",
+    "vimeo/psalm": "6.6.1",
     "dealerdirect/phpcodesniffer-composer-installer": "1.0.0",
     "phpcompatibility/php-compatibility": "9.3.5",
     "cyclonedx/cyclonedx-php-composer": "5.2.1",
@@ -42,7 +42,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.3"
+      "php": "8.3.17"
     },
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
