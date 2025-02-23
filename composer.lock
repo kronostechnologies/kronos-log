@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e591444d7c1f4d2eeac0fac77e03eb28",
+    "content-hash": "39a24bb129768aeeebd849650e1fac65",
     "packages": [
         {
             "name": "psr/log",
@@ -1174,16 +1174,16 @@
         },
         {
             "name": "cyclonedx/cyclonedx-library",
-            "version": "v3.5.2",
+            "version": "v3.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-library.git",
-                "reference": "267414a34d3ac26f75cce6f341414ed6215d6bc6"
+                "reference": "7507552f70c54ef166987a55f7278e171d71146f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/267414a34d3ac26f75cce6f341414ed6215d6bc6",
-                "reference": "267414a34d3ac26f75cce6f341414ed6215d6bc6",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/7507552f70c54ef166987a55f7278e171d71146f",
+                "reference": "7507552f70c54ef166987a55f7278e171d71146f",
                 "shasum": ""
             },
             "require": {
@@ -1258,20 +1258,20 @@
                     "type": "other"
                 }
             ],
-            "time": "2025-01-27T10:06:06+00:00"
+            "time": "2025-02-19T08:04:02+00:00"
         },
         {
             "name": "cyclonedx/cyclonedx-php-composer",
-            "version": "v5.2.1",
+            "version": "v5.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-composer.git",
-                "reference": "3d950d4d360cbfe9498f7b90c53766e572d6a951"
+                "reference": "a8d672b032bd2abae15da6aeb47e4d87479014ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/3d950d4d360cbfe9498f7b90c53766e572d6a951",
-                "reference": "3d950d4d360cbfe9498f7b90c53766e572d6a951",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/a8d672b032bd2abae15da6aeb47e4d87479014ee",
+                "reference": "a8d672b032bd2abae15da6aeb47e4d87479014ee",
                 "shasum": ""
             },
             "require": {
@@ -1334,7 +1334,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2025-01-27T10:05:43+00:00"
+            "time": "2025-02-19T08:07:23+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
@@ -3372,16 +3372,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "12.0.2",
+            "version": "12.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "69dde560510151f7d04315fac6c72016cc5d7bc8"
+                "reference": "2e3038bff41d56114e5396151060f5ac9d2d6751"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/69dde560510151f7d04315fac6c72016cc5d7bc8",
-                "reference": "69dde560510151f7d04315fac6c72016cc5d7bc8",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2e3038bff41d56114e5396151060f5ac9d2d6751",
+                "reference": "2e3038bff41d56114e5396151060f5ac9d2d6751",
                 "shasum": ""
             },
             "require": {
@@ -3437,7 +3437,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.0.2"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.0.3"
             },
             "funding": [
                 {
@@ -3445,7 +3445,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-08T09:08:00+00:00"
+            "time": "2025-02-18T14:04:13+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -3694,16 +3694,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.0.2",
+            "version": "12.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6301fe5c1f5f34192ffd650a87fe055677a32212"
+                "reference": "e469daf4e173c4b7f2d6154d364f468f3713f632"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6301fe5c1f5f34192ffd650a87fe055677a32212",
-                "reference": "6301fe5c1f5f34192ffd650a87fe055677a32212",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e469daf4e173c4b7f2d6154d364f468f3713f632",
+                "reference": "e469daf4e173c4b7f2d6154d364f468f3713f632",
                 "shasum": ""
             },
             "require": {
@@ -3713,11 +3713,11 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.12.1",
+                "myclabs/deep-copy": "^1.13.0",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
-                "phpunit/php-code-coverage": "^12.0.2",
+                "phpunit/php-code-coverage": "^12.0.3",
                 "phpunit/php-file-iterator": "^6.0.0",
                 "phpunit/php-invoker": "^6.0.0",
                 "phpunit/php-text-template": "^5.0.0",
@@ -3771,7 +3771,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.0.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.0.4"
             },
             "funding": [
                 {
@@ -3787,7 +3787,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-02-08T09:18:47+00:00"
+            "time": "2025-02-21T06:10:40+00:00"
         },
         {
             "name": "psr/container",
