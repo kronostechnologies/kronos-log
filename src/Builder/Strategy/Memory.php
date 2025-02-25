@@ -4,6 +4,7 @@ namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Factory\Writer As WriterFactory;
+use Override;
 
 class Memory extends AbstractWriter
 {
@@ -22,6 +23,7 @@ class Memory extends AbstractWriter
      * @param array $settings
      * @return \Kronos\Log\Writer\Memory
      */
+    #[Override]
     public function buildFromArray(array $settings)
     {
         $writer = $this->factory->createMemoryWriter();

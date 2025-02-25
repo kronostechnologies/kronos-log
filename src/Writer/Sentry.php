@@ -5,6 +5,7 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\Logger;
+use Override;
 use Psr\Log\LogLevel;
 use Sentry\ClientInterface;
 use Sentry\Severity;
@@ -23,6 +24,7 @@ class Sentry extends AbstractWriter
     /**
      * @throws InvalidLogLevel
      */
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         $level = $this->getSentryLevelFromLogLevel($level);

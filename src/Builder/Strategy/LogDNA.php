@@ -4,6 +4,7 @@ namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
+use Override;
 
 class LogDNA extends AbstractWriter
 {
@@ -35,6 +36,7 @@ class LogDNA extends AbstractWriter
      * @return \Kronos\Log\Writer\LogDNA
      * @throws RequiredSetting
      */
+    #[Override]
     public function buildFromArray(array $settings)
     {
         $this->checkRequiredSettings($settings);

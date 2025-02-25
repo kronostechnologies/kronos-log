@@ -3,6 +3,7 @@
 namespace Kronos\Log\Writer;
 
 use Kronos\Log\AbstractWriter;
+use Override;
 use Psr\Log\LogLevel;
 
 class TriggerError extends AbstractWriter
@@ -18,6 +19,7 @@ class TriggerError extends AbstractWriter
         LogLevel::DEBUG => E_USER_NOTICE
     ];
 
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         trigger_error($this->interpolate($message, $context), $this->getErrorTypeFromLogLevel($level));

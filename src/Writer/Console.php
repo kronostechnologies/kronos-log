@@ -10,6 +10,7 @@ use Kronos\Log\Enumeration\AnsiTextColor;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Kronos\Log\Logger;
+use Override;
 use Psr\Log\LogLevel;
 use Exception;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
@@ -70,6 +71,7 @@ class Console extends \Kronos\Log\AbstractWriter
      * @param array $context
      * @throws Exception
      */
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         $interpolated_message = $this->interpolate($message, $context);

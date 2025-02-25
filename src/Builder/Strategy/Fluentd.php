@@ -7,6 +7,7 @@ namespace Kronos\Log\Builder\Strategy;
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\WriterInterface;
+use Override;
 
 class Fluentd extends AbstractWriter
 {
@@ -33,6 +34,7 @@ class Fluentd extends AbstractWriter
      * @return WriterInterface|\Kronos\Log\Writer\Fluentd
      * @throws RequiredSetting
      */
+    #[Override]
     public function buildFromArray(array $settings)
     {
         $this->checkRequiredSettings($settings);

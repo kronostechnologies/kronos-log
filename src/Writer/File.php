@@ -8,6 +8,7 @@ use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Logger;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
+use Override;
 use Psr\Log\LogLevel;
 use Throwable;
 
@@ -79,6 +80,7 @@ class File extends \Kronos\Log\AbstractWriter
      * @param string $message
      * @param array $context
      */
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         $this->writeMessage($level, $message, $context);

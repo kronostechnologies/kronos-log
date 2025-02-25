@@ -7,6 +7,7 @@ use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
+use Override;
 
 class LogDNA extends AbstractWriter
 {
@@ -110,6 +111,7 @@ class LogDNA extends AbstractWriter
      * @param string $message
      * @param array $context
      */
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         try {
@@ -219,6 +221,7 @@ class LogDNA extends AbstractWriter
     /**
      * @return TraceBuilder|null
      */
+    #[Override]
     public function getExceptionTraceBuilder()
     {
         return $this->exceptionTraceBuilder;
@@ -227,6 +230,7 @@ class LogDNA extends AbstractWriter
     /**
      * @return TraceBuilder|null
      */
+    #[Override]
     public function getPreviousExceptionTraceBuilder()
     {
         return $this->previousExceptionTraceBuilder;

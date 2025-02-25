@@ -4,6 +4,7 @@ namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
+use Override;
 
 class File extends AbstractWriter
 {
@@ -30,6 +31,7 @@ class File extends AbstractWriter
      * @return \Kronos\Log\Writer\File
      * @throws RequiredSetting
      */
+    #[Override]
     public function buildFromArray(array $settings)
     {
         if (!isset($settings[self::FILENAME])) {
