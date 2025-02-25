@@ -4,6 +4,7 @@ namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Factory\Writer As WriterFactory;
+use Override;
 
 class Console extends AbstractWriter
 {
@@ -31,6 +32,7 @@ class Console extends AbstractWriter
      * @param array $settings
      * @return \Kronos\Log\Writer\Console
      */
+    #[Override]
     public function buildFromArray(array $settings)
     {
         $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);

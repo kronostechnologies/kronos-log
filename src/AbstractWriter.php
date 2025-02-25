@@ -4,6 +4,7 @@ namespace Kronos\Log;
 
 use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\Traits\Interpolate;
+use Override;
 use Psr\Log\LogLevel;
 
 abstract class AbstractWriter implements WriterInterface
@@ -20,6 +21,7 @@ abstract class AbstractWriter implements WriterInterface
      * @return bool
      * @throws InvalidLogLevel
      */
+    #[Override]
     public function canLogLevel($level): bool
     {
         $this->validateLogLevel($level);
@@ -74,6 +76,7 @@ abstract class AbstractWriter implements WriterInterface
         $this->max_level = (string)$level;
     }
 
+    #[Override]
     public function canLog(): bool
     {
         return $this->can_log;
@@ -82,6 +85,7 @@ abstract class AbstractWriter implements WriterInterface
     /**
      * @param bool $can_log
      */
+    #[Override]
     public function setCanLog($can_log = true)
     {
         $this->can_log = (bool)$can_log;

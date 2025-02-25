@@ -10,6 +10,7 @@ use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
+use Override;
 
 class Fluentd extends AbstractWriter
 {
@@ -99,6 +100,7 @@ class Fluentd extends AbstractWriter
         $this->fluentBit = $fluentBit;
     }
 
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         try {
@@ -225,6 +227,7 @@ class Fluentd extends AbstractWriter
     /**
      * @return TraceBuilder|null
      */
+    #[Override]
     public function getExceptionTraceBuilder()
     {
         return $this->exceptionTraceBuilder;
@@ -241,6 +244,7 @@ class Fluentd extends AbstractWriter
     /**
      * @return TraceBuilder|null
      */
+    #[Override]
     public function getPreviousExceptionTraceBuilder()
     {
         return $this->previousExceptionTraceBuilder;

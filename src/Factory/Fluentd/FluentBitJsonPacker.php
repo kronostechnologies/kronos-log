@@ -6,6 +6,7 @@ namespace Kronos\Log\Factory\Fluentd;
 use Fluent\Logger\FluentLogger;
 use Fluent\Logger\Entity;
 use Fluent\Logger\PackerInterface;
+use Override;
 
 class FluentBitJsonPacker implements PackerInterface
 {
@@ -20,6 +21,7 @@ class FluentBitJsonPacker implements PackerInterface
      * @param Entity $entity
      * @return string
      */
+    #[Override]
     public function pack(Entity $entity): string
     {
         $data = $entity->getData();

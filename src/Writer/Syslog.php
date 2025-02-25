@@ -5,6 +5,7 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\AbstractWriter,
     Kronos\Log\Traits\PrependContext,
     Kronos\Log\Traits\LogLevelToSyslogPriority;
+use Override;
 
 class Syslog extends AbstractWriter
 {
@@ -43,6 +44,7 @@ class Syslog extends AbstractWriter
         $this->facility = $facility;
     }
 
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         $interpolated_message = $this->interpolate($message, $context);

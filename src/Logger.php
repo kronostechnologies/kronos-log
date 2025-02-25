@@ -2,6 +2,7 @@
 
 namespace Kronos\Log;
 
+use Override;
 use Throwable;
 
 class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
@@ -25,11 +26,13 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
         $this->writers[] = $writer;
     }
 
+    #[Override]
     public function addContext(string $key, mixed $value): void
     {
         $this->context[$key] = $value;
     }
 
+    #[Override]
     public function addContextArray(array $context): void
     {
         $this->context = array_merge($this->context, $context);
@@ -46,6 +49,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
         }
     }
 
+    #[Override]
     public function log($level, $message, array $context = array()): void
     {
         foreach ($this->writers as $writer) {
@@ -62,6 +66,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
     /**
      * Log Error with exception context
      */
+    #[Override]
     public function exception(string $message, Throwable $exception, array $context = array()): void
     {
         $context[self::EXCEPTION_CONTEXT] = $exception;

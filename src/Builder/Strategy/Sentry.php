@@ -6,6 +6,7 @@ use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
+use Override;
 use SebastianBergmann\GlobalState\RuntimeException;
 use Sentry\Client;
 use Sentry\ClientInterface;
@@ -35,6 +36,7 @@ class Sentry extends AbstractWriter
      * @throws InvalidSetting
      * @throws RequiredSetting
      */
+    #[Override]
     public function buildFromArray(array $settings)
     {
         if (isset($settings[self::CLIENT]) && $settings[self::CLIENT]) {

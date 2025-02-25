@@ -5,6 +5,7 @@ namespace Kronos\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\Writer As WriterFactory;
+use Override;
 
 class Syslog extends AbstractWriter
 {
@@ -28,6 +29,7 @@ class Syslog extends AbstractWriter
      * @return \Kronos\Log\Writer\Syslog
      * @throws RequiredSetting
      */
+    #[Override]
     public function buildFromArray(array $settings)
     {
         if (!isset($settings[self::APPLICATION])) {

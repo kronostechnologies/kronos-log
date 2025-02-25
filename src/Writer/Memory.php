@@ -2,6 +2,8 @@
 
 namespace Kronos\Log\Writer;
 
+use Override;
+
 class Memory extends \Kronos\Log\AbstractWriter
 {
 
@@ -27,6 +29,7 @@ class Memory extends \Kronos\Log\AbstractWriter
      * @param string $message
      * @param array $context
      */
+    #[Override]
     public function log($level, $message, array $context = [])
     {
         $interpolated_message = $this->interpolate($message, $context);
