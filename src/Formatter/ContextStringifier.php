@@ -19,7 +19,7 @@ class ContextStringifier
         $key_count = 0;
         foreach ($context as $key => $value) {
             if (!in_array($key, $this->excluded_keys)) {
-                $string .= ($key_count++ > 0 ? PHP_EOL : '') . $key . ': ' . $this->stringifyValue($value);
+                $string .= ($key_count++ > 0 ? PHP_EOL : '') . (string)$key . ': ' . $this->stringifyValue($value);
             }
         }
 
