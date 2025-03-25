@@ -2093,16 +2093,16 @@
         },
         {
             "name": "jean85/pretty-package-versions",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jean85/pretty-package-versions.git",
-                "reference": "3c4e5f62ba8d7de1734312e4fff32f67a8daaf10"
+                "reference": "4d7aa5dab42e2a76d99559706022885de0e18e1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jean85/pretty-package-versions/zipball/3c4e5f62ba8d7de1734312e4fff32f67a8daaf10",
-                "reference": "3c4e5f62ba8d7de1734312e4fff32f67a8daaf10",
+                "url": "https://api.github.com/repos/Jean85/pretty-package-versions/zipball/4d7aa5dab42e2a76d99559706022885de0e18e1a",
+                "reference": "4d7aa5dab42e2a76d99559706022885de0e18e1a",
                 "shasum": ""
             },
             "require": {
@@ -2112,8 +2112,9 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.2",
                 "jean85/composer-provided-replaced-stub-package": "^1.0",
-                "phpstan/phpstan": "^1.4",
+                "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^7.5|^8.5|^9.6",
+                "rector/rector": "^2.0",
                 "vimeo/psalm": "^4.3 || ^5.0"
             },
             "type": "library",
@@ -2146,9 +2147,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Jean85/pretty-package-versions/issues",
-                "source": "https://github.com/Jean85/pretty-package-versions/tree/2.1.0"
+                "source": "https://github.com/Jean85/pretty-package-versions/tree/2.1.1"
             },
-            "time": "2024-11-18T16:19:46+00:00"
+            "time": "2025-03-19T14:43:43+00:00"
         },
         {
             "name": "kelunik/certificate",
@@ -5097,16 +5098,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.11.3",
+            "version": "3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10"
+                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
-                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
+                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
                 "shasum": ""
             },
             "require": {
@@ -5173,11 +5174,11 @@
                     "type": "open_collective"
                 },
                 {
-                    "url": "https://thanks.dev/phpcsstandards",
+                    "url": "https://thanks.dev/u/gh/phpcsstandards",
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-01-23T17:04:15+00:00"
+            "time": "2025-03-18T05:04:51+00:00"
         },
         {
             "name": "staabm/side-effects-detector",
