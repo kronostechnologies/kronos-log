@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Kronos\Tests\Log\Writer;
-
 
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\Writer\Fluentd;
@@ -44,7 +42,8 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
         $givenHostname = "localhost";
         $this->writer = new Fluentd($givenHostname, 24224, "test", null, false, $this->factory);
 
-        $this->factory->expects($this->once())->method('createFluentLogger')->with($givenHostname, $this->anything(), $this->anything(), $this->anything());
+        $this->factory->expects($this->once())->method('createFluentLogger')->with($givenHostname, $this->anything(),
+            $this->anything(), $this->anything());
 
         $this->writer->log(LogLevel::INFO, "test");
     }
@@ -63,7 +62,8 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     {
         $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory, null, true);
 
-        $this->factory->expects($this->once())->method('createFluentLogger')->with($this->anything(), $this->anything(), $this->anything(), $this->isInstanceOf(FluentBitJsonPacker::class));
+        $this->factory->expects($this->once())->method('createFluentLogger')->with($this->anything(), $this->anything(),
+            $this->anything(), $this->isInstanceOf(FluentBitJsonPacker::class));
 
         $this->writer->log(LogLevel::INFO, "test");
     }
@@ -224,10 +224,13 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
             $h = true;
         }, E_USER_WARNING);
 
-        $retVal = $this->writer->log(LogLevel::INFO, "Anything");
-        restore_error_handler();
-        $this->assertTrue($h);
+        try {
+            $retVal = $this->writer->log(LogLevel::INFO, "Anything");
 
-        $this->assertFalse($retVal);
+            $this->assertTrue($h);
+            $this->assertFalse($retVal);
+        } finally {
+            restore_error_handler();
+        }
     }
 }

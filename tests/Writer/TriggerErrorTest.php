@@ -27,23 +27,22 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
     public function test_AnyLogLevel_log_ShouldTriggerErrorWithMessage()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(self::ANY_LOG_LEVEL, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(self::LOG_MESSAGE, $triggeredErrors[0]['errstr']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_MessageWithInterpolation_log_ShouldInterpolateMessage()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE_WITH_INTERPOLATION,
@@ -52,162 +51,149 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(str_replace('{' . self::INTERPOLATION_KEY . '}', self::INTERPOLATED_VALUE,
                 self::MESSAGE_WITH_INTERPOLATION), $triggeredErrors[0]['errstr']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Emergency_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::EMERGENCY, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Alert_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::ALERT, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Critical_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::CRITICAL, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Error_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::ERROR, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Warning_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::WARNING, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Notice_log_ShouldTriggerUserNotice()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::NOTICE, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_NOTICE, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Info_log_ShouldTriggerUserNotice()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::INFO, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_NOTICE, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_Debug_log_ShouldTriggerUserNotice()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(LogLevel::DEBUG, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_NOTICE, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
     public function test_InvalidLogLevel_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
-        $previousErrorHandler = $this->setUpErrorHandler($triggeredErrors);
+        $this->setUpErrorHandler($triggeredErrors);
 
         try {
             $this->writer->log(self::INVALID_LOG_LEVEL, self::LOG_MESSAGE);
 
             $this->assertEquals(1, count($triggeredErrors));
             $this->assertEquals(E_USER_WARNING, $triggeredErrors[0]['errno']);
-        }
-        finally {
-            set_error_handler($previousErrorHandler);
+        } finally {
+            restore_error_handler();
         }
     }
 
-    /**
-     * @return array
-     */
-    private function setUpErrorHandler(&$triggeredErrors)
+    private function setUpErrorHandler(&$triggeredErrors): void
     {
-        return set_error_handler(function ($errno, $errstr) use (&$triggeredErrors) {
+        set_error_handler(function ($errno, $errstr) use (&$triggeredErrors) {
             $triggeredErrors[] = ['errno' => $errno, 'errstr' => $errstr];
         });
     }
