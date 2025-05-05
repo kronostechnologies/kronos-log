@@ -92,7 +92,7 @@ class LoggerTest extends TestCase
     {
         $errorHandled = 0;
         $handledTriggedError = false;
-        $previousErrorHandler = set_error_handler(function ($errno, $errstr) use (
+        set_error_handler(function ($errno, $errstr) use (
             &$handledTriggedError,
             &$errorHandled
         ) {
@@ -111,7 +111,7 @@ class LoggerTest extends TestCase
         }
         finally {
             // making sure that no matter what happens in my test, PHPUnit error handler is put back
-            set_error_handler($previousErrorHandler);
+            restore_error_handler();
         }
     }
 

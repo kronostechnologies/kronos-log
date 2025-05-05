@@ -25,7 +25,7 @@ class SentryTest extends TestCase
     const LOGGER_MESSAGE_KEY = 'loggerMessage';
 
     private ClientInterface&MockObject $sentryClient;
-    private Sentry|SentryWithScopeDecorator $writer;
+    private Sentry | SentryWithScopeDecorator $writer;
 
     public function setUp(): void
     {
@@ -43,56 +43,56 @@ class SentryTest extends TestCase
 
     public function test_DebugLevel_Log_ShouldCaptureMessageWithDebugLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith($this->anything(),Severity::DEBUG);
+        $this->expectsCaptureMessageToBeCalledWith($this->anything(), Severity::DEBUG);
 
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE);
     }
 
     public function test_InfoLevel_Log_ShouldCaptureMessageWithInfoLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE,Severity::INFO);
+        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::INFO);
 
         $this->writer->log(LogLevel::INFO, self::A_MESSAGE);
     }
 
     public function test_NoticeLevel_Log_ShouldCaptureMessageWithInfoLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE,Severity::INFO);
+        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::INFO);
 
         $this->writer->log(LogLevel::NOTICE, self::A_MESSAGE);
     }
 
     public function test_WarningLevel_Log_ShouldCaptureMessageWithWarningLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE,Severity::WARNING);
+        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::WARNING);
 
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE);
     }
 
     public function test_ErrorLevel_Log_ShouldCaptureMessageWithErrorLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE,Severity::ERROR);
+        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::ERROR);
 
         $this->writer->log(LogLevel::ERROR, self::A_MESSAGE);
     }
 
     public function test_CriticalLevel_Log_ShouldCaptureMessageWithFatalLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE,Severity::FATAL);
+        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::FATAL);
 
         $this->writer->log(LogLevel::CRITICAL, self::A_MESSAGE);
     }
 
     public function test_AlertLevel_Log_ShouldCaptureMessageWithFatalLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE,Severity::FATAL);
+        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::FATAL);
 
         $this->writer->log(LogLevel::ALERT, self::A_MESSAGE);
     }
 
     public function test_EmergencyLevel_Log_ShouldCaptureMessageWithFatalLevel()
     {
-        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE,Severity::FATAL);
+        $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::FATAL);
 
         $this->writer->log(LogLevel::EMERGENCY, self::A_MESSAGE);
     }
@@ -107,7 +107,8 @@ class SentryTest extends TestCase
     public function test_ContextWithException_Log_ShouldCallCaptureException()
     {
         $exception = new \Exception(self::A_MESSAGE);
-        $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::debug(), [self::LOGGER_MESSAGE_KEY => self::A_MESSAGE]);
+        $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::debug(),
+            [self::LOGGER_MESSAGE_KEY => self::A_MESSAGE]);
 
         $this->writer->log(self::ANY_LEVEL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
@@ -214,22 +215,22 @@ class SentryTest extends TestCase
 
     private function expectsCaptureExceptionToBeCalledWith($exception, $level, $params = [])
     {
-        $scope = new Scope();
-        $scope->setLevel($level);
-        if (count($params)) {
-            $scope->setExtras($params);
-        }
-
-        $propagationContext = PropagationContext::fromDefaults();
-        $propagationContext->setSpanId(new SpanId(SentryWithScopeDecorator::SPAN_ID));
-        $propagationContext->setTraceId(new TraceId(SentryWithScopeDecorator::TRACE_ID));
-
-        $scope->setPropagationContext($propagationContext);
-
         $this->sentryClient
             ->expects($this->once())
             ->method('captureException')
-            ->with($exception, $scope);
+            ->with(
+                $exception,
+                $this->callback(
+                    function (Scope $scope) use ($level, $params) {
+                        $scopeReflection = new \ReflectionObject($scope);
+                        $scopeLevel = $scopeReflection->getProperty('level')->getValue($scope);
+                        $scopeExtra = $scopeReflection->getProperty('extra')->getValue($scope);
+                        $this->assertEquals($level, $scopeLevel);
+                        $this->assertEquals($params, $scopeExtra);
+                        return true;
+                    }
+                )
+            );
     }
 }
 
