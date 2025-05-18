@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d8fd7458a76066e81a1dfddb3b864e2",
+    "content-hash": "eb158cb2aaaecf7e8f754d0b6cba67d6",
     "packages": [
         {
             "name": "psr/log",
@@ -1262,16 +1262,16 @@
         },
         {
             "name": "cyclonedx/cyclonedx-php-composer",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-composer.git",
-                "reference": "a8d672b032bd2abae15da6aeb47e4d87479014ee"
+                "reference": "ca283f9823c937d629180b51ab63e18af117916e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/a8d672b032bd2abae15da6aeb47e4d87479014ee",
-                "reference": "a8d672b032bd2abae15da6aeb47e4d87479014ee",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/ca283f9823c937d629180b51ab63e18af117916e",
+                "reference": "ca283f9823c937d629180b51ab63e18af117916e",
                 "shasum": ""
             },
             "require": {
@@ -1334,7 +1334,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2025-02-19T08:07:23+00:00"
+            "time": "2025-05-12T12:08:44+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
@@ -4964,16 +4964,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "4.11.0",
+            "version": "4.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "ebf67deb9902b6da58a4b3383cbd12fed3f4f555"
+                "reference": "53dc0bcb6a667cac5b760b46f98d5380e63e02ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/ebf67deb9902b6da58a4b3383cbd12fed3f4f555",
-                "reference": "ebf67deb9902b6da58a4b3383cbd12fed3f4f555",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/53dc0bcb6a667cac5b760b46f98d5380e63e02ca",
+                "reference": "53dc0bcb6a667cac5b760b46f98d5380e63e02ca",
                 "shasum": ""
             },
             "require": {
@@ -5037,7 +5037,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/4.11.0"
+                "source": "https://github.com/getsentry/sentry-php/tree/4.11.1"
             },
             "funding": [
                 {
@@ -5049,7 +5049,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-04-14T09:04:23+00:00"
+            "time": "2025-05-12T11:30:33+00:00"
         },
         {
             "name": "spatie/array-to-xml",
