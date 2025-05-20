@@ -10,17 +10,10 @@ class File extends AbstractWriter
 {
     const FILENAME = 'filename';
 
-    /**
-     * @var WriterFactory
-     */
-    private $factory;
+    private WriterFactory $factory;
+    private ExceptionTraceHelper $exceptionTraceHelper;
 
-    /**
-     * @var ExceptionTraceHelper
-     */
-    private $exceptionTraceHelper;
-
-    public function __construct(WriterFactory $factory = null, ExceptionTraceHelper $exceptionTraceHelper = null)
+    public function __construct(?WriterFactory $factory = null, ?ExceptionTraceHelper $exceptionTraceHelper = null)
     {
         $this->factory = is_null($factory) ? new WriterFactory() : $factory;
         $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
@@ -28,6 +21,7 @@ class File extends AbstractWriter
 
     /**
      * @param array $settings
+     * @psalm-suppress MoreSpecificReturnType
      * @return \Kronos\Log\Writer\File
      * @throws RequiredSetting
      */
@@ -41,8 +35,11 @@ class File extends AbstractWriter
         $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
         $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
 
-        $writer = $this->factory->createFileWriter($settings[self::FILENAME], $exceptionTraceBuilder,
-            $previousExceptionTraceBuilder);
+        $writer = $this->factory->createFileWriter(
+            $settings[self::FILENAME],
+            $exceptionTraceBuilder,
+            $previousExceptionTraceBuilder
+        );
 
         $this->setCommonSettings($writer, $settings);
 

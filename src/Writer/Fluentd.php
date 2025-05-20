@@ -86,8 +86,8 @@ class Fluentd extends AbstractWriter
         $tag,
         $application,
         $wrapContextInMeta,
-        \Kronos\Log\Factory\Fluentd $factory = null,
-        ContextStringifier $contextStringifier = null,
+        ?\Kronos\Log\Factory\Fluentd $factory = null,
+        ?ContextStringifier $contextStringifier = null,
         $fluentBit = false
     ) {
         $this->hostname = $hostname;

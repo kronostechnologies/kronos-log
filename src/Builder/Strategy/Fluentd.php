@@ -18,12 +18,9 @@ class Fluentd extends AbstractWriter
     const WRAP_CONTEXT_IN_META = 'wrapContextInMeta';
     const FLUENT_BIT = 'fluentBit';
 
-    /**
-     * @var ExceptionTraceHelper
-     */
-    private $exceptionTraceHelper;
+    private ExceptionTraceHelper $exceptionTraceHelper;
 
-    public function __construct(ExceptionTraceHelper $exceptionTraceHelper = null)
+    public function __construct(?ExceptionTraceHelper $exceptionTraceHelper = null)
     {
         $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
     }

@@ -14,12 +14,9 @@ class Syslog extends AbstractWriter
     const OPTION = 'option';
     const FACILITY = 'facility';
 
-    /**
-     * @var WriterFactory
-     */
-    private $factory;
+    private WriterFactory $factory;
 
-    public function __construct(WriterFactory $factory = null)
+    public function __construct(?WriterFactory $factory = null)
     {
         $this->factory = is_null($factory) ? new WriterFactory() : $factory;
     }

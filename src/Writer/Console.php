@@ -26,36 +26,15 @@ class Console extends \Kronos\Log\AbstractWriter
     const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
     const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
 
-    /**
-     * @var TTY
-     */
-    private $stdout;
+    private TTY $stdout;
+    private TTY $stderr;
+    private ?TraceBuilder $exceptionTraceBuilder;
+    private ?TraceBuilder $previousExceptionTraceBuilder;
 
-    /**
-     * @var TTY
-     */
-    private $stderr;
-
-    /**
-     * @var TraceBuilder|null
-     */
-    private $exceptionTraceBuilder;
-
-    /**
-     * @var TraceBuilder|null
-     */
-    private $previousExceptionTraceBuilder;
-
-    /**
-     * Console constructor.
-     * @param FileFactory|null $factory
-     * @param TraceBuilder|null $exceptionTraceBuilder
-     * @param TraceBuilder|null $previousExceptionTraceBuilder
-     */
     public function __construct(
-        FileFactory $factory = null,
-        TraceBuilder $exceptionTraceBuilder = null,
-        TraceBuilder $previousExceptionTraceBuilder = null
+        ?FileFactory $factory = null,
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null
     ) {
         $factory = $factory ?: new FileFactory();
         $this->stdout = $factory->createTTYAdaptor(self::STDOUT);

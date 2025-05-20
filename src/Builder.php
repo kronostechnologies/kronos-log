@@ -9,23 +9,10 @@ use phpDocumentor\Reflection\Types\Context;
 
 class Builder
 {
+    private LoggerFactory $loggerFactory;
+    private Selector $selector;
 
-    /**
-     * @var LoggerFactory
-     */
-    private $loggerFactory;
-
-    /**
-     * @var Selector
-     */
-    private $selector;
-
-    /**
-     * Builder constructor.
-     * @param LoggerFactory $loggerFactory
-     * @param Selector $selector
-     */
-    public function __construct(LoggerFactory $loggerFactory = null, Selector $selector = null)
+    public function __construct(?LoggerFactory $loggerFactory = null, ?Selector $selector = null)
     {
         $this->loggerFactory = $loggerFactory ?: new LoggerFactory();
         $this->selector = $selector ?: new Selector();

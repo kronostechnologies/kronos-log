@@ -19,7 +19,6 @@ use Sentry\SentrySdk;
 
 class Writer
 {
-
     /**
      * @var SyslogAdaptor|null
      */
@@ -35,22 +34,15 @@ class Writer
      */
     private $context_stringifier;
 
-    /**
-     * @param $filename
-     * @param TraceBuilder|null $exceptionTraceBuilder
-     * @param TraceBuilder|null $previousExceptionTraceBuilder
-     * @return File
-     */
     public function createFileWriter(
-        $filename,
-        TraceBuilder $exceptionTraceBuilder = null,
-        TraceBuilder $previousExceptionTraceBuilder = null
-    ) {
+        ?string $filename,
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null
+    ): File {
         $writer = new File($filename, $this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
         $writer->setContextStringifier($this->getContextStringifier());
-
         return $writer;
     }
 
@@ -66,13 +58,11 @@ class Writer
     }
 
     /**
-     * @param TraceBuilder|null $exceptionTraceBuilder
-     * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @return Console
      */
     public function createConsoleWriter(
-        TraceBuilder $exceptionTraceBuilder = null,
-        TraceBuilder $previousExceptionTraceBuilder = null
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null
     ) {
         $writer = new Console($this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
@@ -105,21 +95,13 @@ class Writer
         return new SentryWriter($sentryClient);
     }
 
-    /**
-     * @param $hostname
-     * @param $application
-     * @param $ingestionKey
-     * @param TraceBuilder|null $exceptionTraceBuilder
-     * @param TraceBuilder|null $previousExceptionTraceBuilder
-     * @return LogDNA
-     */
     public function createLogDNAWriter(
         $hostname,
         $application,
         $ingestionKey,
-        TraceBuilder $exceptionTraceBuilder = null,
-        TraceBuilder $previousExceptionTraceBuilder = null
-    ) {
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null
+    ): LogDNA {
         return new LogDNA($hostname, $application, $ingestionKey, [], null,
             $exceptionTraceBuilder, $previousExceptionTraceBuilder);
     }

@@ -42,16 +42,9 @@ class TraceBuilder
      */
     private $includeArgs = false;
 
-    /**
-     * @var LineAssemblerBuilder
-     */
-    private $lineAssemblerBuilder;
+    private LineAssemblerBuilder $lineAssemblerBuilder;
 
-    /**
-     * ExceptionTraceBuilder constructor.
-     * @param LineAssemblerBuilder|null $lineAssemblerBuilder
-     */
-    public function __construct(LineAssemblerBuilder $lineAssemblerBuilder = null)
+    public function __construct(?LineAssemblerBuilder $lineAssemblerBuilder = null)
     {
         $this->lineAssemblerBuilder = is_null($lineAssemblerBuilder) ? new LineAssemblerBuilder() : $lineAssemblerBuilder;
     }

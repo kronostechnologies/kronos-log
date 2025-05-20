@@ -10,17 +10,9 @@ use Kronos\Log\Factory\Writer;
 
 class Selector
 {
+    private Strategy $factory;
 
-    /**
-     * @var Strategy
-     */
-    private $factory;
-
-    /**
-     * Selector constructor.
-     * @param Strategy $factory
-     */
-    public function __construct(Strategy $factory = null)
+    public function __construct(?Strategy $factory = null)
     {
         $this->factory = $factory ?: new Strategy();
     }

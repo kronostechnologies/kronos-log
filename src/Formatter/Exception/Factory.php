@@ -9,7 +9,7 @@ class Factory
         return new NamespaceShrinker();
     }
 
-    public function createLineAssembler(NamespaceShrinker $namespaceShrinker = null): LineAssembler
+    public function createLineAssembler(?NamespaceShrinker $namespaceShrinker = null): LineAssembler
     {
         return new LineAssembler($namespaceShrinker);
     }

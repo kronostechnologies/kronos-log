@@ -76,10 +76,10 @@ class LogDNA extends AbstractWriter
         $application,
         $ingestionKey,
         $guzzleOptions = [],
-        Factory\Guzzle $guzzleFactory = null,
-        TraceBuilder $exceptionTraceBuilder = null,
-        TraceBuilder $previousExceptionTraceBuilder = null,
-        ContextStringifier $contextStringifier = null
+        ?Factory\Guzzle $guzzleFactory = null,
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null,
+        ?ContextStringifier $contextStringifier = null
     ) {
         $this->hostname = $hostname;
         $this->application = $application;
@@ -170,12 +170,7 @@ class LogDNA extends AbstractWriter
         return $metadata;
     }
 
-    /**
-     * @param string $ingestionKey
-     * @param $guzzleOptions
-     * @param Factory\Guzzle $guzzleFactory
-     */
-    private function createGuzzleClient($ingestionKey, $guzzleOptions, Factory\Guzzle $guzzleFactory = null)
+    private function createGuzzleClient($ingestionKey, $guzzleOptions, ?Factory\Guzzle $guzzleFactory = null)
     {
         $factory = $guzzleFactory ?: new Factory\Guzzle();
 
