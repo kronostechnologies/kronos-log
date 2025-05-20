@@ -34,14 +34,11 @@ class Writer
      */
     private $context_stringifier;
 
-    /**
-     * @return File
-     */
     public function createFileWriter(
-        string $filename,
+        ?string $filename,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null
-    ) {
+    ): File {
         $writer = new File($filename, $this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
