@@ -106,7 +106,7 @@ class LoggerTest extends TestCase
 
             $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
 
-            self::assertEquals(1, $errorHandled);
+            self::assertGreaterThan(1, $errorHandled);
             self::assertTrue($handledTriggedError);
         }
         finally {

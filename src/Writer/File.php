@@ -14,7 +14,6 @@ use Throwable;
 
 class File extends \Kronos\Log\AbstractWriter
 {
-
     use PrependDateTime;
     use PrependLogLevel;
 
@@ -22,57 +21,35 @@ class File extends \Kronos\Log\AbstractWriter
     const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
     const CONTEXT_TITLE_LINE = 'Context:';
 
-    /**
-     * @var \Kronos\Log\Adaptor\File
-     */
-    private $file_adaptor;
+    private \Kronos\Log\Adaptor\File $fileAdaptor;
 
-    /**
-     * @var ContextStringifier
-     */
-    private $context_stringifier;
+    private ?ContextStringifier $contextStringifier = null;
 
-    /**
-     * @var TraceBuilder|null
-     */
-    private $exceptionTraceBuilder;
+    private ?TraceBuilder $exceptionTraceBuilder;
 
-    /**
-     * @var TraceBuilder|null
-     */
-    private $previousExceptionTraceBuilder;
+    private ?TraceBuilder $previousExceptionTraceBuilder;
 
-    /**
-     * @var FileFactory
-     */
-    private $factory;
+    private FileFactory $factory;
 
-    /**
-     * File constructor.
-     * @param $filename
-     * @param FileFactory $factory
-     * @param \Kronos\Log\Formatter\Exception\TraceBuilder|null $exceptionTraceBuilder
-     * @param TraceBuilder|null $previousExceptionTraceBuilder
-     */
     public function __construct(
-        $filename,
-        FileFactory $factory = null,
-        TraceBuilder $exceptionTraceBuilder = null,
-        TraceBuilder $previousExceptionTraceBuilder = null
+        ?string $filename,
+        ?FileFactory $factory = null,
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null
     ) {
         $this->factory = is_null($factory) ? new FileFactory() : $factory;
-        $this->file_adaptor = $this->factory->createFileAdaptor($filename);
+        $this->fileAdaptor = $this->factory->createFileAdaptor($filename);
         $this->exceptionTraceBuilder = $exceptionTraceBuilder;
         $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
     }
 
     /**
-     * @param ContextStringifier $context_stringifier
+     * @param ContextStringifier $contextStringifier
      */
-    public function setContextStringifier($context_stringifier)
+    public function setContextStringifier($contextStringifier)
     {
-        $this->context_stringifier = $context_stringifier;
-        $this->context_stringifier->excludeKey(Logger::EXCEPTION_CONTEXT);
+        $this->contextStringifier = $contextStringifier;
+        $this->contextStringifier->excludeKey(Logger::EXCEPTION_CONTEXT);
     }
 
     /**
@@ -98,7 +75,7 @@ class File extends \Kronos\Log\AbstractWriter
         $interpolated_message = $this->interpolate($message, $context);
         $message_with_loglevel = $this->prependLogLevel($level, $interpolated_message);
         $message_with_datetime = $this->prependDateTime($message_with_loglevel);
-        $this->file_adaptor->write($message_with_datetime);
+        $this->fileAdaptor->write($message_with_datetime);
     }
 
     /**
@@ -106,9 +83,9 @@ class File extends \Kronos\Log\AbstractWriter
      */
     private function writeContextIfStringifierGiven(array $context = [])
     {
-        if ($this->context_stringifier && !empty($context)) {
-            $this->file_adaptor->write(self::CONTEXT_TITLE_LINE);
-            $this->file_adaptor->write($this->context_stringifier->stringify($context));
+        if ($this->contextStringifier && !empty($context)) {
+            $this->fileAdaptor->write(self::CONTEXT_TITLE_LINE);
+            $this->fileAdaptor->write($this->contextStringifier->stringify($context));
         }
     }
 
@@ -142,15 +119,15 @@ class File extends \Kronos\Log\AbstractWriter
             if ($depth > 0) {
                 if ($this->previousExceptionTraceBuilder) {
                     $ex_trace = $this->previousExceptionTraceBuilder->getTraceAsString($exception);
-                    $this->file_adaptor->write($ex_trace);
+                    $this->fileAdaptor->write($ex_trace);
                 }
             } elseif ($this->exceptionTraceBuilder) {
                 $ex_trace = $this->exceptionTraceBuilder->getTraceAsString($exception);
-                $this->file_adaptor->write($ex_trace);
+                $this->fileAdaptor->write($ex_trace);
             }
         }
 
-        $this->file_adaptor->write('');
+        $this->fileAdaptor->write('');
 
         $previous = $exception->getPrevious();
         if ($previous instanceof Throwable) {
@@ -172,6 +149,6 @@ class File extends \Kronos\Log\AbstractWriter
             '{line}' => $exception->getLine()
         ]);
 
-        $this->file_adaptor->write($title);
+        $this->fileAdaptor->write($title);
     }
 }

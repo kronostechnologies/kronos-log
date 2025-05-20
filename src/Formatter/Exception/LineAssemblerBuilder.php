@@ -4,10 +4,7 @@ namespace Kronos\Log\Formatter\Exception;
 
 class LineAssemblerBuilder
 {
-    /**
-     * @var Factory
-     */
-    private $factory;
+    private Factory $factory;
 
     /**
      * @var bool
@@ -39,11 +36,7 @@ class LineAssemblerBuilder
      */
     private $namespaceShrinker;
 
-    /**
-     * LineAssemblerBuilder constructor.
-     * @param Factory|null $factory
-     */
-    public function __construct(Factory $factory = null)
+    public function __construct(?Factory $factory = null)
     {
         $this->factory = $factory ?? new Factory();
     }

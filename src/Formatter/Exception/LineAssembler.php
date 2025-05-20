@@ -80,7 +80,7 @@ class LineAssembler
      * LineAssembler constructor.
      * @param NamespaceShrinker|null $namespaceShrinker
      */
-    public function __construct(NamespaceShrinker $namespaceShrinker = null)
+    public function __construct(?NamespaceShrinker $namespaceShrinker = null)
     {
         $this->namespaceShrinker = $namespaceShrinker;
     }

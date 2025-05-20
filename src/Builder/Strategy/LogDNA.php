@@ -15,17 +15,10 @@ class LogDNA extends AbstractWriter
     const IP_ADDRESS = 'ip';
     const MAC_ADDRESS = 'mac';
 
-    /**
-     * @var WriterFactory
-     */
-    private $factory;
+    private WriterFactory $factory;
+    private ExceptionTraceHelper $exceptionTraceHelper;
 
-    /**
-     * @var ExceptionTraceHelper
-     */
-    private $exceptionTraceHelper;
-
-    public function __construct(WriterFactory $factory = null, ExceptionTraceHelper $exceptionTraceHelper = null)
+    public function __construct(?WriterFactory $factory = null, ?ExceptionTraceHelper $exceptionTraceHelper = null)
     {
         $this->factory = is_null($factory) ? new WriterFactory() : $factory;
         $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();

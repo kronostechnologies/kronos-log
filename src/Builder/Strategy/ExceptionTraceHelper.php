@@ -20,16 +20,9 @@ class ExceptionTraceHelper
     const SHOW_PREVIOUS_EXCEPTION_TOP_LINES = 'showPreviousExceptionTopLines';
     const SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES = 'showPreviousExceptionBottomLines';
 
-    /**
-     * @var Formatter
-     */
-    private $factory;
+    private Formatter $factory;
 
-    /**
-     * ExceptionTraceHelper constructor.
-     * @param Formatter $factory
-     */
-    public function __construct(Formatter $factory = null)
+    public function __construct(?Formatter $factory = null)
     {
         $this->factory = $factory ?: new Formatter();
     }

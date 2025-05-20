@@ -8,12 +8,9 @@ use Override;
 
 class TriggerError extends AbstractWriter
 {
-    /**
-     * @var WriterFactory
-     */
-    private $factory;
+    private WriterFactory $factory;
 
-    public function __construct(WriterFactory $factory = null)
+    public function __construct(?WriterFactory $factory = null)
     {
         $this->factory = is_null($factory) ? new WriterFactory() : $factory;
     }

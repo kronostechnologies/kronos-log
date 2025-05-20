@@ -8,13 +8,9 @@ use Override;
 
 class Memory extends AbstractWriter
 {
+    private WriterFactory $factory;
 
-    /**
-     * @var WriterFactory
-     */
-    private $factory;
-
-    public function __construct(WriterFactory $factory = null)
+    public function __construct(?WriterFactory $factory = null)
     {
         $this->factory = is_null($factory) ? new WriterFactory() : $factory;
     }
