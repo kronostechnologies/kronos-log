@@ -10,14 +10,14 @@ on:
 
 jobs:
   php-library:
-    uses: equisoft-actions/php-workflows/.github/workflows/php-library.yml@v8
+    uses: equisoft-actions/php-workflows/.github/workflows/php-library.yml@v9
     secrets: inherit
     with:
       checks: phpunit,psalm
       php-version: '8.3'
       extensions: pcov
   php-library-8-4:
-    uses: equisoft-actions/php-workflows/.github/workflows/php-library.yml@v8
+    uses: equisoft-actions/php-workflows/.github/workflows/php-library.yml@v9
     secrets: inherit
     with:
       checks: phpunit,psalm
