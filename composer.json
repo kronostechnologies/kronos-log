@@ -30,15 +30,15 @@
     "fluent/logger": "Required for Fluentd writer"
   },
   "require-dev": {
-    "guzzlehttp/guzzle": "7.9.3",
+    "guzzlehttp/guzzle": "7.10.0",
     "fluent/logger": "1.0.1",
-    "phpunit/phpunit": "12.3.5",
+    "phpunit/phpunit": "12.3.6",
     "vimeo/psalm": "6.13.1",
     "dealerdirect/phpcodesniffer-composer-installer": "1.1.2",
     "phpcompatibility/php-compatibility": "9.3.5",
     "cyclonedx/cyclonedx-php-composer": "5.2.3",
     "php-http/guzzle7-adapter": "1.1.0",
-    "sentry/sentry": "4.14.2"
+    "sentry/sentry": "4.15.0"
   },
   "config": {
     "platform": {
