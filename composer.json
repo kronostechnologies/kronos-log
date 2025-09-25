@@ -22,8 +22,16 @@
   },
   "require": {
     "php": "^8.4",
-    "psr/log": "^3.0"
+    "psr/log": "^3.0",
+    "equisoft/fluent-logger-php": "^1.0"
   },
+  "repositories": [
+    {
+      "name": "equisoft/fluent-logger-php",
+      "type": "vcs",
+      "url": "https://github.com/kronostechnologies/fluent-logger-php.git"
+    }
+  ],
   "suggest": {
     "guzzlehttp/guzzle": "Required for LogDNA writer",
     "sentry/sentry": "Required for Sentry writer",
@@ -31,7 +39,6 @@
   },
   "require-dev": {
     "guzzlehttp/guzzle": "7.10.0",
-    "fluent/logger": "1.0.1",
     "phpunit/phpunit": "12.3.12",
     "vimeo/psalm": "6.13.1",
     "dealerdirect/phpcodesniffer-composer-installer": "1.1.2",
