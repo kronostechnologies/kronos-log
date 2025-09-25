@@ -20,11 +20,6 @@
       "Kronos\\Tests\\Log\\": "tests/"
     }
   },
-  "require": {
-    "php": "^8.4",
-    "psr/log": "^3.0",
-    "equisoft/fluent-logger-php": "^1.0"
-  },
   "repositories": [
     {
       "name": "equisoft/fluent-logger-php",
@@ -32,6 +27,11 @@
       "url": "https://github.com/kronostechnologies/fluent-logger-php.git"
     }
   ],
+  "require": {
+    "php": "^8.4",
+    "psr/log": "^3.0",
+    "equisoft/fluent-logger-php": "*"
+  },
   "suggest": {
     "guzzlehttp/guzzle": "Required for LogDNA writer",
     "sentry/sentry": "Required for Sentry writer",
