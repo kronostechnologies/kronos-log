@@ -20,9 +20,17 @@
       "Kronos\\Tests\\Log\\": "tests/"
     }
   },
+  "repositories": [
+    {
+      "name": "equisoft/fluent-logger-php",
+      "type": "vcs",
+      "url": "https://github.com/kronostechnologies/fluent-logger-php.git"
+    }
+  ],
   "require": {
-    "php": "^8.3",
-    "psr/log": "^3.0"
+    "php": "^8.4",
+    "psr/log": "^3.0",
+    "equisoft/fluent-logger-php": "1.0.0"
   },
   "suggest": {
     "guzzlehttp/guzzle": "Required for LogDNA writer",
@@ -31,7 +39,6 @@
   },
   "require-dev": {
     "guzzlehttp/guzzle": "7.10.0",
-    "fluent/logger": "1.0.1",
     "phpunit/phpunit": "12.3.15",
     "vimeo/psalm": "6.13.1",
     "dealerdirect/phpcodesniffer-composer-installer": "1.1.2",
@@ -42,7 +49,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.3.17"
+      "php": "8.4.12"
     },
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
