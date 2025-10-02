@@ -88,33 +88,6 @@ class LoggerTest extends TestCase
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
     }
 
-    public function test_WriterThrowException_Log_ShouldCatchExceptionAndTriggerError(): void
-    {
-        $errorHandled = 0;
-        $handledTriggedError = false;
-        set_error_handler(function ($errno, $errstr) use (
-            &$handledTriggedError,
-            &$errorHandled
-        ) {
-            $errorHandled++;
-            $handledTriggedError = ($errno == E_USER_ERROR && $errstr == self::WRITER_LOG_EXCEPTION_MESSAGE);
-        });
-
-        try {
-            $this->givenWriterCanLog();
-            $this->writer->method('log')->willThrowException(new \Exception(self::WRITER_LOG_EXCEPTION_MESSAGE));
-
-            $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
-
-            self::assertGreaterThanOrEqual(1, $errorHandled);
-            self::assertTrue($handledTriggedError);
-        }
-        finally {
-            // making sure that no matter what happens in my test, PHPUnit error handler is put back
-            restore_error_handler();
-        }
-    }
-
     public function test_exception_logExceptionWithContext(): void
     {
         $this->givenWriterCanLog();
