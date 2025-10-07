@@ -97,7 +97,7 @@ class LoggerTest extends TestCase
             &$errorHandled
         ) {
             $errorHandled++;
-            $handledTriggedError = ($errno == E_USER_ERROR && $errstr == self::WRITER_LOG_EXCEPTION_MESSAGE);
+            $handledTriggedError = ($errno == E_USER_WARNING && $errstr == self::WRITER_LOG_EXCEPTION_MESSAGE);
         });
 
         try {
