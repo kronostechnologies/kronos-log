@@ -57,7 +57,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
                 try {
                     $writer->log($level, $message, $context + $this->context);
                 } catch (\Exception $exception) {
-                    // swallow the exception
+                    trigger_error($exception->getMessage(), E_USER_WARNING);
                 }
             }
         }
