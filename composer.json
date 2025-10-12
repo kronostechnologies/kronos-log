@@ -39,7 +39,7 @@
   },
   "require-dev": {
     "guzzlehttp/guzzle": "7.10.0",
-    "phpunit/phpunit": "12.4.0",
+    "phpunit/phpunit": "12.4.1",
     "vimeo/psalm": "6.13.1",
     "dealerdirect/phpcodesniffer-composer-installer": "1.1.2",
     "phpcompatibility/php-compatibility": "9.3.5",
