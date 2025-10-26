@@ -45,7 +45,7 @@
     "phpcompatibility/php-compatibility": "9.3.5",
     "cyclonedx/cyclonedx-php-composer": "5.2.3",
     "php-http/guzzle7-adapter": "1.1.0",
-    "sentry/sentry": "4.16.0"
+    "sentry/sentry": "4.17.1"
   },
   "config": {
     "platform": {
