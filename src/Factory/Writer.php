@@ -20,6 +20,7 @@ use Sentry\Dsn;
 use Sentry\HttpClient\HttpClientInterface;
 use Sentry\Integration\IntegrationInterface;
 use Sentry\SentrySdk;
+use Sentry\Transport\TransportInterface;
 
 class Writer
 {
@@ -100,13 +101,14 @@ class Writer
      *     capture_silenced_errors?: bool,
      *     context_lines?: int|null,
      *     default_integrations?: bool,
-     *     dsn?: string|bool|null|Dsn,
+     *     dsn?: Dsn|bool|null|string,
      *     enable_logs?: bool,
      *     environment?: string|null,
      *     error_types?: int|null,
      *     http_client?: HttpClientInterface|null,
      *     http_compression?: bool,
      *     http_connect_timeout?: int|float,
+     *     http_enable_curl_share_handle?: bool,
      *     http_proxy?: string|null,
      *     http_proxy_authentication?: string|null,
      *     http_ssl_verify_peer?: bool,
@@ -135,7 +137,7 @@ class Writer
      *     trace_propagation_targets?: array<string>|null,
      *     traces_sample_rate?: float|int|null,
      *     traces_sampler?: callable|null,
-     *     transport?: callable,
+     *     transport?: TransportInterface|null,
      * } $options The client options
      */
     public function createSentryWriterAndSentryClient(

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6bc7394237d9404500e558c0caecf195",
+    "content-hash": "dc8aba2200fdce655da9e0d874db0a3e",
     "packages": [
         {
             "name": "equisoft/fluent-logger-php",
@@ -1229,35 +1229,41 @@
         },
         {
             "name": "cyclonedx/cyclonedx-library",
-            "version": "v3.10.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-library.git",
-                "reference": "e6bb0fca8d89f1e34755900c361061a6f5253e49"
+                "reference": "c95a371894c4e32bea42bfa024f2ab5092cbb292"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/e6bb0fca8d89f1e34755900c361061a6f5253e49",
-                "reference": "e6bb0fca8d89f1e34755900c361061a6f5253e49",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/c95a371894c4e32bea42bfa024f2ab5092cbb292",
+                "reference": "c95a371894c4e32bea42bfa024f2ab5092cbb292",
                 "shasum": ""
             },
             "require": {
-                "composer/spdx-licenses": "^1.5",
                 "ext-dom": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
                 "opis/json-schema": "^2.0",
-                "package-url/packageurl-php": "^1.0",
                 "php": "^8.1"
             },
+            "conflict": {
+                "composer/spdx-licenses": "<1.5"
+            },
             "require-dev": {
+                "composer/spdx-licenses": "^1.5",
                 "ext-simplexml": "*",
                 "roave/security-advisories": "dev-latest"
+            },
+            "suggest": {
+                "composer/spdx-licenses": "used in license factory",
+                "package-url/packageurl-php": "for parsing and crafting PackageURL strings"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.x-dev"
+                    "dev-master": "4.x-dev"
                 },
                 "composer-normalize": {
                     "indent-size": 4,
@@ -1314,25 +1320,26 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-01-07T13:45:46+00:00"
+            "time": "2026-02-17T11:46:50+00:00"
         },
         {
             "name": "cyclonedx/cyclonedx-php-composer",
-            "version": "v6.1.0",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-composer.git",
-                "reference": "d718efc4c201acd0da7d2c2e5690864b2a5c7116"
+                "reference": "934440a5ef7c3c3cdb58c3c3d389d412630ccbf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/d718efc4c201acd0da7d2c2e5690864b2a5c7116",
-                "reference": "d718efc4c201acd0da7d2c2e5690864b2a5c7116",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/934440a5ef7c3c3cdb58c3c3d389d412630ccbf6",
+                "reference": "934440a5ef7c3c3cdb58c3c3d389d412630ccbf6",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.3",
-                "cyclonedx/cyclonedx-library": "^3.9",
+                "composer/spdx-licenses": "^1.5.7",
+                "cyclonedx/cyclonedx-library": "^4.0",
                 "package-url/packageurl-php": "^1.0",
                 "php": "^8.1"
             },
@@ -1345,7 +1352,7 @@
             "extra": {
                 "class": "CycloneDX\\Composer\\Plugin",
                 "branch-alias": {
-                    "dev-master": "5.x-dev"
+                    "dev-master": "6.x-dev"
                 },
                 "composer-normalize": {
                     "indent-size": 4,
@@ -1391,7 +1398,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-01-07T13:45:28+00:00"
+            "time": "2026-02-17T13:23:10+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
@@ -3792,16 +3799,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.0.2",
+            "version": "13.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "87f0ca577a7056016741af70e7a7de9246c52e67"
+                "reference": "d57826e8921a534680c613924bfd921ded8047f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/87f0ca577a7056016741af70e7a7de9246c52e67",
-                "reference": "87f0ca577a7056016741af70e7a7de9246c52e67",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d57826e8921a534680c613924bfd921ded8047f4",
+                "reference": "d57826e8921a534680c613924bfd921ded8047f4",
                 "shasum": ""
             },
             "require": {
@@ -3870,7 +3877,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.0.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.0.5"
             },
             "funding": [
                 {
@@ -3894,7 +3901,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-10T12:33:24+00:00"
+            "time": "2026-02-18T12:40:03+00:00"
         },
         {
             "name": "psr/container",
@@ -5196,16 +5203,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "4.19.1",
+            "version": "4.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "1c21d60bebe67c0122335bd3fe977990435af0a3"
+                "reference": "2bf405fc4d38f00073a7d023cf321e59f614d54c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/1c21d60bebe67c0122335bd3fe977990435af0a3",
-                "reference": "1c21d60bebe67c0122335bd3fe977990435af0a3",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/2bf405fc4d38f00073a7d023cf321e59f614d54c",
+                "reference": "2bf405fc4d38f00073a7d023cf321e59f614d54c",
                 "shasum": ""
             },
             "require": {
@@ -5226,9 +5233,12 @@
                 "guzzlehttp/promises": "^2.0.3",
                 "guzzlehttp/psr7": "^1.8.4|^2.1.1",
                 "monolog/monolog": "^1.6|^2.0|^3.0",
+                "nyholm/psr7": "^1.8",
                 "phpbench/phpbench": "^1.0",
                 "phpstan/phpstan": "^1.3",
-                "phpunit/phpunit": "^8.5|^9.6",
+                "phpunit/phpunit": "^8.5.52|^9.6.34",
+                "spiral/roadrunner-http": "^3.6",
+                "spiral/roadrunner-worker": "^3.6",
                 "vimeo/psalm": "^4.17"
             },
             "suggest": {
@@ -5268,7 +5278,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/4.19.1"
+                "source": "https://github.com/getsentry/sentry-php/tree/4.21.0"
             },
             "funding": [
                 {
@@ -5280,7 +5290,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-12-02T15:57:41+00:00"
+            "time": "2026-02-24T15:32:51+00:00"
         },
         {
             "name": "spatie/array-to-xml",
