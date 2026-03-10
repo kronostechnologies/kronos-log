@@ -11,7 +11,7 @@
             "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kronostechnologies/fluent-logger-php.git",
+                "url": "git@github.com:kronostechnologies/fluent-logger-php.git",
                 "reference": "e9a137eafa07740407d147d54e1f84e68b12b87e"
             },
             "dist": {
@@ -60,9 +60,6 @@
                 "log",
                 "logging"
             ],
-            "support": {
-                "source": "https://github.com/kronostechnologies/fluent-logger-php/tree/v1.0.0"
-            },
             "time": "2025-08-15T18:52:24+00:00"
         },
         {
@@ -5493,16 +5490,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v8.0.6",
+            "version": "v8.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "488285876e807a4777f074041d8bb508623419fa"
+                "reference": "15ed9008a4ebe2d6a78e4937f74e0c13ef2e618a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/488285876e807a4777f074041d8bb508623419fa",
-                "reference": "488285876e807a4777f074041d8bb508623419fa",
+                "url": "https://api.github.com/repos/symfony/console/zipball/15ed9008a4ebe2d6a78e4937f74e0c13ef2e618a",
+                "reference": "15ed9008a4ebe2d6a78e4937f74e0c13ef2e618a",
                 "shasum": ""
             },
             "require": {
@@ -5559,7 +5556,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v8.0.6"
+                "source": "https://github.com/symfony/console/tree/v8.0.7"
             },
             "funding": [
                 {
@@ -5579,7 +5576,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-25T16:59:43+00:00"
+            "time": "2026-03-06T14:06:22+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
