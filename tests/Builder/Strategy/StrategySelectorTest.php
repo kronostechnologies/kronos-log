@@ -8,7 +8,7 @@ use Kronos\Log\Builder\Strategy\FileStragegy;
 use Kronos\Log\Builder\Strategy\LogDNAStrategy;
 use Kronos\Log\Builder\Strategy\MemoryStrategy;
 use Kronos\Log\Builder\Strategy\StrategySelector;
-use Kronos\Log\Builder\Strategy\Sentry;
+use Kronos\Log\Builder\Strategy\SentryStrategy;
 use Kronos\Log\Builder\Strategy\SyslogStrategy;
 use Kronos\Log\Builder\Strategy\TriggerErrorStrategy;
 use Kronos\Log\Enumeration\WriterTypes;
@@ -16,7 +16,7 @@ use Kronos\Log\Exception\UnsupportedType;
 use Kronos\Log\Factory\StrategyFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SelectorTest extends \PHPUnit\Framework\TestCase
+class StrategySelectorTest extends \PHPUnit\Framework\TestCase
 {
     const string UNSUPPORTED_TYPE = 'unsupported';
     const string CUSTOM_TYPE = CustomWriterStrategy::class;
@@ -89,7 +89,7 @@ class SelectorTest extends \PHPUnit\Framework\TestCase
 
     public function test_Sentry_getStrategyForType_ShouldCreateSentryStrategyAndReturnIt()
     {
-        $this->strategy = $this->createMock(Sentry::class);
+        $this->strategy = $this->createMock(SentryStrategy::class);
         $this->factory
             ->expects(self::once())
             ->method('createSentryStrategy')

@@ -6,7 +6,7 @@ use Kronos\Log\Builder\Strategy\MemoryStrategy;
 use Kronos\Log\Factory\WriterFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class MemoryTest extends \PHPUnit\Framework\TestCase
+class MemoryStrategyTest extends \PHPUnit\Framework\TestCase
 {
     const MIN_LEVEL = 'debug';
     const MAX_LEVEL = 'emergency';

@@ -5,33 +5,22 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\SyslogStrategy;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\SyslogWriter;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SyslogTest extends \PHPUnit\Framework\TestCase
+class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
 {
-    const MIN_LEVEL = 'debug';
-    const MAX_LEVEL = 'emergency';
+    const string MIN_LEVEL = 'debug';
+    const string MAX_LEVEL = 'emergency';
+    const string APPLICATION_VALUE = 'application value';
 
-    const APPLICATION_VALUE = 'application value';
-
-    /**
-     * @var SyslogStrategy
-     */
-    private $strategy;
-
-    /**
-     * @var MockObject&WriterFactory
-     */
-    private $factory;
-
-    /**
-     * @var MockObject&\Kronos\Log\Writer\SyslogWriter
-     */
-    private $writer;
+    private SyslogStrategy $strategy;
+    private WriterFactory & MockObject $factory;
+    private SyslogWriter & MockObject $writer;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\Writer\SyslogWriter::class);
+        $this->writer = $this->createMock(SyslogWriter::class);
         $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createSyslogWriter')->willReturn($this->writer);
 
@@ -66,7 +55,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
         $this->factory
             ->expects(self::once())
             ->method('createSyslogWriter')
-            ->with(self::APPLICATION_VALUE, \Kronos\Log\Writer\SyslogWriter::DEFAULT_OPTION, LOG_LOCAL6);
+            ->with(self::APPLICATION_VALUE, SyslogWriter::DEFAULT_OPTION, LOG_LOCAL6);
         $settings = $this->givenRequiredSetting();
         $settings[SyslogStrategy::FACILITY] = LOG_LOCAL6;
 

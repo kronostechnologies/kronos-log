@@ -5,20 +5,15 @@ namespace Kronos\Tests\Log\Writer;
 use Kronos\Log\Writer\MemoryWriter;
 use Psr\Log\LogLevel;
 
-class MemoryTest extends \PHPUnit\Framework\TestCase
+class MemoryWriterTest extends \PHPUnit\Framework\TestCase
 {
+    const string INFO_LOG_LEVEL = LogLevel::INFO;
+    const string A_MESSAGE = 'a message {key}';
+    const string CONTEXT_KEY = 'key';
+    const string CONTEXT_VALUE = 'value';
+    const string INTERPOLATED_MESSAGE_WITH_LOG_LEVEL = 'INFO : a message value';
 
-    const INFO_LOG_LEVEL = LogLevel::INFO;
-    const A_MESSAGE = 'a message {key}';
-    const CONTEXT_KEY = 'key';
-    const CONTEXT_VALUE = 'value';
-    const INTERPOLATED_MESSAGE_WITH_LOG_LEVEL = 'INFO : a message value';
-
-
-    /**
-     * @var Kronos\Log\Writer\Memory
-     */
-    private $writer;
+    private MemoryWriter $writer;
 
     public function setUp(): void
     {

@@ -3,7 +3,7 @@
 namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\WriterFactory As WriterFactory;
+use Kronos\Log\Factory\WriterFactory;
 use Override;
 
 class FileStragegy extends AbstractWriterStrategy

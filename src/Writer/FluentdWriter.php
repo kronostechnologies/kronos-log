@@ -7,6 +7,7 @@ namespace Kronos\Log\Writer;
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
+use Kronos\Log\Factory\FluentdFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
@@ -42,12 +43,12 @@ class FluentdWriter extends AbstractWriter
     protected $logger;
 
     /**
-     * @var \Kronos\Log\Factory\FluentdFactory
+     * @var FluentdFactory
      */
     protected $factory;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $wrapContextInMeta;
 
@@ -77,7 +78,7 @@ class FluentdWriter extends AbstractWriter
      * @param $tag
      * @param null|string $application
      * @param bool $wrapContextInMeta
-     * @param \Kronos\Log\Factory\FluentdFactory|null $factory
+     * @param FluentdFactory|null $factory
      * @param ContextStringifier|null $contextStringifier
      */
     public function __construct(
@@ -86,7 +87,7 @@ class FluentdWriter extends AbstractWriter
         $tag,
         $application,
         $wrapContextInMeta,
-        ?\Kronos\Log\Factory\FluentdFactory $factory = null,
+        ?FluentdFactory $factory = null,
         ?ContextStringifier $contextStringifier = null,
         $fluentBit = false
     ) {
@@ -95,7 +96,7 @@ class FluentdWriter extends AbstractWriter
         $this->tag = $tag;
         $this->application = $application;
         $this->wrapContextInMeta = $wrapContextInMeta;
-        $this->factory = $factory ?: new \Kronos\Log\Factory\FluentdFactory();
+        $this->factory = $factory ?: new FluentdFactory();
         $this->contextStringifier = $contextStringifier ?: new ContextStringifier();
         $this->fluentBit = $fluentBit;
     }

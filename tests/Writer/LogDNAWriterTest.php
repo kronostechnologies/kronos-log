@@ -4,41 +4,41 @@ namespace Kronos\Tests\Log\Writer;
 
 use Exception;
 use GuzzleHttp\Client;
+use Kronos\Log\Factory\GuzzleFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\LogDNAWriter;
-use Kronos\Log\Factory;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
-class LogDNATest extends TestCase
+class LogDNAWriterTest extends TestCase
 {
-    const INGESTION_KEY = 'ingestionKey';
-    const HOSTNAME = 'hostname';
-    const APPLICATION = 'application';
+    const string INGESTION_KEY = 'ingestionKey';
+    const string HOSTNAME = 'hostname';
+    const string APPLICATION = 'application';
 
-    const MESSAGE = 'message';
-    const ANY_LOG_LEVEL = LogLevel::INFO;
-    const TIMESTAMP = 1497626722;
+    const string MESSAGE = 'message';
+    const string ANY_LOG_LEVEL = LogLevel::INFO;
+    const int TIMESTAMP = 1497626722;
 
-    const MESSAGE_WITH_INTERPOLATION = 'should replace {field}';
-    const INTERPOLATED_MESSAGE = 'should replace value';
-    const CONTEXT = ['field' => 'value'];
+    const string MESSAGE_WITH_INTERPOLATION = 'should replace {field}';
+    const string INTERPOLATED_MESSAGE = 'should replace value';
+    const array CONTEXT = ['field' => 'value'];
 
-    const IP_ADDRESS = '10.0.1.101';
-    const MAC_ADDRESS = 'C0:FF:EE:C0:FF:EE';
-    const SOME_TEXT = 'some text';
-    const CUSTOM_HEADER_VALUE = ['Bar', 'Baz'];
-    const CUSTOM_HEADER = 'X-Foo';
-    const PROXY = 'tcp://localhost:8125';
-    const TIMEOUT = 3.14;
-    const STINGIFYIED_CONTEXT = ['field' => 'stringified value'];
-    const EXCEPTION_TRACE = 'exception trace';
+    const string IP_ADDRESS = '10.0.1.101';
+    const string MAC_ADDRESS = 'C0:FF:EE:C0:FF:EE';
+    const string SOME_TEXT = 'some text';
+    const array CUSTOM_HEADER_VALUE = ['Bar', 'Baz'];
+    const string CUSTOM_HEADER = 'X-Foo';
+    const string PROXY = 'tcp://localhost:8125';
+    const float TIMEOUT = 3.14;
+    const array STINGIFYIED_CONTEXT = ['field' => 'stringified value'];
+    const string EXCEPTION_TRACE = 'exception trace';
 
     private LogDNAWriter $writer;
-    private Factory\GuzzleFactory&MockObject $factory;
+    private GuzzleFactory&MockObject $factory;
     private Client&MockObject $client;
     private TraceBuilder&MockObject $exceptionTraceBuilder;
     private TraceBuilder&MockObject $previousExceptionTraceBuilder;
@@ -51,7 +51,7 @@ class LogDNATest extends TestCase
             ->onlyMethods(['post'])
             ->getMock();
 
-        $this->factory = $this->createMock(Factory\GuzzleFactory::class);
+        $this->factory = $this->createMock(GuzzleFactory::class);
         $this->factory->method('createClient')->willReturn($this->client);
 
         $this->contextStringifier = $this->createMock(ContextStringifier::class);

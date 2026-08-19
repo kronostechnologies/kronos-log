@@ -3,6 +3,7 @@
 namespace Kronos\Log\Writer;
 
 use Kronos\Log\AbstractWriter;
+use Kronos\Log\Factory\GuzzleFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Factory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
@@ -66,7 +67,7 @@ class LogDNAWriter extends AbstractWriter
      * @param $application
      * @param $ingestionKey
      * @param array $guzzleOptions
-     * @param Factory\GuzzleFactory|null $guzzleFactory
+     * @param GuzzleFactory|null $guzzleFactory
      * @param TraceBuilder|null $exceptionTraceBuilder
      * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @param ContextStringifier|null $contextStringifier
@@ -76,7 +77,7 @@ class LogDNAWriter extends AbstractWriter
         $application,
         $ingestionKey,
         $guzzleOptions = [],
-        ?Factory\GuzzleFactory $guzzleFactory = null,
+        ?GuzzleFactory $guzzleFactory = null,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null,
         ?ContextStringifier $contextStringifier = null
@@ -170,9 +171,9 @@ class LogDNAWriter extends AbstractWriter
         return $metadata;
     }
 
-    private function createGuzzleClient($ingestionKey, $guzzleOptions, ?Factory\GuzzleFactory $guzzleFactory = null)
+    private function createGuzzleClient($ingestionKey, $guzzleOptions, ?GuzzleFactory $guzzleFactory = null)
     {
-        $factory = $guzzleFactory ?: new Factory\GuzzleFactory();
+        $factory = $guzzleFactory ?: new GuzzleFactory();
 
         $baseOptions = [
             'headers' => [

@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Adaptor;
 
-class File
+class FileAdaptor
 {
     private $filename;
     private $ressource;

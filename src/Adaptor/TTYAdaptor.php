@@ -5,7 +5,7 @@ namespace Kronos\Log\Adaptor;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
 
-class TTY
+class TTYAdaptor
 {
 
     const string ESCAPE_SEQUENCE = "\033[";

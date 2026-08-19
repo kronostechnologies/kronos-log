@@ -2,35 +2,37 @@
 
 namespace Kronos\Tests\Log\Writer;
 
-use \Psr\Log\LogLevel;
+use Kronos\Log\Adaptor\SyslogAdaptor;
+use Kronos\Log\Writer\SyslogWriter;
+use Psr\Log\LogLevel;
 
-class SyslogTest extends \PHPUnit\Framework\TestCase
+class SyslogWriterTest extends \PHPUnit\Framework\TestCase
 {
+    const string APPLICATION = 'application';
+    const int SYSLOG_OPTION = LOG_ODELAY;
+    const int SYSLOG_FACILITY = LOG_LOCAL0;
 
-    const APPLICATION = 'application';
-    const SYSLOG_OPTION = LOG_ODELAY;
-    const SYSLOG_FACILITY = LOG_LOCAL0;
+    const string ANY_LOG_LEVEL = LogLevel::NOTICE;
+    const string A_MESSAGE = 'a message {key}';
+    const string CONTEXT_KEY = 'key';
+    const string CONTEXT_VALUE = 'value';
+    const string INTERPOLATED_MESSAGE = 'a message value';
+    const string INVALID_LOG_LEVEL = 'invalid log level';
 
-    const ANY_LOG_LEVEL = LogLevel::NOTICE;
-    const A_MESSAGE = 'a message {key}';
-    const CONTEXT_KEY = 'key';
-    const CONTEXT_VALUE = 'value';
-    const INTERPOLATED_MESSAGE = 'a message value';
-    const INVALID_LOG_LEVEL = 'invalid log level';
+    private SyslogWriter $writer;
 
-    /**
-     * @var \Kronos\Log\Writer\SyslogWriter
-     */
-    private $writer;
-
-    private $syslog_adaptor;
+    private SyslogAdaptor $syslogAdaptor;
 
     public function setUp(): void
     {
-        $this->syslog_adaptor = $this->createMock(\Kronos\Log\Adaptor\Syslog::class);
+        $this->syslogAdaptor = $this->createMock(SyslogAdaptor::class);
 
-        $this->writer = new \Kronos\Log\Writer\SyslogWriter($this->syslog_adaptor, self::APPLICATION, self::SYSLOG_OPTION,
-            self::SYSLOG_FACILITY);
+        $this->writer = new SyslogWriter(
+            $this->syslogAdaptor,
+            self::APPLICATION,
+            self::SYSLOG_OPTION,
+            self::SYSLOG_FACILITY
+        );
     }
 
     public function test_Writer_Log_ShouldCallAdaptorLogWithApplicationOptionAndFacility()
@@ -124,7 +126,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
 
     private function expectsAdaptorLogToBeCalledWith($ident, $option, $facility, $priority, $message)
     {
-        $this->syslog_adaptor
+        $this->syslogAdaptor
             ->expects($this->once())
             ->method('log')
             ->with(

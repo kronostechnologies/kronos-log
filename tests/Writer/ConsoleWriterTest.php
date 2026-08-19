@@ -3,8 +3,8 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Exception;
-use Kronos\Log\Adaptor\FileFactory;
-use Kronos\Log\Adaptor\TTY;
+use Kronos\Log\Adaptor\FileAdaptorFactory;
+use Kronos\Log\Adaptor\TTYAdaptor;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
@@ -14,35 +14,34 @@ use Kronos\Tests\Log\ExtendedTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 
-class ConsoleTest extends ExtendedTestCase
+class ConsoleWriterTest extends ExtendedTestCase
 {
-    const LOGLEVEL_BELOW_ERROR = LogLevel::INFO;
-    const LOGLEVEL_ABOVE_WARNING = LogLevel::ERROR;
-    const A_MESSAGE = 'a message {key}';
-    const CONTEXT_KEY = 'key';
-    const CONTEXT_VALUE = 'value';
-    const INTERPOLATED_MESSAGE = 'a message value';
-    const INTERPOLATED_MESSAGE_WITH_LOG_LEVEL = 'INFO : a message value';
-    const DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
+    const string LOGLEVEL_BELOW_ERROR = LogLevel::INFO;
+    const string LOGLEVEL_ABOVE_WARNING = LogLevel::ERROR;
+    const string A_MESSAGE = 'a message {key}';
+    const string CONTEXT_KEY = 'key';
+    const string CONTEXT_VALUE = 'value';
+    const string INTERPOLATED_MESSAGE = 'a message value';
+    const string INTERPOLATED_MESSAGE_WITH_LOG_LEVEL = 'INFO : a message value';
+    const string DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
 
-
-    const EXCEPTION_MESSAGE = 'Some exception message';
-    const EXCEPTION_FILE = '/tmp/some/file.php';
-    const EXCEPTION_LINE = 2;
-    const EXCEPTION_TITLE_LINE_FORMAT = "Exception: 'Some exception message' in '%s' at line %i";
-    const PREVIOUS_EXCEPTION_MESSAGE = 'Previous exception message';
-    const PREVIOUS_EXCEPTION_FILE = '/tmp/some/other/file.php';
-    const PREVIOUS_EXCEPTION_LINE = 3;
-    const PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT = "Previous exception: 'Previous exception message' in '%s' at line %i";
+    const string EXCEPTION_MESSAGE = 'Some exception message';
+    const string EXCEPTION_FILE = '/tmp/some/file.php';
+    const int EXCEPTION_LINE = 2;
+    const string EXCEPTION_TITLE_LINE_FORMAT = "Exception: 'Some exception message' in '%s' at line %i";
+    const string PREVIOUS_EXCEPTION_MESSAGE = 'Previous exception message';
+    const string PREVIOUS_EXCEPTION_FILE = '/tmp/some/other/file.php';
+    const int PREVIOUS_EXCEPTION_LINE = 3;
+    const string PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT = "Previous exception: 'Previous exception message' in '%s' at line %i";
 
     private ConsoleWriter $writer;
-    private FileFactory&MockObject $fileFactory;
-    private TTY&MockObject $stdout;
-    private TTY&MockObject $stderr;
+    private FileAdaptorFactory&MockObject $fileFactory;
+    private TTYAdaptor&MockObject $stdout;
+    private TTYAdaptor&MockObject $stderr;
 
     public function setUp(): void
     {
-        $this->fileFactory = $this->getMockBuilder(FileFactory::class)->disableOriginalConstructor()->getMock();
+        $this->fileFactory = $this->getMockBuilder(FileAdaptorFactory::class)->disableOriginalConstructor()->getMock();
     }
 
     public function test_NewConsole_Constructor_ShouldCreateAdaptorForStdoutAndStderr()
@@ -237,8 +236,8 @@ class ConsoleTest extends ExtendedTestCase
 
     private function givenFactoryReturnFileAdaptors()
     {
-        $this->stdout = $this->getMockBuilder(TTY::class)->disableOriginalConstructor()->getMock();
-        $this->stderr = $this->getMockBuilder(TTY::class)->disableOriginalConstructor()->getMock();
+        $this->stdout = $this->getMockBuilder(TTYAdaptor::class)->disableOriginalConstructor()->getMock();
+        $this->stderr = $this->getMockBuilder(TTYAdaptor::class)->disableOriginalConstructor()->getMock();
 
         $this->fileFactory
             ->method('createTTYAdaptor')
@@ -248,22 +247,22 @@ class ConsoleTest extends ExtendedTestCase
             ]);
     }
 
-    private function expectsWriteToBeCalled(TTY&MockObject $file, $message, $text_color = null, $background_color = null)
+    private function expectsWriteToBeCalled(TTYAdaptor&MockObject $file, $message, $text_color = null, $background_color = null)
     {
         $file->expects(self::once())->method('write')->with($message, $text_color, $background_color);
     }
 
-    private function expectsSetForceAnsiColorSupportToBeCalled(TTY&MockObject $file)
+    private function expectsSetForceAnsiColorSupportToBeCalled(TTYAdaptor&MockObject $file)
     {
         $file->expects(self::once())->method('setForceAnsiColorSupport')->with(true);
     }
 
-    private function expectsSetForceNoAnsiColorSupportToBeCalled(TTY&MockObject $file)
+    private function expectsSetForceNoAnsiColorSupportToBeCalled(TTYAdaptor&MockObject $file)
     {
         $file->expects(self::once())->method('setForceNoAnsiColorSupport')->with(true);
     }
 
-    private function expectsWriteToBeCalledWithConsecutive(TTY&MockObject $file, array $consecutive_args)
+    private function expectsWriteToBeCalledWithConsecutive(TTYAdaptor&MockObject $file, array $consecutive_args)
     {
         $file
             ->expects(self::exactly(count($consecutive_args)))

@@ -9,7 +9,7 @@ use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class LogDNATest extends \PHPUnit\Framework\TestCase
+class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
 {
     const MIN_LEVEL = 'debug';
     const MAX_LEVEL = 'emergency';

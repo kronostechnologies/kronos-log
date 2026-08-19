@@ -2,8 +2,7 @@
 
 namespace Kronos\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy;
-use Kronos\Log\Factory\WriterFactory As WriterFactory;
+use Kronos\Log\Factory\WriterFactory;
 use Override;
 
 class MemoryStrategy extends AbstractWriterStrategy

@@ -3,31 +3,21 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Fluent\Logger\FluentLogger;
+use Kronos\Log\Factory\FluentdFactory;
 use Kronos\Log\Writer\FluentdWriter;
 use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 
-class FluentdTest extends \PHPUnit\Framework\TestCase
+class FluentdWriterTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Kronos\Log\Factory\FluentdFactory&MockObject
-     */
-    private $factory;
-
-    /**
-     * @var FluentLogger&MockObject
-     */
-    private $logger;
-
-    /**
-     * @var FluentdWriter
-     */
-    private $writer;
+    private FluentdFactory&MockObject $factory;
+    private FluentLogger&MockObject $logger;
+    private FluentdWriter $writer;
 
     public function setUp(): void
     {
-        $this->factory = $this->getMockBuilder(\Kronos\Log\Factory\FluentdFactory::class)
+        $this->factory = $this->getMockBuilder(FluentdFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->logger = $this->getMockBuilder(FluentLogger::class)

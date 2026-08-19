@@ -11,7 +11,7 @@ use SebastianBergmann\GlobalState\RuntimeException;
 use Sentry\Client;
 use Sentry\ClientInterface;
 
-class Sentry extends AbstractWriterStrategy
+class SentryStrategy extends AbstractWriterStrategy
 {
 
     const string CLIENT = 'client';

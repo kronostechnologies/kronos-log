@@ -2,10 +2,9 @@
 
 namespace Kronos\Log\Adaptor;
 
-class Syslog
+class SyslogAdaptor
 {
-
-    private static $facilities = [
+    private static array $facilities = [
         LOG_AUTH,
         LOG_AUTHPRIV,
         LOG_CRON,
@@ -27,7 +26,7 @@ class Syslog
         LOG_UUCP
     ];
 
-    private static $priorities = [
+    private static array $priorities = [
         LOG_EMERG,
         LOG_ALERT,
         LOG_CRIT,
@@ -97,7 +96,6 @@ class Syslog
 
     /**
      * @param $facility
-     * @throws \Exception
      */
     private function checkFacility($facility)
     {
@@ -108,7 +106,6 @@ class Syslog
 
     /**
      * @param $priority
-     * @throws \Exception
      */
     private function checkPriority($priority)
     {

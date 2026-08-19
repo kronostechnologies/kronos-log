@@ -2,9 +2,9 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\Adaptor\File as FileAdaptor;
-use Kronos\Log\Adaptor\FileFactory;
-use Kronos\Log\Adaptor\TTY;
+use Kronos\Log\Adaptor\FileAdaptor as FileAdaptor;
+use Kronos\Log\Adaptor\FileAdaptorFactory;
+use Kronos\Log\Adaptor\TTYAdaptor;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
 use Kronos\Log\Traits\PrependDateTime;
@@ -26,17 +26,17 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
     const string EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
     const string PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
 
-    private TTY $stdout;
-    private TTY $stderr;
+    private TTYAdaptor $stdout;
+    private TTYAdaptor $stderr;
     private ?TraceBuilder $exceptionTraceBuilder;
     private ?TraceBuilder $previousExceptionTraceBuilder;
 
     public function __construct(
-        ?FileFactory $factory = null,
+        ?FileAdaptorFactory $factory = null,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null
     ) {
-        $factory = $factory ?: new FileFactory();
+        $factory = $factory ?: new FileAdaptorFactory();
         $this->stdout = $factory->createTTYAdaptor(self::STDOUT);
         $this->stderr = $factory->createTTYAdaptor(self::STDERR);
 

@@ -5,84 +5,56 @@ namespace Kronos\Log\Factory;
 use Kronos\Log\Builder\Strategy\ConsoleStrategy;
 use Kronos\Log\Builder\Strategy\CustomWriterStrategy;
 use Kronos\Log\Builder\Strategy\FileStragegy;
-use Kronos\Log\Builder\Strategy\FluentdStrategy as FluentdStrategy;
+use Kronos\Log\Builder\Strategy\FluentdStrategy;
 use Kronos\Log\Builder\Strategy\LogDNAStrategy;
 use Kronos\Log\Builder\Strategy\MemoryStrategy;
-use Kronos\Log\Builder\Strategy\Sentry;
+use Kronos\Log\Builder\Strategy\SentryStrategy;
 use Kronos\Log\Builder\Strategy\SyslogStrategy;
 use Kronos\Log\Builder\Strategy\TriggerErrorStrategy;
 
 class StrategyFactory
 {
-
-    /**
-     * @return ConsoleStrategy
-     */
-    public function createConsoleStrategy()
+    public function createConsoleStrategy(): ConsoleStrategy
     {
         return new ConsoleStrategy();
     }
 
-    /**
-     * @return FileStragegy
-     */
-    public function createFileStrategy()
+    public function createFileStrategy(): FileStragegy
     {
         return new FileStragegy();
     }
 
-    /**
-     * @return FluentdStrategy
-     */
-    public function createFluentdStrategy()
+    public function createFluentdStrategy(): FluentdStrategy
     {
         return new FluentdStrategy();
     }
 
-    /**
-     * @return LogDNAStrategy
-     */
-    public function createLogDNAStrategy()
+    public function createLogDNAStrategy(): LogDNAStrategy
     {
         return new LogDNAStrategy();
     }
 
-    /**
-     * @return MemoryStrategy
-     */
-    public function createMemoryStrategy()
+    public function createMemoryStrategy(): MemoryStrategy
     {
         return new MemoryStrategy();
     }
 
-    /**
-     * @return Sentry
-     */
-    public function createSentryStrategy()
+    public function createSentryStrategy(): SentryStrategy
     {
-        return new Sentry();
+        return new SentryStrategy();
     }
 
-    /**
-     * @return SyslogStrategy
-     */
-    public function createSyslogStrategy()
+    public function createSyslogStrategy(): SyslogStrategy
     {
         return new SyslogStrategy();
     }
 
-    /**
-     * @return TriggerErrorStrategy
-     */
-    public function createTriggerErrorStrategy()
+    public function createTriggerErrorStrategy(): TriggerErrorStrategy
     {
         return new TriggerErrorStrategy();
     }
 
-    /**
-     * @return CustomWriterStrategy
-     */
-    public function createCustomWriterStrategy()
+    public function createCustomWriterStrategy(): CustomWriterStrategy
     {
         return new CustomWriterStrategy();
     }

@@ -14,15 +14,15 @@ use Sentry\Tracing\PropagationContext;
 use Sentry\Tracing\SpanId;
 use Sentry\Tracing\TraceId;
 
-class SentryTest extends TestCase
+class SentryWriterTest extends TestCase
 {
-    const A_MESSAGE = 'a message';
-    const INTERPOLATABLE_MESSAGE = 'message with {key}';
-    const INTERPOLATED_MESSAGE = 'message with value';
-    const CONTEXT_KEY = 'key';
-    const CONTEXT_VALUE = 'value';
-    const ANY_LEVEL = LogLevel::DEBUG;
-    const LOGGER_MESSAGE_KEY = 'loggerMessage';
+    const string A_MESSAGE = 'a message';
+    const string INTERPOLATABLE_MESSAGE = 'message with {key}';
+    const string INTERPOLATED_MESSAGE = 'message with value';
+    const string CONTEXT_KEY = 'key';
+    const string CONTEXT_VALUE = 'value';
+    const string ANY_LEVEL = LogLevel::DEBUG;
+    const string LOGGER_MESSAGE_KEY = 'loggerMessage';
 
     private ClientInterface&MockObject $sentryClient;
     private SentryWriter | SentryWriterWithScopeDecorator $writer;

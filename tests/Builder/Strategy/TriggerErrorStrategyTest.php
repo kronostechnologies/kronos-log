@@ -7,26 +7,15 @@ use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Writer\TriggerErrorWriter AS TriggerErrorWriter;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class TriggerErrorTest extends \PHPUnit\Framework\TestCase
+class TriggerErrorStrategyTest extends \PHPUnit\Framework\TestCase
 {
-    const MIN_LEVEL = 'debug';
-    const MAX_LEVEL = 'emergency';
-    const FILENAME_VALUE = 'filename';
+    const string MIN_LEVEL = 'debug';
+    const string MAX_LEVEL = 'emergency';
+    const string FILENAME_VALUE = 'filename';
 
-    /**
-     * @var TriggerErrorStrategy
-     */
-    private $strategy;
-
-    /**
-     * @var MockObject&WriterFactory
-     */
-    private $factory;
-
-    /**
-     * @var MockObject&TriggerErrorWriter
-     */
-    private $writer;
+    private TriggerErrorStrategy $strategy;
+    private WriterFactory & MockObject $factory;
+    private TriggerErrorWriter & MockObject $writer;
 
     public function setUp(): void
     {

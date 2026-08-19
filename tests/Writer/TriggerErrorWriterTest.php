@@ -5,19 +5,16 @@ namespace Kronos\Tests\Log\Writer;
 use Kronos\Log\Writer\TriggerErrorWriter;
 use Psr\Log\LogLevel;
 
-class TriggerErrorTest extends \PHPUnit\Framework\TestCase
+class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
 {
-    const ANY_LOG_LEVEL = LogLevel::INFO;
-    const LOG_MESSAGE = 'log message';
-    const MESSAGE_WITH_INTERPOLATION = 'message with {interpolation}';
-    const INTERPOLATION_KEY = 'interpolation';
-    const INTERPOLATED_VALUE = 'interpolated value';
-    const INVALID_LOG_LEVEL = 'invalid log level';
+    const string ANY_LOG_LEVEL = LogLevel::INFO;
+    const string LOG_MESSAGE = 'log message';
+    const string MESSAGE_WITH_INTERPOLATION = 'message with {interpolation}';
+    const string INTERPOLATION_KEY = 'interpolation';
+    const string INTERPOLATED_VALUE = 'interpolated value';
+    const string INVALID_LOG_LEVEL = 'invalid log level';
 
-    /**
-     * @var TriggerErrorWriter
-     */
-    private $writer;
+    private TriggerErrorWriter $writer;
 
     public function setUp(): void
     {

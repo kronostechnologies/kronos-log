@@ -7,7 +7,7 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\FluentdStrategy;
 use Kronos\Log\Exception\RequiredSetting;
 
-class FluentdTest extends \PHPUnit\Framework\TestCase
+class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FluentdStrategy

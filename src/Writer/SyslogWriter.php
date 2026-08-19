@@ -17,7 +17,7 @@ class SyslogWriter extends AbstractWriter
     const int DEFAULT_FACILITY = LOG_LOCAL0;
 
     /**
-     * @var \Kronos\Log\Adaptor\Syslog
+     * @var \Kronos\Log\Adaptor\SyslogAdaptor
      */
     private $syslog_adaptor;
 
@@ -27,13 +27,13 @@ class SyslogWriter extends AbstractWriter
 
     /**
      * Syslog constructor.
-     * @param \Kronos\Log\Adaptor\Syslog $syslog_adaptor
+     * @param \Kronos\Log\Adaptor\SyslogAdaptor $syslog_adaptor
      * @param $application
      * @param $option
      * @param $facility
      */
     public function __construct(
-        \Kronos\Log\Adaptor\Syslog $syslog_adaptor,
+        \Kronos\Log\Adaptor\SyslogAdaptor $syslog_adaptor,
         $application,
         $option = self::DEFAULT_OPTION,
         $facility = self::DEFAULT_FACILITY

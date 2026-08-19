@@ -8,16 +8,13 @@ use \Psr\Log\LogLevel;
 class AbstractWriterTest extends \PHPUnit\Framework\TestCase
 {
 
-    const ANY_LEVEL = LogLevel::INFO;
-    const INVALID_LOG_LEVEL = 'invalid';
+    const string ANY_LEVEL = LogLevel::INFO;
+    const string INVALID_LOG_LEVEL = 'invalid';
 
-    const LOWER_LEVEL = LogLevel::NOTICE;
-    const HIGHER_LEVEL = LogLevel::CRITICAL;
+    const string LOWER_LEVEL = LogLevel::NOTICE;
+    const string HIGHER_LEVEL = LogLevel::CRITICAL;
 
-    /**
-     * @var TestableWriter;
-     */
-    private $writer;
+    private TestableWriter $writer;
 
     public function setUp(): void
     {

@@ -2,13 +2,13 @@
 
 namespace Kronos\Log\Factory;
 
-use Kronos\Log\Adaptor\FileFactory;
-use Kronos\Log\Adaptor\Syslog as SyslogAdaptor;
+use Kronos\Log\Adaptor\FileAdaptorFactory;
+use Kronos\Log\Adaptor\SyslogAdaptor as SyslogAdaptor;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\FileWriter;
 use Kronos\Log\Writer\LogDNAWriter;
-use Kronos\Log\Writer\SentryWriter as SentryWriter;
+use Kronos\Log\Writer\SentryWriter;
 use Kronos\Log\Writer\SyslogWriter;
 use Kronos\Log\Writer\ConsoleWriter;
 use Kronos\Log\Writer\MemoryWriter;
@@ -30,7 +30,7 @@ class WriterFactory
     private $syslog_adaptor;
 
     /**
-     * @var FileFactory|null
+     * @var FileAdaptorFactory|null
      */
     private $file_factory;
 
@@ -171,12 +171,12 @@ class WriterFactory
     }
 
     /**
-     * @return FileFactory
+     * @return FileAdaptorFactory
      */
     private function getFileFactory()
     {
         if (!$this->file_factory) {
-            $this->file_factory = new FileFactory();
+            $this->file_factory = new FileAdaptorFactory();
         }
 
         return $this->file_factory;

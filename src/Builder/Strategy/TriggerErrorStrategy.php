@@ -2,7 +2,8 @@
 
 namespace Kronos\Log\Builder\Strategy;
 
-use Kronos\Log\Factory\WriterFactory AS WriterFactory;
+use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\TriggerErrorWriter;
 use Kronos\Log\WriterInterface;
 use Override;
 
@@ -17,7 +18,7 @@ class TriggerErrorStrategy extends AbstractWriterStrategy
 
     /**
      * @param array $settings
-     * @return \Kronos\Log\Writer\TriggerErrorWriter|WriterInterface
+     * @return TriggerErrorWriter|WriterInterface
      */
     #[Override]
     public function buildFromArray(array $settings)
@@ -28,5 +29,4 @@ class TriggerErrorStrategy extends AbstractWriterStrategy
 
         return $writer;
     }
-
 }

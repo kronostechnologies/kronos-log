@@ -2,7 +2,8 @@
 
 namespace Kronos\Tests\Log\Writer;
 
-use Kronos\Log\Adaptor\FileFactory;
+use Kronos\Log\Adaptor\FileAdaptor;
+use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\FileWriter;
@@ -11,36 +12,36 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 use Kronos\Log\Logger;
 
-class FileTest extends ExtendedTestCase
+class FileWriterTest extends ExtendedTestCase
 {
-    const A_FILENAME = '/path/to/file';
-    const ANY_LOG_LEVEL = LogLevel::INFO;
-    const LOGLEVEL_BELOW_ERROR = LogLevel::INFO;
-    const A_MESSAGE = 'a message {key}';
-    const CONTEXT_KEY = 'key';
-    const CONTEXT_VALUE = 'value';
-    const INTERPOLATED_MESSAGE = 'a message value';
-    const INTERPOLATED_MESSAGE_WITH_LOG_LEVEL = 'INFO : a message value';
-    const DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
+    const string A_FILENAME = '/path/to/file';
+    const string ANY_LOG_LEVEL = LogLevel::INFO;
+    const string LOGLEVEL_BELOW_ERROR = LogLevel::INFO;
+    const string A_MESSAGE = 'a message {key}';
+    const string CONTEXT_KEY = 'key';
+    const string CONTEXT_VALUE = 'value';
+    const string INTERPOLATED_MESSAGE = 'a message value';
+    const string INTERPOLATED_MESSAGE_WITH_LOG_LEVEL = 'INFO : a message value';
+    const string DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
 
-    const EXCEPTION_MESSAGE = 'Some exception message';
-    const EXCEPTION_FILE = '/tmp/some/file.php';
-    const EXCEPTION_LINE = 2;
-    const EXCEPTION_TITLE_LINE_FORMAT = "Exception: 'Some exception message' in '%s' at line %i";
-    const PREVIOUS_EXCEPTION_MESSAGE = 'Previous exception message';
-    const PREVIOUS_EXCEPTION_FILE = '/tmp/some/other/file.php';
-    const PREVIOUS_EXCEPTION_LINE = 3;
-    const PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT = "Previous exception: 'Previous exception message' in '%s' at line %i";
+    const string EXCEPTION_MESSAGE = 'Some exception message';
+    const string EXCEPTION_FILE = '/tmp/some/file.php';
+    const int EXCEPTION_LINE = 2;
+    const string EXCEPTION_TITLE_LINE_FORMAT = "Exception: 'Some exception message' in '%s' at line %i";
+    const string PREVIOUS_EXCEPTION_MESSAGE = 'Previous exception message';
+    const string PREVIOUS_EXCEPTION_FILE = '/tmp/some/other/file.php';
+    const int PREVIOUS_EXCEPTION_LINE = 3;
+    const string PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT = "Previous exception: 'Previous exception message' in '%s' at line %i";
 
-    const STRINGIFIED_CONTEXT = 'stringified context';
+    const string STRINGIFIED_CONTEXT = 'stringified context';
 
-    private FileWriter|MockObject $adaptor;
-    private FileFactory&MockObject $factory;
+    private FileWriter | MockObject $adaptor;
+    private FileAdaptorFactory & MockObject $factory;
 
     public function setUp(): void
     {
-        $this->adaptor = $this->getMockBuilder(\Kronos\Log\Adaptor\File::class)->disableOriginalConstructor()->getMock();
-        $this->factory = $this->createMock(FileFactory::class);
+        $this->adaptor = $this->getMockBuilder(FileAdaptor::class)->disableOriginalConstructor()->getMock();
+        $this->factory = $this->createMock(FileAdaptorFactory::class);
     }
 
     public function test_NewWriter_Constructor_ShouldCreateNewFile()

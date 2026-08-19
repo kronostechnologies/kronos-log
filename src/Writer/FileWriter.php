@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\Adaptor\FileFactory;
+use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Logger;
@@ -21,7 +21,7 @@ class FileWriter extends \Kronos\Log\AbstractWriter
     const string PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
     const string CONTEXT_TITLE_LINE = 'Context:';
 
-    private \Kronos\Log\Adaptor\File $fileAdaptor;
+    private \Kronos\Log\Adaptor\FileAdaptor $fileAdaptor;
 
     private ?ContextStringifier $contextStringifier = null;
 
@@ -29,15 +29,15 @@ class FileWriter extends \Kronos\Log\AbstractWriter
 
     private ?TraceBuilder $previousExceptionTraceBuilder;
 
-    private FileFactory $factory;
+    private FileAdaptorFactory $factory;
 
     public function __construct(
         ?string $filename,
-        ?FileFactory $factory = null,
+        ?FileAdaptorFactory $factory = null,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null
     ) {
-        $this->factory = is_null($factory) ? new FileFactory() : $factory;
+        $this->factory = is_null($factory) ? new FileAdaptorFactory() : $factory;
         $this->fileAdaptor = $this->factory->createFileAdaptor($filename);
         $this->exceptionTraceBuilder = $exceptionTraceBuilder;
         $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
