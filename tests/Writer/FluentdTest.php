@@ -3,7 +3,7 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Fluent\Logger\FluentLogger;
-use Kronos\Log\Writer\Fluentd;
+use Kronos\Log\Writer\FluentdWriter;
 use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
@@ -11,7 +11,7 @@ use Psr\Log\LogLevel;
 class FluentdTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Kronos\Log\Factory\Fluentd&MockObject
+     * @var \Kronos\Log\Factory\FluentdFactory&MockObject
      */
     private $factory;
 
@@ -21,13 +21,13 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     private $logger;
 
     /**
-     * @var Fluentd
+     * @var FluentdWriter
      */
     private $writer;
 
     public function setUp(): void
     {
-        $this->factory = $this->getMockBuilder(\Kronos\Log\Factory\Fluentd::class)
+        $this->factory = $this->getMockBuilder(\Kronos\Log\Factory\FluentdFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->logger = $this->getMockBuilder(FluentLogger::class)
@@ -40,7 +40,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_uninitialized_log_CreatesLoggerWithHostname()
     {
         $givenHostname = "localhost";
-        $this->writer = new Fluentd($givenHostname, 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter($givenHostname, 24224, "test", null, false, $this->factory);
 
         $this->factory->expects($this->once())->method('createFluentLogger')->with($givenHostname, $this->anything(),
             $this->anything(), $this->anything());
@@ -51,7 +51,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_uninitialized_log_CreatesLoggerWithPort()
     {
         $givenPort = 24224;
-        $this->writer = new Fluentd("localhost", $givenPort, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", $givenPort, "test", null, false, $this->factory);
 
         $this->factory->expects($this->once())->method('createFluentLogger')->with($this->anything(), $givenPort);
 
@@ -60,7 +60,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
 
     public function test_uninitialized_log_CreatesLoggerWithFluentBitPacker()
     {
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory, null, true);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory, null, true);
 
         $this->factory->expects($this->once())->method('createFluentLogger')->with($this->anything(), $this->anything(),
             $this->anything(), $this->isInstanceOf(FluentBitJsonPacker::class));
@@ -70,7 +70,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
 
     public function test_uninitialized_logTwice_CreatesLoggerOnlyOnce()
     {
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
         $this->factory->expects($this->once())->method('createFluentLogger');
 
@@ -81,7 +81,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_log_PassesTag()
     {
         $givenTag = "test";
-        $this->writer = new Fluentd("localhost", 24224, $givenTag, null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, $givenTag, null, false, $this->factory);
 
         $this->logger->expects($this->once())->method('post')->with($givenTag, $this->anything());
 
@@ -91,7 +91,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_log_MessageSetInContext()
     {
         $givenMessage = "message";
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -105,7 +105,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_log_LevelSetInContext()
     {
         $givenLevel = LogLevel::INFO;
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -118,7 +118,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
 
     public function test_ApplicationUnset_log_DoesNotContainApp()
     {
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -132,7 +132,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_ApplicationSet_log_ContainsApp()
     {
         $givenApp = "testapp";
-        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -146,7 +146,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_DoNotWrapContextInMeta_log_ContainsAppInRoot()
     {
         $givenApp = "testapp";
-        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -160,7 +160,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_WrapContextInMeta_log_ContainsAppInRoot()
     {
         $givenApp = "testapp";
-        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, true, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, true, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -174,7 +174,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_WrapContextInMeta_log_UnderlyingMetaDoesNotContainLevelOrMessage()
     {
         $givenApp = "testapp";
-        $this->writer = new Fluentd("localhost", 24224, "test", $givenApp, true, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, true, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -188,7 +188,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_MessageInContext_log_MessageOverridesGivenContext()
     {
         $givenMessage = "a message";
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -203,7 +203,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     {
         $givenContextKey = "test";
         $givenContextVal = "something";
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
         $this->logger->expects($this->once())
             ->method('post')
@@ -217,7 +217,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
     public function test_ExceptionWhenLogging_log_ReturnsFalse()
     {
         $this->logger->method('post')->willThrowException(new \Exception("Connection error"));
-        $this->writer = new Fluentd("localhost", 24224, "test", null, false, $this->factory);
+        $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
         $h = false;
         set_error_handler(static function () use (&$h) {

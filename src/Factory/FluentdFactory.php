@@ -5,7 +5,7 @@ namespace Kronos\Log\Factory;
 use Fluent\Logger\FluentLogger;
 use Fluent\Logger\PackerInterface;
 
-class Fluentd
+class FluentdFactory
 {
     /**
      * @param string $hostname

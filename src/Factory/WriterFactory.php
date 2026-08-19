@@ -6,13 +6,13 @@ use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Adaptor\Syslog as SyslogAdaptor;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
-use Kronos\Log\Writer\File;
-use Kronos\Log\Writer\LogDNA;
-use Kronos\Log\Writer\Sentry as SentryWriter;
-use Kronos\Log\Writer\Syslog;
-use Kronos\Log\Writer\Console;
-use Kronos\Log\Writer\Memory;
-use Kronos\Log\Writer\TriggerError;
+use Kronos\Log\Writer\FileWriter;
+use Kronos\Log\Writer\LogDNAWriter;
+use Kronos\Log\Writer\SentryWriter as SentryWriter;
+use Kronos\Log\Writer\SyslogWriter;
+use Kronos\Log\Writer\ConsoleWriter;
+use Kronos\Log\Writer\MemoryWriter;
+use Kronos\Log\Writer\TriggerErrorWriter;
 use Psr\Log\LoggerInterface;
 use Sentry;
 use Sentry\ClientInterface;
@@ -22,7 +22,7 @@ use Sentry\Integration\IntegrationInterface;
 use Sentry\SentrySdk;
 use Sentry\Transport\TransportInterface;
 
-class Writer
+class WriterFactory
 {
     /**
      * @var SyslogAdaptor|null
@@ -43,8 +43,8 @@ class Writer
         ?string $filename,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null
-    ): File {
-        $writer = new File($filename, $this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+    ): FileWriter {
+        $writer = new FileWriter($filename, $this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
         $writer->setContextStringifier($this->getContextStringifier());
@@ -55,21 +55,21 @@ class Writer
      * @param $application
      * @param int $option
      * @param int $facility
-     * @return Syslog
+     * @return SyslogWriter
      */
     public function createSyslogWriter($application, $option = LOG_ODELAY, $facility = LOG_LOCAL0)
     {
-        return new Syslog($this->getSyslogAdaptor(), $application, $option, $facility);
+        return new SyslogWriter($this->getSyslogAdaptor(), $application, $option, $facility);
     }
 
     /**
-     * @return Console
+     * @return ConsoleWriter
      */
     public function createConsoleWriter(
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null
     ) {
-        $writer = new Console($this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+        $writer = new ConsoleWriter($this->getFileFactory(), $exceptionTraceBuilder, $previousExceptionTraceBuilder);
         $writer->setPrependDateTime();
         $writer->setPrependLogLevel();
 
@@ -77,11 +77,11 @@ class Writer
     }
 
     /**
-     * @return Memory
+     * @return MemoryWriter
      */
     public function createMemoryWriter()
     {
-        return new Memory();
+        return new MemoryWriter();
     }
 
     public function createSentryWriter(ClientInterface $client): SentryWriter
@@ -157,17 +157,17 @@ class Writer
         $ingestionKey,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null
-    ): LogDNA {
-        return new LogDNA($hostname, $application, $ingestionKey, [], null,
+    ): LogDNAWriter {
+        return new LogDNAWriter($hostname, $application, $ingestionKey, [], null,
             $exceptionTraceBuilder, $previousExceptionTraceBuilder);
     }
 
     /**
-     * @return TriggerError
+     * @return TriggerErrorWriter
      */
     public function createTriggerErrorWriter()
     {
-        return new TriggerError();
+        return new TriggerErrorWriter();
     }
 
     /**

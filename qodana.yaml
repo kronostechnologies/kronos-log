@@ -4,5 +4,5 @@ linter: jetbrains/qodana-php:2025.2-eap
 script:
   name: php-migration
   parameters:
-    fromLevel: 8.3
-    toLevel: 8.4
+    fromLevel: 8.4
+    toLevel: 8.5

@@ -9,7 +9,7 @@ use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
 use Override;
 
-class LogDNA extends AbstractWriter
+class LogDNAWriter extends AbstractWriter
 {
     use ExceptionTraceBuilderAwareTrait;
 
@@ -66,7 +66,7 @@ class LogDNA extends AbstractWriter
      * @param $application
      * @param $ingestionKey
      * @param array $guzzleOptions
-     * @param Factory\Guzzle|null $guzzleFactory
+     * @param Factory\GuzzleFactory|null $guzzleFactory
      * @param TraceBuilder|null $exceptionTraceBuilder
      * @param TraceBuilder|null $previousExceptionTraceBuilder
      * @param ContextStringifier|null $contextStringifier
@@ -76,7 +76,7 @@ class LogDNA extends AbstractWriter
         $application,
         $ingestionKey,
         $guzzleOptions = [],
-        ?Factory\Guzzle $guzzleFactory = null,
+        ?Factory\GuzzleFactory $guzzleFactory = null,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null,
         ?ContextStringifier $contextStringifier = null
@@ -170,9 +170,9 @@ class LogDNA extends AbstractWriter
         return $metadata;
     }
 
-    private function createGuzzleClient($ingestionKey, $guzzleOptions, ?Factory\Guzzle $guzzleFactory = null)
+    private function createGuzzleClient($ingestionKey, $guzzleOptions, ?Factory\GuzzleFactory $guzzleFactory = null)
     {
-        $factory = $guzzleFactory ?: new Factory\Guzzle();
+        $factory = $guzzleFactory ?: new Factory\GuzzleFactory();
 
         $baseOptions = [
             'headers' => [

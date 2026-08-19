@@ -3,10 +3,10 @@
 namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\Writer As WriterFactory;
+use Kronos\Log\Factory\WriterFactory As WriterFactory;
 use Override;
 
-class LogDNA extends AbstractWriter
+class LogDNAStrategy extends AbstractWriterStrategy
 {
     const HOSTNAME = 'hostname';
     const APPLICATION = 'application';
@@ -26,7 +26,7 @@ class LogDNA extends AbstractWriter
 
     /**
      * @param array $settings
-     * @return \Kronos\Log\Writer\LogDNA
+     * @return \Kronos\Log\Writer\LogDNAWriter
      * @throws RequiredSetting
      */
     #[Override]

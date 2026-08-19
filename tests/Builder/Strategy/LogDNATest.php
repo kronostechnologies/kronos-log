@@ -3,9 +3,9 @@
 namespace Kronos\Tests\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
-use Kronos\Log\Builder\Strategy\LogDNA;
+use Kronos\Log\Builder\Strategy\LogDNAStrategy;
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\Writer;
+use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -20,12 +20,12 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     const MAC_ADDRESS = '01:23:45:67:89:ab';
 
     /**
-     * @var LogDNA
+     * @var LogDNAStrategy
      */
     private $strategy;
 
     /**
-     * @var MockObject&Writer
+     * @var MockObject&WriterFactory
      */
     private $factory;
 
@@ -35,18 +35,18 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     private $exceptionTraceHelper;
 
     /**
-     * @var MockObject&\Kronos\Log\Writer\LogDNA
+     * @var MockObject&\Kronos\Log\Writer\LogDNAWriter
      */
     private $writer;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\Writer\LogDNA::class);
-        $this->factory = $this->createMock(Writer::class);
+        $this->writer = $this->createMock(\Kronos\Log\Writer\LogDNAWriter::class);
+        $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createLogDNAWriter')->willReturn($this->writer);
         $this->exceptionTraceHelper = $this->createMock(ExceptionTraceHelper::class);
 
-        $this->strategy = new LogDNA($this->factory, $this->exceptionTraceHelper);
+        $this->strategy = new LogDNAStrategy($this->factory, $this->exceptionTraceHelper);
     }
 
     public function test_Settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
@@ -115,7 +115,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             ->method('setMinLevel')
             ->with(self::MIN_LEVEL);
         $settings = $this->givenRequiredSettings();
-        $settings[LogDNA::MIN_LEVEL] = self::MIN_LEVEL;
+        $settings[LogDNAStrategy::MIN_LEVEL] = self::MIN_LEVEL;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -127,7 +127,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             ->method('setMaxLevel')
             ->with(self::MAX_LEVEL);
         $settings = $this->givenRequiredSettings();
-        $settings[LogDNA::MAX_LEVEL] = self::MAX_LEVEL;
+        $settings[LogDNAStrategy::MAX_LEVEL] = self::MAX_LEVEL;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -139,7 +139,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             ->method('setIpAddress')
             ->with(self::IP_ADDRESS);
         $settings = $this->givenRequiredSettings();
-        $settings[LogDNA::IP_ADDRESS] = self::IP_ADDRESS;
+        $settings[LogDNAStrategy::IP_ADDRESS] = self::IP_ADDRESS;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -151,7 +151,7 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
             ->method('setMacAddress')
             ->with(self::MAC_ADDRESS);
         $settings = $this->givenRequiredSettings();
-        $settings[LogDNA::MAC_ADDRESS] = self::MAC_ADDRESS;
+        $settings[LogDNAStrategy::MAC_ADDRESS] = self::MAC_ADDRESS;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -168,10 +168,10 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     public function test_MissingIngestionKeySetting_buildFromArray_ShouldThrowRequiredSettingException()
     {
         $this->expectException(RequiredSetting::class);
-        $this->expectExceptionMessage(LogDNA::INGESTION_KEY . ' setting is required');
+        $this->expectExceptionMessage(LogDNAStrategy::INGESTION_KEY . ' setting is required');
         $settings = [
-            LogDNA::HOSTNAME => self::HOSTNAME_VALUE,
-            LogDNA::APPLICATION => self::APPLICATION_VALUE
+            LogDNAStrategy::HOSTNAME => self::HOSTNAME_VALUE,
+            LogDNAStrategy::APPLICATION => self::APPLICATION_VALUE
         ];
 
         $this->strategy->buildFromArray($settings);
@@ -180,9 +180,9 @@ class LogDNATest extends \PHPUnit\Framework\TestCase
     private function givenRequiredSettings()
     {
         return [
-            LogDNA::HOSTNAME => self::HOSTNAME_VALUE,
-            LogDNA::APPLICATION => self::APPLICATION_VALUE,
-            LogDNA::INGESTION_KEY => self::INGESTION_KEY_VALUE
+            LogDNAStrategy::HOSTNAME => self::HOSTNAME_VALUE,
+            LogDNAStrategy::APPLICATION => self::APPLICATION_VALUE,
+            LogDNAStrategy::INGESTION_KEY => self::INGESTION_KEY_VALUE
         ];
     }
 }

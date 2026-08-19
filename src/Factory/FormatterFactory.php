@@ -5,7 +5,7 @@ namespace Kronos\Log\Factory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 
-class Formatter
+class FormatterFactory
 {
 
     /**

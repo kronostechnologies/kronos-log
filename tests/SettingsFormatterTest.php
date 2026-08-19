@@ -7,8 +7,8 @@ use Kronos\Log\SettingsFormatter;
 
 class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
 {
-    const FIRST_WRITER_TYPE = WriterTypes::CONSOLE;
-    const SECOND_WRITER_TYPE = WriterTypes::FILE;
+    const FIRST_WRITER_TYPE = WriterTypes::CONSOLE->value;
+    const SECOND_WRITER_TYPE = WriterTypes::FILE->value;
     const SETTING_NAME = 'setting name';
     const SETTING_VALUE = 'setting value';
     const ACTIVATION_FLAG = 'activation flag';

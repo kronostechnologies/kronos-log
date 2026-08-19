@@ -2,24 +2,22 @@
 
 namespace Kronos\Log\Enumeration;
 
-use Kronos\Log\Enumeration;
-
-class AnsiTextColor extends Enumeration
+enum AnsiTextColor: string
 {
-    const BLACK = '0;30';
-    const DARK_GRAY = '1;30';
-    const RED = '0;31';
-    const LIGHT_RED = '1;31';
-    const GREEN = '0;32';
-    const LIGHT_GREEN = '1;32';
-    const BROWN = '0;33';
-    const YELLOW = '1;33';
-    const BLUE = '0;34';
-    const LIGHT_BLUE = '1;34';
-    const PURPLE = '0;35';
-    const LIGHT_PURPLE = '1;35';
-    const CYAN = '0;36m';
-    const LIGHT_CYAN = '1;36';
-    const LIGHT_GRAY = '0;37';
-    const WHITE = '1;37';
+    case BLACK = '0;30';
+    case DARK_GRAY = '1;30';
+    case RED = '0;31';
+    case LIGHT_RED = '1;31';
+    case GREEN = '0;32';
+    case LIGHT_GREEN = '1;32';
+    case BROWN = '0;33';
+    case YELLOW = '1;33';
+    case BLUE = '0;34';
+    case LIGHT_BLUE = '1;34';
+    case PURPLE = '0;35';
+    case LIGHT_PURPLE = '1;35';
+    case CYAN = '0;36m';
+    case LIGHT_CYAN = '1;36';
+    case LIGHT_GRAY = '0;37';
+    case WHITE = '1;37';
 }

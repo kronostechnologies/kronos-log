@@ -11,7 +11,7 @@ use Sentry\ClientInterface;
 use Sentry\Severity;
 use Sentry\State\Scope;
 
-class Sentry extends AbstractWriter
+class SentryWriter extends AbstractWriter
 {
     /**
      * Sentry constructor.

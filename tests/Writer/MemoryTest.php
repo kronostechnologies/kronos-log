@@ -2,7 +2,7 @@
 
 namespace Kronos\Tests\Log\Writer;
 
-use Kronos\Log\Writer\Memory;
+use Kronos\Log\Writer\MemoryWriter;
 use Psr\Log\LogLevel;
 
 class MemoryTest extends \PHPUnit\Framework\TestCase
@@ -23,7 +23,7 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
     public function setUp(): void
     {
 
-        $this->writer = new Memory();
+        $this->writer = new MemoryWriter();
     }
 
     public function test_Writer_Log_WillAddInterpolatedMessageWithLogLevelToContent()

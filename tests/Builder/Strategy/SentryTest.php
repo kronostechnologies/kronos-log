@@ -5,8 +5,8 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\Sentry;
 use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\Writer;
-use Kronos\Log\Writer\Sentry as SentryWriter;
+use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\SentryWriter as SentryWriter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Sentry\ClientInterface;
 
@@ -24,7 +24,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     private $strategy;
 
     /**
-     * @var Writer&MockObject
+     * @var WriterFactory&MockObject
      */
     private $factory;
 
@@ -41,7 +41,7 @@ class SentryTest extends \PHPUnit\Framework\TestCase
     public function setUp(): void
     {
         $this->writer = $this->createMock(SentryWriter::class);
-        $this->factory = $this->createMock(Writer::class);
+        $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createSentryWriter')->willReturn($this->writer);
 
         $this->sentryClient = $this->createMock(ClientInterface::class);

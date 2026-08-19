@@ -12,7 +12,7 @@ use Override;
 use Psr\Log\LogLevel;
 use Throwable;
 
-class File extends \Kronos\Log\AbstractWriter
+class FileWriter extends \Kronos\Log\AbstractWriter
 {
     use PrependDateTime;
     use PrependLogLevel;

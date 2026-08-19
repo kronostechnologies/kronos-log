@@ -4,7 +4,7 @@ namespace Kronos\Log\Writer;
 
 use Override;
 
-class Memory extends \Kronos\Log\AbstractWriter
+class MemoryWriter extends \Kronos\Log\AbstractWriter
 {
 
     use \Kronos\Log\Traits\PrependLogLevel;

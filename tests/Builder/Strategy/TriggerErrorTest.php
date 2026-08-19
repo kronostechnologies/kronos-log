@@ -2,9 +2,9 @@
 
 namespace Kronos\Tests\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy\TriggerError;
-use Kronos\Log\Factory\Writer;
-use Kronos\Log\Writer\TriggerError AS TriggerErrorWriter;
+use Kronos\Log\Builder\Strategy\TriggerErrorStrategy;
+use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\TriggerErrorWriter AS TriggerErrorWriter;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class TriggerErrorTest extends \PHPUnit\Framework\TestCase
@@ -14,12 +14,12 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
     const FILENAME_VALUE = 'filename';
 
     /**
-     * @var TriggerError
+     * @var TriggerErrorStrategy
      */
     private $strategy;
 
     /**
-     * @var MockObject&Writer
+     * @var MockObject&WriterFactory
      */
     private $factory;
 
@@ -31,10 +31,10 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
     public function setUp(): void
     {
         $this->writer = $this->createMock(TriggerErrorWriter::class);
-        $this->factory = $this->createMock(Writer::class);
+        $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createTriggerErrorWriter')->willReturn($this->writer);
 
-        $this->strategy = new TriggerError($this->factory);
+        $this->strategy = new TriggerErrorStrategy($this->factory);
     }
 
     public function test_NoSettings_buildFromArray_ShouldCreateTriggerErrorWriter()
@@ -53,7 +53,7 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
             ->method('setMinLevel')
             ->with(self::MIN_LEVEL);
 
-        $this->strategy->buildFromArray([TriggerError::MIN_LEVEL => self::MIN_LEVEL]);
+        $this->strategy->buildFromArray([TriggerErrorStrategy::MIN_LEVEL => self::MIN_LEVEL]);
     }
 
     public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
@@ -63,7 +63,7 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
             ->method('setMaxLevel')
             ->with(self::MAX_LEVEL);
 
-        $this->strategy->buildFromArray([TriggerError::MAX_LEVEL => self::MAX_LEVEL]);
+        $this->strategy->buildFromArray([TriggerErrorStrategy::MAX_LEVEL => self::MAX_LEVEL]);
     }
 
     public function test_buildFromArray_ShouldReturnWriter()

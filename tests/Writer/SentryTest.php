@@ -2,7 +2,7 @@
 
 namespace Kronos\Tests\Log\Writer;
 
-use Kronos\Log\Writer\Sentry;
+use Kronos\Log\Writer\SentryWriter;
 use Kronos\Log\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -25,13 +25,13 @@ class SentryTest extends TestCase
     const LOGGER_MESSAGE_KEY = 'loggerMessage';
 
     private ClientInterface&MockObject $sentryClient;
-    private Sentry | SentryWithScopeDecorator $writer;
+    private SentryWriter | SentryWriterWithScopeDecorator $writer;
 
     public function setUp(): void
     {
         $this->sentryClient = $this->createMock(ClientInterface::class);
 
-        $this->writer = new SentryWithScopeDecorator($this->sentryClient);
+        $this->writer = new SentryWriterWithScopeDecorator($this->sentryClient);
     }
 
     public function test_MessageAndContext_Log_SouldCallCaptureMessageWithInterpolatedMessage()
@@ -234,7 +234,7 @@ class SentryTest extends TestCase
     }
 }
 
-class SentryWithScopeDecorator extends Sentry
+class SentryWriterWithScopeDecorator extends SentryWriter
 {
     const SPAN_ID = "3d1bf6350d09fb80";
     const TRACE_ID = "141bb800f59d073b7a075b1eed7d5372";

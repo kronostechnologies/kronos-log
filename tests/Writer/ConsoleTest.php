@@ -9,7 +9,7 @@ use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Logger;
-use Kronos\Log\Writer\Console;
+use Kronos\Log\Writer\ConsoleWriter;
 use Kronos\Tests\Log\ExtendedTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
@@ -35,7 +35,7 @@ class ConsoleTest extends ExtendedTestCase
     const PREVIOUS_EXCEPTION_LINE = 3;
     const PREVIOUS_EXCEPTION_TITLE_LINE_FORMAT = "Previous exception: 'Previous exception message' in '%s' at line %i";
 
-    private Console $writer;
+    private ConsoleWriter $writer;
     private FileFactory&MockObject $fileFactory;
     private TTY&MockObject $stdout;
     private TTY&MockObject $stderr;
@@ -52,19 +52,19 @@ class ConsoleTest extends ExtendedTestCase
             ->method('createTTYAdaptor')
             ->with(
                 ...self::withConsecutive(
-                    [Console::STDOUT],
-                    [Console::STDERR]
+                    [ConsoleWriter::STDOUT],
+                    [ConsoleWriter::STDERR]
                 )
             );
 
-        $this->writer = new Console($this->fileFactory);
+        $this->writer = new ConsoleWriter($this->fileFactory);
     }
 
     public function test_Console_LogWithLevelBelowError_ShouldWriteInterpolatedMessageToStdout()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout, self::INTERPOLATED_MESSAGE);
-        $this->writer = new Console($this->fileFactory);
+        $this->writer = new ConsoleWriter($this->fileFactory);
 
         $this->writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
@@ -73,7 +73,7 @@ class ConsoleTest extends ExtendedTestCase
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout, self::INTERPOLATED_MESSAGE, AnsiTextColor::YELLOW);
-        $this->writer = new Console($this->fileFactory);
+        $this->writer = new ConsoleWriter($this->fileFactory);
 
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
@@ -83,7 +83,7 @@ class ConsoleTest extends ExtendedTestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stderr, self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE,
             AnsiBackgroundColor::RED);
-        $this->writer = new Console($this->fileFactory);
+        $this->writer = new ConsoleWriter($this->fileFactory);
 
         $this->writer->log(self::LOGLEVEL_ABOVE_WARNING, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
@@ -94,7 +94,7 @@ class ConsoleTest extends ExtendedTestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout,
             self::matchesRegularExpression('/' . self::DATETIME_REGEX . self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL . '/'));
-        $this->writer = new Console($this->fileFactory);
+        $this->writer = new ConsoleWriter($this->fileFactory);
         $this->writer->setPrependLogLevel();
         $this->writer->setPrependDateTime();
 
@@ -106,7 +106,7 @@ class ConsoleTest extends ExtendedTestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsSetForceAnsiColorSupportToBeCalled($this->stdout);
         $this->expectsSetForceAnsiColorSupportToBeCalled($this->stderr);
-        $this->writer = new Console($this->fileFactory);
+        $this->writer = new ConsoleWriter($this->fileFactory);
 
         $this->writer->setForceAnsiColorSupport();
     }
@@ -116,7 +116,7 @@ class ConsoleTest extends ExtendedTestCase
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsSetForceNoAnsiColorSupportToBeCalled($this->stdout);
         $this->expectsSetForceNoAnsiColorSupportToBeCalled($this->stderr);
-        $this->writer = new Console($this->fileFactory);
+        $this->writer = new ConsoleWriter($this->fileFactory);
 
         $this->writer->setForceNoAnsiColorSupport();
     }
@@ -131,7 +131,7 @@ class ConsoleTest extends ExtendedTestCase
             [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
-        $writer = new Console($this->fileFactory);
+        $writer = new ConsoleWriter($this->fileFactory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => new Exception(self::EXCEPTION_MESSAGE)
@@ -156,7 +156,7 @@ class ConsoleTest extends ExtendedTestCase
             ->method('getTraceAsString')
             ->willReturn($exception->getTraceAsString());
 
-        $writer = new Console($this->fileFactory, $exceptionTraceBuilder);
+        $writer = new ConsoleWriter($this->fileFactory, $exceptionTraceBuilder);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -175,7 +175,7 @@ class ConsoleTest extends ExtendedTestCase
         ]);
         $exception = new Exception(self::EXCEPTION_MESSAGE);
 
-        $writer = new Console($this->fileFactory);
+        $writer = new ConsoleWriter($this->fileFactory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -203,7 +203,7 @@ class ConsoleTest extends ExtendedTestCase
             ->method('getTraceAsString')
             ->willReturn($previous_exception->getTraceAsString());
 
-        $writer = new Console($this->fileFactory, null, $previousExceptionTraceBuilder);
+        $writer = new ConsoleWriter($this->fileFactory, null, $previousExceptionTraceBuilder);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -226,7 +226,7 @@ class ConsoleTest extends ExtendedTestCase
             ['']
         ]);
 
-        $writer = new Console($this->fileFactory);
+        $writer = new ConsoleWriter($this->fileFactory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -243,8 +243,8 @@ class ConsoleTest extends ExtendedTestCase
         $this->fileFactory
             ->method('createTTYAdaptor')
             ->willReturnMap([
-                [Console::STDOUT, $this->stdout],
-                [Console::STDERR, $this->stderr],
+                [ConsoleWriter::STDOUT, $this->stdout],
+                [ConsoleWriter::STDERR, $this->stderr],
             ]);
     }
 

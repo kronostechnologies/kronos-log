@@ -2,20 +2,21 @@
 
 namespace Kronos\Log;
 
-use Kronos\Log\Builder\Strategy\Selector;
+use Kronos\Log\Builder\Strategy\StrategySelector;
+use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\Exception\NoWriter;
-use Kronos\Log\Factory\Logger as LoggerFactory;
+use Kronos\Log\Factory\LoggerFactory as LoggerFactory;
 use phpDocumentor\Reflection\Types\Context;
 
 class Builder
 {
     private LoggerFactory $loggerFactory;
-    private Selector $selector;
+    private StrategySelector $selector;
 
-    public function __construct(?LoggerFactory $loggerFactory = null, ?Selector $selector = null)
+    public function __construct(?LoggerFactory $loggerFactory = null, ?StrategySelector $selector = null)
     {
         $this->loggerFactory = $loggerFactory ?: new LoggerFactory();
-        $this->selector = $selector ?: new Selector();
+        $this->selector = $selector ?: new StrategySelector();
     }
 
 
@@ -33,7 +34,7 @@ class Builder
         }
 
         foreach ($settings as $writerSetting) {
-            $strategy = $this->selector->getStrategyForType($writerSetting['type']);
+            $strategy = $this->selector->getStrategyForType($writerSetting['type'] ?? null);
             $writer = $strategy->buildFromArray($writerSetting['settings']);
             $logger->addWriter($writer);
         }

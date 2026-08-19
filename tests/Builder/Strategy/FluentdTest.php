@@ -4,19 +4,19 @@
 namespace Kronos\Tests\Log\Builder\Strategy;
 
 
-use Kronos\Log\Builder\Strategy\Fluentd;
+use Kronos\Log\Builder\Strategy\FluentdStrategy;
 use Kronos\Log\Exception\RequiredSetting;
 
 class FluentdTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Fluentd
+     * @var FluentdStrategy
      */
     protected $strategy;
 
     public function setUp(): void
     {
-        $this->strategy = new Fluentd();
+        $this->strategy = new FluentdStrategy();
     }
 
     public function test_settingsValid_buildFromArray_writerIsCreatedSuccessfully()
@@ -28,7 +28,7 @@ class FluentdTest extends \PHPUnit\Framework\TestCase
 
         $retVal = $this->strategy->buildFromArray($validParams);
 
-        $this->assertInstanceOf(\Kronos\Log\Writer\Fluentd::class, $retVal);
+        $this->assertInstanceOf(\Kronos\Log\Writer\FluentdWriter::class, $retVal);
     }
 
     public function test_hostnameNotSet_buildFromArray_throwsRequiredSettingException()

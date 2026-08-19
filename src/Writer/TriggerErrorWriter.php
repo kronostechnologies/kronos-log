@@ -6,7 +6,7 @@ use Kronos\Log\AbstractWriter;
 use Override;
 use Psr\Log\LogLevel;
 
-class TriggerError extends AbstractWriter
+class TriggerErrorWriter extends AbstractWriter
 {
     const MAP = [
         LogLevel::EMERGENCY => E_USER_WARNING,

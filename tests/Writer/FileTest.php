@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log\Writer;
 use Kronos\Log\Adaptor\FileFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
-use Kronos\Log\Writer\File;
+use Kronos\Log\Writer\FileWriter;
 use Kronos\Tests\Log\ExtendedTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
@@ -34,7 +34,7 @@ class FileTest extends ExtendedTestCase
 
     const STRINGIFIED_CONTEXT = 'stringified context';
 
-    private File|MockObject $adaptor;
+    private FileWriter|MockObject $adaptor;
     private FileFactory&MockObject $factory;
 
     public function setUp(): void
@@ -50,14 +50,14 @@ class FileTest extends ExtendedTestCase
             ->method('createFileAdaptor')
             ->with(self::A_FILENAME);
 
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
     }
 
     public function test_WriteWithAdaptor_Log_ShouldCallWriteWithInterpolatedMessage()
     {
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToByCalledOnceWith(self::INTERPOLATED_MESSAGE);
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
 
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
@@ -67,7 +67,7 @@ class FileTest extends ExtendedTestCase
     {
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToByCalledOnceWith(self::matchesRegularExpression('/' . self::DATETIME_REGEX . '' . self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL . '/'));
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
         $writer->setPrependLogLevel();
         $writer->setPrependDateTime();
 
@@ -78,7 +78,7 @@ class FileTest extends ExtendedTestCase
     {
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToByCalledOnceWith(self::INTERPOLATED_MESSAGE);
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => self::CONTEXT_VALUE
@@ -95,7 +95,7 @@ class FileTest extends ExtendedTestCase
             [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => new \Exception(self::EXCEPTION_MESSAGE)
@@ -113,7 +113,7 @@ class FileTest extends ExtendedTestCase
             [self::matches(self::EXCEPTION_TITLE_LINE_FORMAT)],
             ['']
         ]);
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -141,7 +141,7 @@ class FileTest extends ExtendedTestCase
             ->method('getTraceAsString')
             ->willReturn($previous_exception->getTraceAsString());
 
-        $writer = new File(self::A_FILENAME, $this->factory, null, $previousExceptionTraceBuilder);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory, null, $previousExceptionTraceBuilder);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -164,7 +164,7 @@ class FileTest extends ExtendedTestCase
             ['']
         ]);
 
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE,
             Logger::EXCEPTION_CONTEXT => $exception
@@ -181,7 +181,7 @@ class FileTest extends ExtendedTestCase
             ->expects(self::once())
             ->method('excludeKey')
             ->with(Logger::EXCEPTION_CONTEXT);
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
 
         $writer->setContextStringifier($context_stringifier);
     }
@@ -199,7 +199,7 @@ class FileTest extends ExtendedTestCase
             ->method('stringify')
             ->with($context)
             ->willReturn(self::STRINGIFIED_CONTEXT);
-        $writer = new File(self::A_FILENAME, $this->factory);
+        $writer = new FileWriter(self::A_FILENAME, $this->factory);
         $writer->setContextStringifier($context_stringifier);
 
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
@@ -213,7 +213,7 @@ class FileTest extends ExtendedTestCase
 
         $this->expectsWriteToBeCalledOnce();
 
-        $writer = new File(null, $this->factory);
+        $writer = new FileWriter(null, $this->factory);
         $writer->setContextStringifier($given_stringifier);
 
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
@@ -234,7 +234,7 @@ class FileTest extends ExtendedTestCase
 
         $this->expectsContextToBeIncludedInWriter();
 
-        $writer = new File(null, $this->factory);
+        $writer = new FileWriter(null, $this->factory);
         $writer->setContextStringifier($given_stringifier);
 
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
@@ -256,7 +256,7 @@ class FileTest extends ExtendedTestCase
     {
         $this->expectsWriteToBeCalledWithConsecutive([
             [self::INTERPOLATED_MESSAGE],
-            [File::CONTEXT_TITLE_LINE],
+            [FileWriter::CONTEXT_TITLE_LINE],
             [self::STRINGIFIED_CONTEXT]
         ]);
     }

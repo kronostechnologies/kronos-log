@@ -12,7 +12,7 @@ use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
 use Override;
 
-class Fluentd extends AbstractWriter
+class FluentdWriter extends AbstractWriter
 {
     use ExceptionTraceBuilderAwareTrait;
 
@@ -42,7 +42,7 @@ class Fluentd extends AbstractWriter
     protected $logger;
 
     /**
-     * @var \Kronos\Log\Factory\Fluentd
+     * @var \Kronos\Log\Factory\FluentdFactory
      */
     protected $factory;
 
@@ -77,7 +77,7 @@ class Fluentd extends AbstractWriter
      * @param $tag
      * @param null|string $application
      * @param bool $wrapContextInMeta
-     * @param \Kronos\Log\Factory\Fluentd|null $factory
+     * @param \Kronos\Log\Factory\FluentdFactory|null $factory
      * @param ContextStringifier|null $contextStringifier
      */
     public function __construct(
@@ -86,7 +86,7 @@ class Fluentd extends AbstractWriter
         $tag,
         $application,
         $wrapContextInMeta,
-        ?\Kronos\Log\Factory\Fluentd $factory = null,
+        ?\Kronos\Log\Factory\FluentdFactory $factory = null,
         ?ContextStringifier $contextStringifier = null,
         $fluentBit = false
     ) {
@@ -95,7 +95,7 @@ class Fluentd extends AbstractWriter
         $this->tag = $tag;
         $this->application = $application;
         $this->wrapContextInMeta = $wrapContextInMeta;
-        $this->factory = $factory ?: new \Kronos\Log\Factory\Fluentd();
+        $this->factory = $factory ?: new \Kronos\Log\Factory\FluentdFactory();
         $this->contextStringifier = $contextStringifier ?: new ContextStringifier();
         $this->fluentBit = $fluentBit;
     }

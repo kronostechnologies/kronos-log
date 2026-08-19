@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Factory;
 
-class Logger
+class LoggerFactory
 {
 
     /**

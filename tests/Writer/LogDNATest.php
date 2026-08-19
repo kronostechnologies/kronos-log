@@ -6,7 +6,7 @@ use Exception;
 use GuzzleHttp\Client;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
-use Kronos\Log\Writer\LogDNA;
+use Kronos\Log\Writer\LogDNAWriter;
 use Kronos\Log\Factory;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -37,8 +37,8 @@ class LogDNATest extends TestCase
     const STINGIFYIED_CONTEXT = ['field' => 'stringified value'];
     const EXCEPTION_TRACE = 'exception trace';
 
-    private LogDNA $writer;
-    private Factory\Guzzle&MockObject $factory;
+    private LogDNAWriter $writer;
+    private Factory\GuzzleFactory&MockObject $factory;
     private Client&MockObject $client;
     private TraceBuilder&MockObject $exceptionTraceBuilder;
     private TraceBuilder&MockObject $previousExceptionTraceBuilder;
@@ -51,7 +51,7 @@ class LogDNATest extends TestCase
             ->onlyMethods(['post'])
             ->getMock();
 
-        $this->factory = $this->createMock(Factory\Guzzle::class);
+        $this->factory = $this->createMock(Factory\GuzzleFactory::class);
         $this->factory->method('createClient')->willReturn($this->client);
 
         $this->contextStringifier = $this->createMock(ContextStringifier::class);
@@ -68,10 +68,10 @@ class LogDNATest extends TestCase
                     'apikey' => self::INGESTION_KEY,
                     'Connection' => 'keep-alive'
                 ],
-                'base_uri' => LogDNA::LOGDNA_URL
+                'base_uri' => LogDNAWriter::LOGDNA_URL
             ]);
 
-        $this->writer = new LogDNA(
+        $this->writer = new LogDNAWriter(
             self::HOSTNAME,
             self::APPLICATION,
             self::INGESTION_KEY,
@@ -95,7 +95,7 @@ class LogDNATest extends TestCase
                     'Connection' => 'keep-alive',
                     self::CUSTOM_HEADER => self::CUSTOM_HEADER_VALUE
                 ],
-                'base_uri' => LogDNA::LOGDNA_URL,
+                'base_uri' => LogDNAWriter::LOGDNA_URL,
                 'proxy' => self::PROXY,
                 'timeout' => self::TIMEOUT
             ]);
@@ -109,7 +109,7 @@ class LogDNATest extends TestCase
             'timeout' => self::TIMEOUT
         ];
 
-        $this->writer = new LogDNA(
+        $this->writer = new LogDNAWriter(
             self::HOSTNAME,
             self::APPLICATION,
             self::INGESTION_KEY,
@@ -138,7 +138,7 @@ class LogDNATest extends TestCase
             ->expects(self::once())
             ->method('post')
             ->with(
-                $this->matchesRegularExpression($this->buildUriRegex(LogDNA::INGEST_URI . '?hostname=' . self::HOSTNAME . '&now=\d+')),
+                $this->matchesRegularExpression($this->buildUriRegex(LogDNAWriter::INGEST_URI . '?hostname=' . self::HOSTNAME . '&now=\d+')),
                 [
                     'json' => [
                         'lines' => [
@@ -146,7 +146,7 @@ class LogDNATest extends TestCase
                                 'line' => self::MESSAGE,
                                 'app' => self::APPLICATION,
                                 'level' => self::ANY_LOG_LEVEL,
-                                'meta' => [LogDNA::METADATA_CONTEXT => self::STINGIFYIED_CONTEXT]
+                                'meta' => [LogDNAWriter::METADATA_CONTEXT => self::STINGIFYIED_CONTEXT]
                             ]
                         ]
                     ]
@@ -164,7 +164,7 @@ class LogDNATest extends TestCase
             ->expects(self::once())
             ->method('post')
             ->with(
-                $this->matchesRegularExpression($this->buildUriRegex(LogDNA::INGEST_URI . '?hostname=' . urlencode(self::HOSTNAME) . '&now=\d+')),
+                $this->matchesRegularExpression($this->buildUriRegex(LogDNAWriter::INGEST_URI . '?hostname=' . urlencode(self::HOSTNAME) . '&now=\d+')),
                 [
                     'json' => [
                         'lines' => [
@@ -172,7 +172,7 @@ class LogDNATest extends TestCase
                                 'line' => self::INTERPOLATED_MESSAGE,
                                 'app' => self::APPLICATION,
                                 'level' => self::ANY_LOG_LEVEL,
-                                'meta' => [LogDNA::METADATA_CONTEXT => self::STINGIFYIED_CONTEXT]
+                                'meta' => [LogDNAWriter::METADATA_CONTEXT => self::STINGIFYIED_CONTEXT]
                             ]
                         ]
                     ]
@@ -190,7 +190,7 @@ class LogDNATest extends TestCase
             ->expects(self::once())
             ->method('post')
             ->with(
-                $this->matchesRegularExpression($this->buildUriRegex(LogDNA::INGEST_URI . '?hostname=' . urlencode(self::HOSTNAME) . '&now=\d+&ip=' . urlencode(self::IP_ADDRESS))),
+                $this->matchesRegularExpression($this->buildUriRegex(LogDNAWriter::INGEST_URI . '?hostname=' . urlencode(self::HOSTNAME) . '&now=\d+&ip=' . urlencode(self::IP_ADDRESS))),
                 $this->anything()
             );
         $this->givenWriter();
@@ -205,7 +205,7 @@ class LogDNATest extends TestCase
             ->expects(self::once())
             ->method('post')
             ->with(
-                $this->matchesRegularExpression($this->buildUriRegex(LogDNA::INGEST_URI . '?hostname=' . urlencode(self::HOSTNAME) . '&now=\d+&mac=' . urlencode(self::MAC_ADDRESS))),
+                $this->matchesRegularExpression($this->buildUriRegex(LogDNAWriter::INGEST_URI . '?hostname=' . urlencode(self::HOSTNAME) . '&now=\d+&mac=' . urlencode(self::MAC_ADDRESS))),
                 $this->anything()
             );
         $this->givenWriter();
@@ -325,7 +325,7 @@ class LogDNATest extends TestCase
 
     private function givenWriter()
     {
-        $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
+        $this->writer = new LogDNAWriter(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
             null, null, $this->contextStringifier);
     }
 
@@ -333,7 +333,7 @@ class LogDNATest extends TestCase
     {
         $this->exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
 
-        $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
+        $this->writer = new LogDNAWriter(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
             $this->exceptionTraceBuilder, null, $this->contextStringifier);
     }
 
@@ -341,7 +341,7 @@ class LogDNATest extends TestCase
     {
         $this->previousExceptionTraceBuilder = $this->createMock(TraceBuilder::class);
 
-        $this->writer = new LogDNA(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
+        $this->writer = new LogDNAWriter(self::HOSTNAME, self::APPLICATION, self::INGESTION_KEY, [], $this->factory,
             null, $this->previousExceptionTraceBuilder, $this->contextStringifier);
     }
 

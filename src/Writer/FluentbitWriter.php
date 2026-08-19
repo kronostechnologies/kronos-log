@@ -8,7 +8,7 @@ use Fluent\Logger\FluentLogger;
 use \Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use Override;
 
-class Fluentbit extends Fluentd
+class FluentbitWriter extends FluentdWriter
 {
     /**
      * @return FluentLogger

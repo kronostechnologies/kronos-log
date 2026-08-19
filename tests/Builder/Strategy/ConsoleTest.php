@@ -2,9 +2,9 @@
 
 namespace Kronos\Tests\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy\Console;
+use Kronos\Log\Builder\Strategy\ConsoleStrategy;
 use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
-use Kronos\Log\Factory\Writer;
+use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -14,12 +14,12 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     const MAX_LEVEL = 'emergency';
 
     /**
-     * @var Console
+     * @var ConsoleStrategy
      */
     private $strategy;
 
     /**
-     * @var MockObject&Writer
+     * @var MockObject&WriterFactory
      */
     private $factory;
 
@@ -29,18 +29,18 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
     private $exceptionTraceHelper;
 
     /**
-     * @var MockObject&\Kronos\Log\Writer\Console
+     * @var MockObject&\Kronos\Log\Writer\ConsoleWriter
      */
     private $writer;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\Writer\Console::class);
-        $this->factory = $this->createMock(Writer::class);
+        $this->writer = $this->createMock(\Kronos\Log\Writer\ConsoleWriter::class);
+        $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createConsoleWriter')->willReturn($this->writer);
         $this->exceptionTraceHelper = $this->createMock(ExceptionTraceHelper::class);
 
-        $this->strategy = new Console($this->factory, $this->exceptionTraceHelper);
+        $this->strategy = new ConsoleStrategy($this->factory, $this->exceptionTraceHelper);
     }
 
     public function test_Settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
@@ -112,7 +112,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             ->method('setMinLevel')
             ->with(self::MIN_LEVEL);
 
-        $this->strategy->buildFromArray([Console::MIN_LEVEL => self::MIN_LEVEL]);
+        $this->strategy->buildFromArray([ConsoleStrategy::MIN_LEVEL => self::MIN_LEVEL]);
     }
 
     public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
@@ -122,7 +122,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             ->method('setMaxLevel')
             ->with(self::MAX_LEVEL);
 
-        $this->strategy->buildFromArray([Console::MAX_LEVEL => self::MAX_LEVEL]);
+        $this->strategy->buildFromArray([ConsoleStrategy::MAX_LEVEL => self::MAX_LEVEL]);
     }
 
     public function test_ForceAnsiColor_buildFromArray_ShouldSetForceAnsiColor()
@@ -132,7 +132,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             ->method('setForceAnsiColorSupport')
             ->with(true);
 
-        $this->strategy->buildFromArray([Console::FORCE_ANSI_COLOR => true]);
+        $this->strategy->buildFromArray([ConsoleStrategy::FORCE_ANSI_COLOR => true]);
     }
 
     public function test_FalseForceAnsiColor_buildFromArray_ShouldNeverSetForceAnsiColor()
@@ -141,7 +141,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             ->expects(self::never())
             ->method('setForceAnsiColorSupport');
 
-        $this->strategy->buildFromArray([Console::FORCE_ANSI_COLOR => false]);
+        $this->strategy->buildFromArray([ConsoleStrategy::FORCE_ANSI_COLOR => false]);
     }
 
     public function test_ForceNoAnsiColor_buildFromArray_ShouldSetForceAnsiColor()
@@ -151,7 +151,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             ->method('setForceNoAnsiColorSupport')
             ->with(true);
 
-        $this->strategy->buildFromArray([Console::FORCE_NO_ANSI_COLOR => true]);
+        $this->strategy->buildFromArray([ConsoleStrategy::FORCE_NO_ANSI_COLOR => true]);
     }
 
     public function test_FalseForceNoAnsiColor_buildFromArray_ShouldNeverSetForceNoAnsiColor()
@@ -160,7 +160,7 @@ class ConsoleTest extends \PHPUnit\Framework\TestCase
             ->expects(self::never())
             ->method('setForceNoAnsiColorSupport');
 
-        $this->strategy->buildFromArray([Console::FORCE_NO_ANSI_COLOR => false]);
+        $this->strategy->buildFromArray([ConsoleStrategy::FORCE_NO_ANSI_COLOR => false]);
     }
 
     public function test_buildFromArray_ShouldReturnWriter()

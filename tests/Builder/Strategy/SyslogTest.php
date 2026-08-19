@@ -2,9 +2,9 @@
 
 namespace Kronos\Tests\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy\Syslog;
+use Kronos\Log\Builder\Strategy\SyslogStrategy;
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\Writer;
+use Kronos\Log\Factory\WriterFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SyslogTest extends \PHPUnit\Framework\TestCase
@@ -15,27 +15,27 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
     const APPLICATION_VALUE = 'application value';
 
     /**
-     * @var Syslog
+     * @var SyslogStrategy
      */
     private $strategy;
 
     /**
-     * @var MockObject&Writer
+     * @var MockObject&WriterFactory
      */
     private $factory;
 
     /**
-     * @var MockObject&\Kronos\Log\Writer\Syslog
+     * @var MockObject&\Kronos\Log\Writer\SyslogWriter
      */
     private $writer;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\Writer\Syslog::class);
-        $this->factory = $this->createMock(Writer::class);
+        $this->writer = $this->createMock(\Kronos\Log\Writer\SyslogWriter::class);
+        $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createSyslogWriter')->willReturn($this->writer);
 
-        $this->strategy = new Syslog($this->factory);
+        $this->strategy = new SyslogStrategy($this->factory);
     }
 
     public function test_Application_buildFromArray_ShouldCreateSyslogWriterWithSettings()
@@ -56,7 +56,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
             ->method('createSyslogWriter')
             ->with(self::APPLICATION_VALUE, LOG_PID);
         $settings = $this->givenRequiredSetting();
-        $settings[Syslog::OPTION] = LOG_PID;
+        $settings[SyslogStrategy::OPTION] = LOG_PID;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -66,9 +66,9 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
         $this->factory
             ->expects(self::once())
             ->method('createSyslogWriter')
-            ->with(self::APPLICATION_VALUE, \Kronos\Log\Writer\Syslog::DEFAULT_OPTION, LOG_LOCAL6);
+            ->with(self::APPLICATION_VALUE, \Kronos\Log\Writer\SyslogWriter::DEFAULT_OPTION, LOG_LOCAL6);
         $settings = $this->givenRequiredSetting();
-        $settings[Syslog::FACILITY] = LOG_LOCAL6;
+        $settings[SyslogStrategy::FACILITY] = LOG_LOCAL6;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -80,7 +80,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
             ->method('setMinLevel')
             ->with(self::MIN_LEVEL);
         $settings = $this->givenRequiredSetting();
-        $settings[Syslog::MIN_LEVEL] = self::MIN_LEVEL;
+        $settings[SyslogStrategy::MIN_LEVEL] = self::MIN_LEVEL;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -92,7 +92,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
             ->method('setMaxLevel')
             ->with(self::MAX_LEVEL);
         $settings = $this->givenRequiredSetting();
-        $settings[Syslog::MAX_LEVEL] = self::MAX_LEVEL;
+        $settings[SyslogStrategy::MAX_LEVEL] = self::MAX_LEVEL;
 
         $this->strategy->buildFromArray($settings);
     }
@@ -109,7 +109,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
     public function test_MissingApplication_buildFromArray_ShouldThrowRequiredSettingException()
     {
         $this->expectException(RequiredSetting::class);
-        $this->expectExceptionMessage(Syslog::APPLICATION . ' setting is required');
+        $this->expectExceptionMessage(SyslogStrategy::APPLICATION . ' setting is required');
 
         $this->strategy->buildFromArray([]);
     }
@@ -117,7 +117,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
     private function givenRequiredSetting()
     {
         return [
-            Syslog::APPLICATION => self::APPLICATION_VALUE
+            SyslogStrategy::APPLICATION => self::APPLICATION_VALUE
         ];
     }
 }

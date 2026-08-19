@@ -4,10 +4,10 @@ namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\Writer As WriterFactory;
+use Kronos\Log\Factory\WriterFactory As WriterFactory;
 use Override;
 
-class Syslog extends AbstractWriter
+class SyslogStrategy extends AbstractWriterStrategy
 {
 
     const APPLICATION = 'application';
@@ -23,7 +23,7 @@ class Syslog extends AbstractWriter
 
     /**
      * @param array $settings
-     * @return \Kronos\Log\Writer\Syslog
+     * @return \Kronos\Log\Writer\SyslogWriter
      * @throws RequiredSetting
      */
     #[Override]
@@ -50,7 +50,7 @@ class Syslog extends AbstractWriter
      */
     protected function getOption(array $settings)
     {
-        return isset($settings[self::OPTION]) ? $settings[self::OPTION] : \Kronos\Log\Writer\Syslog::DEFAULT_OPTION;
+        return isset($settings[self::OPTION]) ? $settings[self::OPTION] : \Kronos\Log\Writer\SyslogWriter::DEFAULT_OPTION;
     }
 
     /**
@@ -59,6 +59,6 @@ class Syslog extends AbstractWriter
      */
     protected function getFacility(array $settings)
     {
-        return isset($settings[self::FACILITY]) ? $settings[self::FACILITY] : \Kronos\Log\Writer\Syslog::DEFAULT_FACILITY;
+        return isset($settings[self::FACILITY]) ? $settings[self::FACILITY] : \Kronos\Log\Writer\SyslogWriter::DEFAULT_FACILITY;
     }
 }

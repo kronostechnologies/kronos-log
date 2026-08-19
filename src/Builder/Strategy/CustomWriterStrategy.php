@@ -5,15 +5,13 @@ namespace Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\InvalidCustomWriter;
 use Kronos\Log\Builder\Strategy;
 
-class CustomWriter
+class CustomWriterStrategy
 {
     /**
-     * @param $classname
-     * @return Strategy
+     * @param class-string $classname
      * @throws InvalidCustomWriter
-     * @throws \ReflectionException
      */
-    public function getStrategyForClassname($classname)
+    public function getStrategyForClassname(string $classname): Strategy
     {
         if (class_exists($classname)) {
             $reflection = new \ReflectionClass($classname);

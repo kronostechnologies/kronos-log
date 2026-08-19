@@ -7,7 +7,7 @@ use Kronos\Log\AbstractWriter,
     Kronos\Log\Traits\LogLevelToSyslogPriority;
 use Override;
 
-class Syslog extends AbstractWriter
+class SyslogWriter extends AbstractWriter
 {
 
     use PrependContext;

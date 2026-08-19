@@ -2,8 +2,8 @@
 
 namespace Kronos\Tests\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy\Memory;
-use Kronos\Log\Factory\Writer;
+use Kronos\Log\Builder\Strategy\MemoryStrategy;
+use Kronos\Log\Factory\WriterFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MemoryTest extends \PHPUnit\Framework\TestCase
@@ -12,27 +12,27 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
     const MAX_LEVEL = 'emergency';
 
     /**
-     * @var Memory
+     * @var MemoryStrategy
      */
     private $strategy;
 
     /**
-     * @var MockObject&Writer
+     * @var MockObject&WriterFactory
      */
     private $factory;
 
     /**
-     * @var MockObject&\Kronos\Log\Writer\Memory
+     * @var MockObject&\Kronos\Log\Writer\MemoryWriter
      */
     private $writer;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\Writer\Memory::class);
-        $this->factory = $this->createMock(Writer::class);
+        $this->writer = $this->createMock(\Kronos\Log\Writer\MemoryWriter::class);
+        $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createMemoryWriter')->willReturn($this->writer);
 
-        $this->strategy = new Memory($this->factory);
+        $this->strategy = new MemoryStrategy($this->factory);
     }
 
     public function test_buildFromArray_ShouldCreateMemoryWriter()
@@ -51,7 +51,7 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
             ->method('setMinLevel')
             ->with(self::MIN_LEVEL);
 
-        $this->strategy->buildFromArray([Memory::MIN_LEVEL => self::MIN_LEVEL]);
+        $this->strategy->buildFromArray([MemoryStrategy::MIN_LEVEL => self::MIN_LEVEL]);
     }
 
     public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
@@ -61,7 +61,7 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
             ->method('setMaxLevel')
             ->with(self::MAX_LEVEL);
 
-        $this->strategy->buildFromArray([Memory::MAX_LEVEL => self::MAX_LEVEL]);
+        $this->strategy->buildFromArray([MemoryStrategy::MAX_LEVEL => self::MAX_LEVEL]);
     }
 
     public function test_buildFromArray_ShouldReturnWriter()

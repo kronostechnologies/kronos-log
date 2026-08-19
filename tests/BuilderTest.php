@@ -5,7 +5,7 @@ namespace Kronos\Tests\Log;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Builder;
 use Kronos\Log\Exception\NoWriter;
-use Kronos\Log\Factory\Logger as LoggerFactory;
+use Kronos\Log\Factory\LoggerFactory as LoggerFactory;
 use Kronos\Log\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -26,7 +26,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
     private $loggerFactory;
 
     /**
-     * @var MockObject&Builder\Strategy\Selector
+     * @var MockObject&Builder\Strategy\StrategySelector
      */
     private $selector;
 
@@ -52,7 +52,7 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->loggerFactory->method('createLogger')->willReturn($this->logger);
 
         $this->strategy = $this->createMock(Builder\Strategy::class);
-        $this->selector = $this->createMock(Builder\Strategy\Selector::class);
+        $this->selector = $this->createMock(Builder\Strategy\StrategySelector::class);
         $this->selector->method('getStrategyForType')->willReturn($this->strategy);
 
         $this->writer = $this->createMock(AbstractWriter::class);

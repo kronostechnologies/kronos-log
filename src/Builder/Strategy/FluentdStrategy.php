@@ -9,7 +9,7 @@ use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\WriterInterface;
 use Override;
 
-class Fluentd extends AbstractWriter
+class FluentdStrategy extends AbstractWriterStrategy
 {
     const APPLICATION = 'application';
     const TAG = 'tag';
@@ -28,7 +28,7 @@ class Fluentd extends AbstractWriter
 
     /**
      * @param array $settings
-     * @return WriterInterface|\Kronos\Log\Writer\Fluentd
+     * @return WriterInterface|\Kronos\Log\Writer\FluentdWriter
      * @throws RequiredSetting
      */
     #[Override]
@@ -44,7 +44,7 @@ class Fluentd extends AbstractWriter
             FILTER_VALIDATE_BOOLEAN) : false;
         $fluentBit = isset($settings[self::FLUENT_BIT]) ? filter_var($settings[self::FLUENT_BIT],FILTER_VALIDATE_BOOLEAN) : false;
 
-        $writer = new \Kronos\Log\Writer\Fluentd(
+        $writer = new \Kronos\Log\Writer\FluentdWriter(
             $hostname,
             $port,
             $tag,

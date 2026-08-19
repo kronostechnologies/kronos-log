@@ -2,46 +2,45 @@
 
 namespace Kronos\Log\Builder\Strategy;
 
-use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\Writer As WriterFactory;
+use Kronos\Log\Builder\Strategy;
+use Kronos\Log\Factory\WriterFactory As WriterFactory;
 use Override;
 
-class File extends AbstractWriter
+class ConsoleStrategy extends AbstractWriterStrategy
 {
-    const FILENAME = 'filename';
+    const FORCE_ANSI_COLOR = 'forceAnsiColor';
+    const FORCE_NO_ANSI_COLOR = 'forceNoAnsiColor';
 
     private WriterFactory $factory;
     private ExceptionTraceHelper $exceptionTraceHelper;
 
     public function __construct(?WriterFactory $factory = null, ?ExceptionTraceHelper $exceptionTraceHelper = null)
     {
-        $this->factory = is_null($factory) ? new WriterFactory() : $factory;
+        $this->factory = $factory ?: new WriterFactory();
         $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
     }
 
     /**
      * @param array $settings
      * @psalm-suppress MoreSpecificReturnType
-     * @return \Kronos\Log\Writer\File
-     * @throws RequiredSetting
+     * @return \Kronos\Log\Writer\ConsoleWriter
      */
     #[Override]
     public function buildFromArray(array $settings)
     {
-        if (!isset($settings[self::FILENAME])) {
-            throw new RequiredSetting(self::FILENAME . ' setting is required');
-        }
-
         $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
         $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
 
-        $writer = $this->factory->createFileWriter(
-            $settings[self::FILENAME],
-            $exceptionTraceBuilder,
-            $previousExceptionTraceBuilder
-        );
+        $writer = $this->factory->createConsoleWriter($exceptionTraceBuilder, $previousExceptionTraceBuilder);
 
         $this->setCommonSettings($writer, $settings);
+
+        if (isset($settings['forceAnsiColor']) && $settings['forceAnsiColor']) {
+            $writer->setForceAnsiColorSupport();
+        }
+        if (isset($settings['forceNoAnsiColor']) && $settings['forceNoAnsiColor']) {
+            $writer->setForceNoAnsiColorSupport();
+        }
 
         return $writer;
     }

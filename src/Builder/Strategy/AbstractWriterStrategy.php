@@ -5,7 +5,7 @@ namespace Kronos\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy;
 use Psr\Log\LogLevel;
 
-abstract class AbstractWriter implements Strategy
+abstract class AbstractWriterStrategy implements Strategy
 {
 
     const MIN_LEVEL = 'minLevel';

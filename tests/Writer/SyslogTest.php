@@ -19,7 +19,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
     const INVALID_LOG_LEVEL = 'invalid log level';
 
     /**
-     * @var \Kronos\Log\Writer\Syslog
+     * @var \Kronos\Log\Writer\SyslogWriter
      */
     private $writer;
 
@@ -29,7 +29,7 @@ class SyslogTest extends \PHPUnit\Framework\TestCase
     {
         $this->syslog_adaptor = $this->createMock(\Kronos\Log\Adaptor\Syslog::class);
 
-        $this->writer = new \Kronos\Log\Writer\Syslog($this->syslog_adaptor, self::APPLICATION, self::SYSLOG_OPTION,
+        $this->writer = new \Kronos\Log\Writer\SyslogWriter($this->syslog_adaptor, self::APPLICATION, self::SYSLOG_OPTION,
             self::SYSLOG_FACILITY);
     }
 

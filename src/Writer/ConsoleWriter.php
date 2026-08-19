@@ -16,7 +16,7 @@ use Exception;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Throwable;
 
-class Console extends \Kronos\Log\AbstractWriter
+class ConsoleWriter extends \Kronos\Log\AbstractWriter
 {
     use PrependLogLevel;
     use PrependDateTime;
@@ -86,9 +86,9 @@ class Console extends \Kronos\Log\AbstractWriter
 
     /**
      * @param $level
-     * @return null|string
+     * @return AnsiTextColor|null
      */
-    private function getLevelTextColor($level)
+    private function getLevelTextColor($level): ?AnsiTextColor
     {
         return ($level == LogLevel::WARNING ? AnsiTextColor::YELLOW : null);
     }

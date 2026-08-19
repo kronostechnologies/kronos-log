@@ -2,11 +2,11 @@
 
 namespace Kronos\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy;
-use Kronos\Log\Factory\Writer As WriterFactory;
+use Kronos\Log\Factory\WriterFactory AS WriterFactory;
+use Kronos\Log\WriterInterface;
 use Override;
 
-class Memory extends AbstractWriter
+class TriggerErrorStrategy extends AbstractWriterStrategy
 {
     private WriterFactory $factory;
 
@@ -17,15 +17,16 @@ class Memory extends AbstractWriter
 
     /**
      * @param array $settings
-     * @return \Kronos\Log\Writer\Memory
+     * @return \Kronos\Log\Writer\TriggerErrorWriter|WriterInterface
      */
     #[Override]
     public function buildFromArray(array $settings)
     {
-        $writer = $this->factory->createMemoryWriter();
+        $writer = $this->factory->createTriggerErrorWriter();
 
         $this->setCommonSettings($writer, $settings);
 
         return $writer;
     }
+
 }

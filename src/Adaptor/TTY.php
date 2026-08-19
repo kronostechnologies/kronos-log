@@ -53,14 +53,7 @@ class TTY
         }
     }
 
-    /**
-     * @param string $line
-     * @param string $text_color AnsiTextColor enumeration value
-     * @param string $background_color AnsiBackgroundColor enumeration value
-     * @param bool $add_eol
-     * @throws \Exception
-     */
-    public function write($line, $text_color = null, $background_color = null, $add_eol = true)
+    public function write(string $line, ?AnsiTextColor $text_color = null, ?AnsiBackgroundColor $background_color = null, bool $add_eol = true): void
     {
         if (!$this->ressource) {
             throw new \Exception('No file opened, cannot write');
@@ -71,20 +64,20 @@ class TTY
         fwrite($this->ressource, $line . ($add_eol ? "\n" : ''));
     }
 
-    private function addColor($line, $text_color, $background_color)
+    private function addColor(string $line, ?AnsiTextColor $text_color, ?AnsiBackgroundColor $background_color): string
     {
         $colored_line = '';
         $is_colored = false;
 
         if ($this->canUseColor()) {
-            if (AnsiTextColor::isValidValue($text_color)) {
+            if ($text_color !== null) {
                 $is_colored = true;
-                $colored_line .= self::ESCAPE_SEQUENCE . $text_color . self::END_SEQUENCE;
+                $colored_line .= self::ESCAPE_SEQUENCE . $text_color->value . self::END_SEQUENCE;
             }
 
-            if (AnsiBackgroundColor::isValidValue($background_color)) {
+            if ($background_color !== null) {
                 $is_colored = true;
-                $colored_line .= self::ESCAPE_SEQUENCE . $background_color . self::END_SEQUENCE;
+                $colored_line .= self::ESCAPE_SEQUENCE . $background_color->value . self::END_SEQUENCE;
             }
         }
 

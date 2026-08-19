@@ -2,7 +2,7 @@
 
 namespace Kronos\Tests\Log\Writer;
 
-use Kronos\Log\Writer\TriggerError;
+use Kronos\Log\Writer\TriggerErrorWriter;
 use Psr\Log\LogLevel;
 
 class TriggerErrorTest extends \PHPUnit\Framework\TestCase
@@ -15,13 +15,13 @@ class TriggerErrorTest extends \PHPUnit\Framework\TestCase
     const INVALID_LOG_LEVEL = 'invalid log level';
 
     /**
-     * @var TriggerError
+     * @var TriggerErrorWriter
      */
     private $writer;
 
     public function setUp(): void
     {
-        $this->writer = new TriggerError();
+        $this->writer = new TriggerErrorWriter();
     }
 
     public function test_AnyLogLevel_log_ShouldTriggerErrorWithMessage()

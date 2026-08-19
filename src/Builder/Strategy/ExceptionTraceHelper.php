@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Builder\Strategy;
 
-use Kronos\Log\Factory\Formatter;
+use Kronos\Log\Factory\FormatterFactory;
 
 class ExceptionTraceHelper
 {
@@ -20,11 +20,11 @@ class ExceptionTraceHelper
     const SHOW_PREVIOUS_EXCEPTION_TOP_LINES = 'showPreviousExceptionTopLines';
     const SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES = 'showPreviousExceptionBottomLines';
 
-    private Formatter $factory;
+    private FormatterFactory $factory;
 
-    public function __construct(?Formatter $factory = null)
+    public function __construct(?FormatterFactory $factory = null)
     {
-        $this->factory = $factory ?: new Formatter();
+        $this->factory = $factory ?: new FormatterFactory();
     }
 
     /**
