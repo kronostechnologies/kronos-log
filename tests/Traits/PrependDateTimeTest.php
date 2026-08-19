@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 class PrependDateTimeTest extends TestCase
 {
     use PrependDateTime;
-    const A_MESSAGE = ' a message';
-    const DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
+    const string A_MESSAGE = ' a message';
+    const string DATETIME_REGEX = '\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]';
 
     public function test_NewPrepender_PrependDateTime_ShouldReturnGivenMessage()
     {

@@ -4,19 +4,16 @@ namespace Kronos\Log\Traits;
 
 trait PrependDateTime
 {
-    private $prepend_datetime = false;
+    private bool $prependDatetime = false;
 
-    /**
-     * @param boolean $prepend_datetime
-     */
-    public function setPrependDateTime($prepend_datetime = true)
+    public function setPrependDateTime(bool $prependDatetime = true): void
     {
-        $this->prepend_datetime = $prepend_datetime;
+        $this->prependDatetime = $prependDatetime;
     }
 
     public function prependDateTime($message)
     {
-        if ($this->prepend_datetime) {
+        if ($this->prependDatetime) {
             return '[' . date('Y-m-d H:i:s') . ']' . $message;
         } else {
             return $message;

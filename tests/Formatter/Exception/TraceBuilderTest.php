@@ -200,7 +200,6 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $exception = new \Exception();
         $reflection = new \ReflectionObject($exception);
         $property = $reflection->getProperty('trace');
-        $property->setAccessible(true);
         $property->setValue($exception, [
             0 => [
                 'file' => '/path/to/file/TestClass.php',
