@@ -17,9 +17,9 @@ class FileWriter extends \Kronos\Log\AbstractWriter
     use PrependDateTime;
     use PrependLogLevel;
 
-    const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
-    const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
-    const CONTEXT_TITLE_LINE = 'Context:';
+    const string EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
+    const string PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
+    const string CONTEXT_TITLE_LINE = 'Context:';
 
     private \Kronos\Log\Adaptor\File $fileAdaptor;
 

@@ -8,8 +8,8 @@ use Psr\Log\LogLevel;
 abstract class AbstractWriterStrategy implements Strategy
 {
 
-    const MIN_LEVEL = 'minLevel';
-    const MAX_LEVEL = 'maxLevel';
+    const string MIN_LEVEL = 'minLevel';
+    const string MAX_LEVEL = 'maxLevel';
 
     /**
      * @param \Kronos\Log\AbstractWriter $writer

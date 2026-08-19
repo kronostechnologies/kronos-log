@@ -14,11 +14,11 @@ use Sentry\ClientInterface;
 class Sentry extends AbstractWriterStrategy
 {
 
-    const CLIENT = 'client';
+    const string CLIENT = 'client';
 
-    const KEY = 'key';
-    const PROJECT_ID = 'projectId';
-    const OPTIONS = 'options';
+    const string KEY = 'key';
+    const string PROJECT_ID = 'projectId';
+    const string OPTIONS = 'options';
 
     private WriterFactory $factory;
 

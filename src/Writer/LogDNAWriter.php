@@ -13,12 +13,12 @@ class LogDNAWriter extends AbstractWriter
 {
     use ExceptionTraceBuilderAwareTrait;
 
-    const LOGDNA_URL = 'https://logs.logdna.com/';
-    const INGEST_URI = 'logs/ingest';
+    const string LOGDNA_URL = 'https://logs.logdna.com/';
+    const string INGEST_URI = 'logs/ingest';
 
-    const METADATA_CONTEXT = 'context';
-    const METADATA_USER = 'user';
-    const METADATA_EXCEPTION = 'exception';
+    const string METADATA_CONTEXT = 'context';
+    const string METADATA_USER = 'user';
+    const string METADATA_EXCEPTION = 'exception';
 
     /**
      * @var string

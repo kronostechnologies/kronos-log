@@ -10,7 +10,7 @@ use Throwable;
  */
 class TraceBuilder
 {
-    const LINE_SKIP = '...';
+    const string LINE_SKIP = '...';
 
     /**
      * @var bool

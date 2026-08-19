@@ -8,8 +8,8 @@ use Override;
 
 class ConsoleStrategy extends AbstractWriterStrategy
 {
-    const FORCE_ANSI_COLOR = 'forceAnsiColor';
-    const FORCE_NO_ANSI_COLOR = 'forceNoAnsiColor';
+    const string FORCE_ANSI_COLOR = 'forceAnsiColor';
+    const string FORCE_NO_ANSI_COLOR = 'forceNoAnsiColor';
 
     private WriterFactory $factory;
     private ExceptionTraceHelper $exceptionTraceHelper;

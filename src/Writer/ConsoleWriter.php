@@ -21,10 +21,10 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
     use PrependLogLevel;
     use PrependDateTime;
 
-    const STDOUT = 'php://stdout';
-    const STDERR = 'php://stderr';
-    const EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
-    const PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
+    const string STDOUT = 'php://stdout';
+    const string STDERR = 'php://stderr';
+    const string EXCEPTION_TITLE_LINE = "Exception: '{message}' in '{file}' at line {line}";
+    const string PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
 
     private TTY $stdout;
     private TTY $stderr;

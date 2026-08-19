@@ -6,19 +6,19 @@ use Kronos\Log\Factory\FormatterFactory;
 
 class ExceptionTraceHelper
 {
-    const INCLUDE_ARGS = 'includeExceptionArgs';
-    const STRIP_BASE_PATH = 'stripExceptionBasePath';
-    const SHRINK_PATHS = 'shrinkExceptionPaths';
-    const REMOVE_EXTENSION = 'removeExceptionFileExtension';
-    const SHRINK_NAMESPACES = 'shrinkExceptionNamespaces';
+    const string INCLUDE_ARGS = 'includeExceptionArgs';
+    const string STRIP_BASE_PATH = 'stripExceptionBasePath';
+    const string SHRINK_PATHS = 'shrinkExceptionPaths';
+    const string REMOVE_EXTENSION = 'removeExceptionFileExtension';
+    const string SHRINK_NAMESPACES = 'shrinkExceptionNamespaces';
 
-    const SHOW_EXCEPTION_STACKTRACE = 'showExceptionStackTrace';
-    const SHOW_EXCEPTION_TOP_LINES = 'showExceptionTopLines';
-    const SHOW_EXCEPTION_BOTTOM_LINES = 'showExceptionBottomLines';
+    const string SHOW_EXCEPTION_STACKTRACE = 'showExceptionStackTrace';
+    const string SHOW_EXCEPTION_TOP_LINES = 'showExceptionTopLines';
+    const string SHOW_EXCEPTION_BOTTOM_LINES = 'showExceptionBottomLines';
 
-    const SHOW_PREVIOUS_EXCEPTION_STACKTRACE = 'showPreviousExceptionStackTrace';
-    const SHOW_PREVIOUS_EXCEPTION_TOP_LINES = 'showPreviousExceptionTopLines';
-    const SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES = 'showPreviousExceptionBottomLines';
+    const string SHOW_PREVIOUS_EXCEPTION_STACKTRACE = 'showPreviousExceptionStackTrace';
+    const string SHOW_PREVIOUS_EXCEPTION_TOP_LINES = 'showPreviousExceptionTopLines';
+    const string SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES = 'showPreviousExceptionBottomLines';
 
     private FormatterFactory $factory;
 

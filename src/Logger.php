@@ -8,8 +8,8 @@ use Throwable;
 class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
 
-    const EXCEPTION_CONTEXT = 'exception';
-    const WRITER_PATH = "\Kronos\Log\Writer\\";
+    const string EXCEPTION_CONTEXT = 'exception';
+    const string WRITER_PATH = "\Kronos\Log\Writer\\";
 
     private $context = [];
 

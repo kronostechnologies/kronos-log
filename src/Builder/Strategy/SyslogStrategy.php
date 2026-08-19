@@ -10,9 +10,9 @@ use Override;
 class SyslogStrategy extends AbstractWriterStrategy
 {
 
-    const APPLICATION = 'application';
-    const OPTION = 'option';
-    const FACILITY = 'facility';
+    const string APPLICATION = 'application';
+    const string OPTION = 'option';
+    const string FACILITY = 'facility';
 
     private WriterFactory $factory;
 

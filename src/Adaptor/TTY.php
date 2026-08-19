@@ -8,9 +8,9 @@ use Kronos\Log\Enumeration\AnsiTextColor;
 class TTY
 {
 
-    const ESCAPE_SEQUENCE = "\033[";
-    const NO_COLOR = "\033[0m";
-    const END_SEQUENCE = "m";
+    const string ESCAPE_SEQUENCE = "\033[";
+    const string NO_COLOR = "\033[0m";
+    const string END_SEQUENCE = "m";
 
     private $ressource;
 

@@ -8,12 +8,12 @@ use Override;
 
 class LogDNAStrategy extends AbstractWriterStrategy
 {
-    const HOSTNAME = 'hostname';
-    const APPLICATION = 'application';
-    const INGESTION_KEY = 'ingestionKey';
+    const string HOSTNAME = 'hostname';
+    const string APPLICATION = 'application';
+    const string INGESTION_KEY = 'ingestionKey';
 
-    const IP_ADDRESS = 'ip';
-    const MAC_ADDRESS = 'mac';
+    const string IP_ADDRESS = 'ip';
+    const string MAC_ADDRESS = 'mac';
 
     private WriterFactory $factory;
     private ExceptionTraceHelper $exceptionTraceHelper;

@@ -8,7 +8,7 @@ use Override;
 
 class FileStragegy extends AbstractWriterStrategy
 {
-    const FILENAME = 'filename';
+    const string FILENAME = 'filename';
 
     private WriterFactory $factory;
     private ExceptionTraceHelper $exceptionTraceHelper;

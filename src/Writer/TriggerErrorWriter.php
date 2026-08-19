@@ -8,7 +8,7 @@ use Psr\Log\LogLevel;
 
 class TriggerErrorWriter extends AbstractWriter
 {
-    const MAP = [
+    const array MAP = [
         LogLevel::EMERGENCY => E_USER_WARNING,
         LogLevel::ALERT => E_USER_WARNING,
         LogLevel::CRITICAL => E_USER_WARNING,

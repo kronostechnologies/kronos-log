@@ -11,12 +11,12 @@ use Override;
 
 class FluentdStrategy extends AbstractWriterStrategy
 {
-    const APPLICATION = 'application';
-    const TAG = 'tag';
-    const HOSTNAME = 'hostname';
-    const PORT = 'port';
-    const WRAP_CONTEXT_IN_META = 'wrapContextInMeta';
-    const FLUENT_BIT = 'fluentBit';
+    const string APPLICATION = 'application';
+    const string TAG = 'tag';
+    const string HOSTNAME = 'hostname';
+    const string PORT = 'port';
+    const string WRAP_CONTEXT_IN_META = 'wrapContextInMeta';
+    const string FLUENT_BIT = 'fluentBit';
 
     private ExceptionTraceHelper $exceptionTraceHelper;
 

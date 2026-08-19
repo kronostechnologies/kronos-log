@@ -13,8 +13,8 @@ class SyslogWriter extends AbstractWriter
     use PrependContext;
     use LogLevelToSyslogPriority;
 
-    const DEFAULT_OPTION = LOG_ODELAY;
-    const DEFAULT_FACILITY = LOG_LOCAL0;
+    const int DEFAULT_OPTION = LOG_ODELAY;
+    const int DEFAULT_FACILITY = LOG_LOCAL0;
 
     /**
      * @var \Kronos\Log\Adaptor\Syslog
