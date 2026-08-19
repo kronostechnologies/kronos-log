@@ -3,6 +3,7 @@
 namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\MemoryWriter;
 use Override;
 
 class MemoryStrategy extends AbstractWriterStrategy
@@ -16,7 +17,7 @@ class MemoryStrategy extends AbstractWriterStrategy
 
     /**
      * @param array $settings
-     * @return \Kronos\Log\Writer\MemoryWriter
+     * @return MemoryWriter
      */
     #[Override]
     public function buildFromArray(array $settings)

@@ -37,7 +37,7 @@ $debug = new Log\Writer\FileWriter('/var/log/debug.log');
 $debug->setMaxLevel(\Psr\Log\LogLevel::WARNING);
 $logger->addWriter($debug);
 
-$syslog = new Log\Writer\SyslogWriter('application-name');
+$syslog = new Log\Writer\SyslogWriter(new Log\Adaptor\SyslogAdaptor(), 'application-name');
 $syslog->setMinLevel(\Psr\Log\LogLevel::ERROR);
 $logger->addWriter($syslog);
 

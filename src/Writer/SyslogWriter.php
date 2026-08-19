@@ -5,35 +5,24 @@ namespace Kronos\Log\Writer;
 use Kronos\Log\AbstractWriter,
     Kronos\Log\Traits\PrependContext,
     Kronos\Log\Traits\LogLevelToSyslogPriority;
+use Kronos\Log\Adaptor\SyslogAdaptor;
 use Override;
 
 class SyslogWriter extends AbstractWriter
 {
-
     use PrependContext;
     use LogLevelToSyslogPriority;
 
     const int DEFAULT_OPTION = LOG_ODELAY;
     const int DEFAULT_FACILITY = LOG_LOCAL0;
 
-    /**
-     * @var \Kronos\Log\Adaptor\SyslogAdaptor
-     */
-    private $syslog_adaptor;
-
+    private SyslogAdaptor $syslog_adaptor;
     private $application;
     private $option;
     private $facility;
 
-    /**
-     * Syslog constructor.
-     * @param \Kronos\Log\Adaptor\SyslogAdaptor $syslog_adaptor
-     * @param $application
-     * @param $option
-     * @param $facility
-     */
     public function __construct(
-        \Kronos\Log\Adaptor\SyslogAdaptor $syslog_adaptor,
+        SyslogAdaptor $syslog_adaptor,
         $application,
         $option = self::DEFAULT_OPTION,
         $facility = self::DEFAULT_FACILITY

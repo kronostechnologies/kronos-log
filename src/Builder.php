@@ -3,10 +3,8 @@
 namespace Kronos\Log;
 
 use Kronos\Log\Builder\Strategy\StrategySelector;
-use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\Exception\NoWriter;
-use Kronos\Log\Factory\LoggerFactory as LoggerFactory;
-use phpDocumentor\Reflection\Types\Context;
+use Kronos\Log\Factory\LoggerFactory;
 
 class Builder
 {

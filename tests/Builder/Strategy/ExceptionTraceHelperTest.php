@@ -10,19 +10,13 @@ use PHPUnit\Framework\TestCase;
 
 class ExceptionTraceHelperTest extends TestCase
 {
-    const TOP_LINES = 4;
-    const LOWER_THAN_ONE = -1;
-    const BOTTOM_LINES = 2;
-    const BASE_PATH = '/base/path/';
-    /**
-     * @var MockObject&FormatterFactory
-     */
-    private $factory;
+    const int TOP_LINES = 4;
+    const int LOWER_THAN_ONE = -1;
+    const int BOTTOM_LINES = 2;
+    const string BASE_PATH = '/base/path/';
 
-    /**
-     * @var ExceptionTraceHelper
-     */
-    private $helper;
+    private FormatterFactory & MockObject $factory;
+    private ExceptionTraceHelper $helper;
 
     public function setUp(): void
     {

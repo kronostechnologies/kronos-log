@@ -4,31 +4,21 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy\MemoryStrategy;
 use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\MemoryWriter;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MemoryStrategyTest extends \PHPUnit\Framework\TestCase
 {
-    const MIN_LEVEL = 'debug';
-    const MAX_LEVEL = 'emergency';
+    const string MIN_LEVEL = 'debug';
+    const string MAX_LEVEL = 'emergency';
 
-    /**
-     * @var MemoryStrategy
-     */
-    private $strategy;
-
-    /**
-     * @var MockObject&WriterFactory
-     */
-    private $factory;
-
-    /**
-     * @var MockObject&\Kronos\Log\Writer\MemoryWriter
-     */
-    private $writer;
+    private MemoryStrategy $strategy;
+    private WriterFactory & MockObject $factory;
+    private MemoryWriter & MockObject $writer;
 
     public function setUp(): void
     {
-        $this->writer = $this->createMock(\Kronos\Log\Writer\MemoryWriter::class);
+        $this->writer = $this->createMock(MemoryWriter::class);
         $this->factory = $this->createMock(WriterFactory::class);
         $this->factory->method('createMemoryWriter')->willReturn($this->writer);
 

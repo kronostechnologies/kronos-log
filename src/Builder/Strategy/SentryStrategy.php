@@ -2,13 +2,11 @@
 
 namespace Kronos\Log\Builder\Strategy;
 
-use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\WriterFactory As WriterFactory;
+use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\SentryWriter;
 use Override;
-use SebastianBergmann\GlobalState\RuntimeException;
-use Sentry\Client;
 use Sentry\ClientInterface;
 
 class SentryStrategy extends AbstractWriterStrategy
@@ -28,8 +26,7 @@ class SentryStrategy extends AbstractWriterStrategy
     }
 
     /**
-     * @param array $settings
-     * @return \Kronos\Log\Writer\SentryWriter
+     * @return SentryWriter
      * @throws InvalidSetting
      * @throws RequiredSetting
      */

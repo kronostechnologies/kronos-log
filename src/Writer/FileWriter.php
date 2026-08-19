@@ -2,6 +2,7 @@
 
 namespace Kronos\Log\Writer;
 
+use Kronos\Log\Adaptor\FileAdaptor;
 use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
@@ -21,7 +22,7 @@ class FileWriter extends \Kronos\Log\AbstractWriter
     const string PREVIOUS_EXCEPTION_TITLE_LINE = "Previous exception: '{message}' in '{file}' at line {line}";
     const string CONTEXT_TITLE_LINE = 'Context:';
 
-    private \Kronos\Log\Adaptor\FileAdaptor $fileAdaptor;
+    private FileAdaptor $fileAdaptor;
 
     private ?ContextStringifier $contextStringifier = null;
 

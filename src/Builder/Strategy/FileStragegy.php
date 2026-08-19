@@ -4,6 +4,7 @@ namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\FileWriter;
 use Override;
 
 class FileStragegy extends AbstractWriterStrategy
@@ -22,7 +23,7 @@ class FileStragegy extends AbstractWriterStrategy
     /**
      * @param array $settings
      * @psalm-suppress MoreSpecificReturnType
-     * @return \Kronos\Log\Writer\FileWriter
+     * @return FileWriter
      * @throws RequiredSetting
      */
     #[Override]

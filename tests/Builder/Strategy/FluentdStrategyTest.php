@@ -6,13 +6,11 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 
 use Kronos\Log\Builder\Strategy\FluentdStrategy;
 use Kronos\Log\Exception\RequiredSetting;
+use Kronos\Log\Writer\FluentdWriter;
 
 class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var FluentdStrategy
-     */
-    protected $strategy;
+    protected FluentdStrategy $strategy;
 
     public function setUp(): void
     {
@@ -28,7 +26,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
 
         $retVal = $this->strategy->buildFromArray($validParams);
 
-        $this->assertInstanceOf(\Kronos\Log\Writer\FluentdWriter::class, $retVal);
+        $this->assertInstanceOf(FluentdWriter::class, $retVal);
     }
 
     public function test_hostnameNotSet_buildFromArray_throwsRequiredSettingException()

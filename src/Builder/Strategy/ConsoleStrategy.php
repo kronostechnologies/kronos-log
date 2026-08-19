@@ -3,6 +3,7 @@
 namespace Kronos\Log\Builder\Strategy;
 
 use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Writer\ConsoleWriter;
 use Override;
 
 class ConsoleStrategy extends AbstractWriterStrategy
@@ -22,7 +23,7 @@ class ConsoleStrategy extends AbstractWriterStrategy
     /**
      * @param array $settings
      * @psalm-suppress MoreSpecificReturnType
-     * @return \Kronos\Log\Writer\ConsoleWriter
+     * @return ConsoleWriter
      */
     #[Override]
     public function buildFromArray(array $settings)
