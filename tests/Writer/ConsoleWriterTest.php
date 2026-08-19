@@ -51,9 +51,9 @@ class ConsoleWriterTest extends ExtendedTestCase
             ->method('createTTYAdaptor')
             ->with(
                 ...self::withConsecutive(
-                    [ConsoleWriter::STDOUT],
-                    [ConsoleWriter::STDERR]
-                )
+                [ConsoleWriter::STDOUT],
+                [ConsoleWriter::STDERR]
+            )
             );
 
         $this->writer = new ConsoleWriter($this->fileFactory);
@@ -247,8 +247,12 @@ class ConsoleWriterTest extends ExtendedTestCase
             ]);
     }
 
-    private function expectsWriteToBeCalled(TTYAdaptor&MockObject $file, $message, $text_color = null, $background_color = null)
-    {
+    private function expectsWriteToBeCalled(
+        TTYAdaptor&MockObject $file,
+        $message,
+        $text_color = null,
+        $background_color = null
+    ) {
         $file->expects(self::once())->method('write')->with($message, $text_color, $background_color);
     }
 
@@ -269,8 +273,8 @@ class ConsoleWriterTest extends ExtendedTestCase
             ->method('write')
             ->with(
                 ...self::withConsecutive(
-                    ...$consecutive_args
-                )
+                ...$consecutive_args
+            )
             );
     }
 }

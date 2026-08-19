@@ -2,7 +2,6 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\Adaptor\FileAdaptor as FileAdaptor;
 use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Adaptor\TTYAdaptor;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
@@ -84,11 +83,7 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
         $this->stderr->setForceNoAnsiColorSupport($force);
     }
 
-    /**
-     * @param $level
-     * @return AnsiTextColor|null
-     */
-    private function getLevelTextColor($level): ?AnsiTextColor
+    private function getLevelTextColor($level): ?string
     {
         return ($level == LogLevel::WARNING ? AnsiTextColor::YELLOW : null);
     }

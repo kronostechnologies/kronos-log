@@ -17,7 +17,6 @@ class TTYAdaptor
     private $force_ansi_color_support = false;
     private $force_no_ansi_color_support = false;
 
-
     public function __construct($filename)
     {
         $this->open($filename);
@@ -53,8 +52,12 @@ class TTYAdaptor
         }
     }
 
-    public function write(string $line, ?AnsiTextColor $text_color = null, ?AnsiBackgroundColor $background_color = null, bool $add_eol = true): void
-    {
+    public function write(
+        string $line,
+        ?string $text_color = null,
+        ?string $background_color = null,
+        bool $add_eol = true
+    ): void {
         if (!$this->ressource) {
             throw new \Exception('No file opened, cannot write');
         }
@@ -64,7 +67,7 @@ class TTYAdaptor
         fwrite($this->ressource, $line . ($add_eol ? "\n" : ''));
     }
 
-    private function addColor(string $line, ?AnsiTextColor $text_color, ?AnsiBackgroundColor $background_color): string
+    private function addColor(string $line, ?string $text_color, ?string $background_color): string
     {
         $colored_line = '';
         $is_colored = false;
@@ -72,12 +75,12 @@ class TTYAdaptor
         if ($this->canUseColor()) {
             if ($text_color !== null) {
                 $is_colored = true;
-                $colored_line .= self::ESCAPE_SEQUENCE . $text_color->value . self::END_SEQUENCE;
+                $colored_line .= self::ESCAPE_SEQUENCE . $text_color . self::END_SEQUENCE;
             }
 
             if ($background_color !== null) {
                 $is_colored = true;
-                $colored_line .= self::ESCAPE_SEQUENCE . $background_color->value . self::END_SEQUENCE;
+                $colored_line .= self::ESCAPE_SEQUENCE . $background_color . self::END_SEQUENCE;
             }
         }
 
