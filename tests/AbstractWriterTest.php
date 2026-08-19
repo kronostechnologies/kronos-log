@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log;
 
 use Kronos\Log\Exception\InvalidLogLevel;
 use \Psr\Log\LogLevel;
+use PHPUnit\Framework\Attributes\Test;
 
 class AbstractWriterTest extends \PHPUnit\Framework\TestCase
 {
@@ -21,14 +22,16 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer = new TestableWriter();
     }
 
-    public function test_NewWriter_CanLogLevel_ShouldReturnTrue()
+    #[Test]
+    public function newWriter_CanLogLevel_ShouldReturnTrue()
     {
         $canLog = $this->writer->canLogLevel(self::ANY_LEVEL);
 
         $this->assertTrue($canLog);
     }
 
-    public function test_Writer_CanLogLevel_WhenCanLogIsFalse_ShouldReturnFalse()
+    #[Test]
+    public function writer_CanLogLevel_WhenCanLogIsFalse_ShouldReturnFalse()
     {
         $this->writer->setCanLog(false);
 
@@ -37,14 +40,16 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($canLog);
     }
 
-    public function test_NewWriter_CanLogLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
+    #[Test]
+    public function newWriter_CanLogLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
 
         $this->writer->canLogLevel(self::INVALID_LOG_LEVEL);
     }
 
-    public function test_WriterWithMinLevel_CanLogLevelWithLowerLevel_ShouldReturnFalse()
+    #[Test]
+    public function writerWithMinLevel_CanLogLevelWithLowerLevel_ShouldReturnFalse()
     {
         $this->writer->setMinLevel(self::HIGHER_LEVEL);
 
@@ -53,7 +58,8 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($canLog);
     }
 
-    public function test_WriterWithMinLevel_CanLogLevelWithHigerLevel_ShouldReturnTrue()
+    #[Test]
+    public function writerWithMinLevel_CanLogLevelWithHigerLevel_ShouldReturnTrue()
     {
         $this->writer->setMinLevel(self::LOWER_LEVEL);
 
@@ -62,14 +68,16 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($canLog);
     }
 
-    public function test_NewWriter_SetMinLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
+    #[Test]
+    public function newWriter_SetMinLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
 
         $this->writer->setMinLevel(self::INVALID_LOG_LEVEL);
     }
 
-    public function test_WriterWithMaxLevel_CanLogLevelWithHigherLevel_SouldReturnFalse()
+    #[Test]
+    public function writerWithMaxLevel_CanLogLevelWithHigherLevel_SouldReturnFalse()
     {
         $this->writer->setMaxLevel(self::LOWER_LEVEL);
 
@@ -78,7 +86,8 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($canLog);
     }
 
-    public function test_WriterWithMaxLevel_CanLogLevelWithLowerLevel_SouldReturnTrue()
+    #[Test]
+    public function writerWithMaxLevel_CanLogLevelWithLowerLevel_SouldReturnTrue()
     {
         $this->writer->setMaxLevel(self::HIGHER_LEVEL);
 
@@ -87,7 +96,8 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($canLog);
     }
 
-    public function test_NewWriter_SetMaxLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
+    #[Test]
+    public function newWriter_SetMaxLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
 

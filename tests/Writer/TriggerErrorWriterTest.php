@@ -3,6 +3,7 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Kronos\Log\Writer\TriggerErrorWriter;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LogLevel;
 
 class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
@@ -21,7 +22,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer = new TriggerErrorWriter();
     }
 
-    public function test_AnyLogLevel_log_ShouldTriggerErrorWithMessage()
+    #[Test]
+    public function anyLogLevel_log_ShouldTriggerErrorWithMessage()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -36,7 +38,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_MessageWithInterpolation_log_ShouldInterpolateMessage()
+    #[Test]
+    public function messageWithInterpolation_log_ShouldInterpolateMessage()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -53,7 +56,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Emergency_log_ShouldTriggerUserWarning()
+    #[Test]
+    public function emergency_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -68,7 +72,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Alert_log_ShouldTriggerUserWarning()
+    #[Test]
+    public function alert_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -83,7 +88,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Critical_log_ShouldTriggerUserWarning()
+    #[Test]
+    public function critical_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -98,7 +104,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Error_log_ShouldTriggerUserWarning()
+    #[Test]
+    public function error_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -113,7 +120,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Warning_log_ShouldTriggerUserWarning()
+    #[Test]
+    public function warning_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -128,7 +136,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Notice_log_ShouldTriggerUserNotice()
+    #[Test]
+    public function notice_log_ShouldTriggerUserNotice()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -143,7 +152,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Info_log_ShouldTriggerUserNotice()
+    #[Test]
+    public function info_log_ShouldTriggerUserNotice()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -158,7 +168,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Debug_log_ShouldTriggerUserNotice()
+    #[Test]
+    public function debug_log_ShouldTriggerUserNotice()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);
@@ -173,7 +184,8 @@ class TriggerErrorWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_InvalidLogLevel_log_ShouldTriggerUserWarning()
+    #[Test]
+    public function invalidLogLevel_log_ShouldTriggerUserWarning()
     {
         $triggeredErrors = [];
         $this->setUpErrorHandler($triggeredErrors);

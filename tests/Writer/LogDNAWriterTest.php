@@ -9,6 +9,7 @@ use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\LogDNAWriter;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
@@ -57,7 +58,8 @@ class LogDNAWriterTest extends TestCase
         $this->contextStringifier = $this->createMock(ContextStringifier::class);
     }
 
-    public function test_constructor_ShouldCreateGuzzleClient()
+    #[Test]
+    public function constructor_ShouldCreateGuzzleClient()
     {
         $this->factory
             ->expects(self::once())
@@ -83,7 +85,8 @@ class LogDNAWriterTest extends TestCase
         );
     }
 
-    public function test_guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions()
+    #[Test]
+    public function guzzleOptions_constructor_ShouldCreateGuzzleClientWithMergedOptions()
     {
         $this->factory
             ->expects(self::once())
@@ -121,7 +124,8 @@ class LogDNAWriterTest extends TestCase
         );
     }
 
-    public function test_Context_log_ShouldStringifyContext()
+    #[Test]
+    public function context_log_ShouldStringifyContext()
     {
         $this->contextStringifier
             ->expects(self::once())
@@ -132,7 +136,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, self::CONTEXT);
     }
 
-    public function test_StringifiedContext_log_ShouldPostMessage()
+    #[Test]
+    public function stringifiedContext_log_ShouldPostMessage()
     {
         $this->client
             ->expects(self::once())
@@ -158,7 +163,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, self::CONTEXT);
     }
 
-    public function test_MessageWithInterpolation_log_ShouldPostInterpolatedMessage()
+    #[Test]
+    public function messageWithInterpolation_log_ShouldPostInterpolatedMessage()
     {
         $this->client
             ->expects(self::once())
@@ -184,7 +190,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE_WITH_INTERPOLATION, self::CONTEXT);
     }
 
-    public function test_IpAddress_log_ShouldPutIpAddressInUri()
+    #[Test]
+    public function ipAddress_log_ShouldPutIpAddressInUri()
     {
         $this->client
             ->expects(self::once())
@@ -199,7 +206,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
     }
 
-    public function test_MacAddress_log_ShouldPutMacAddressInUri()
+    #[Test]
+    public function macAddress_log_ShouldPutMacAddressInUri()
     {
         $this->client
             ->expects(self::once())
@@ -214,7 +222,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE);
     }
 
-    public function test_ExceptionInContext_log_ShouldReplaceExceptionWithMessage()
+    #[Test]
+    public function exceptionInContext_log_ShouldReplaceExceptionWithMessage()
     {
         $exception = new TestableException('exception message');
         $this->contextStringifier
@@ -230,7 +239,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
     }
 
-    public function test_ExceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace()
+    #[Test]
+    public function exceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace()
     {
         $this->givenWriterWithExceptionTraceBuilder();
         $exception = new TestableException('exception message');
@@ -252,7 +262,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
     }
 
-    public function test_ExceptionWithPreviousExceptionInContext_log_ShouldIncludePreviousExceptionMessage()
+    #[Test]
+    public function exceptionWithPreviousExceptionInContext_log_ShouldIncludePreviousExceptionMessage()
     {
         $previousException = new TestableException('previous exception message');
         $exception = new TestableException('exception message', 0, $previousException);
@@ -272,7 +283,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
     }
 
-    public function test_ExceptionWithPreviousExceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace(
+    #[Test]
+    public function exceptionWithPreviousExceptionInContextAndTraceBuilder_log_ShouldReplaceExceptionWithMessageAndAddStacktrace(
     )
     {
         $this->givenWriterWithPreviousExceptionTraceBuilder();
@@ -299,7 +311,8 @@ class LogDNAWriterTest extends TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::MESSAGE, ['exception' => $exception]);
     }
 
-    public function test_ExceptionStringInContext_log_ShouldKeepExceptionText()
+    #[Test]
+    public function exceptionStringInContext_log_ShouldKeepExceptionText()
     {
         $this->givenWriter();
         $this->contextStringifier
@@ -313,7 +326,8 @@ class LogDNAWriterTest extends TestCase
     }
 
     #[DoesNotPerformAssertions]
-    public function test_GuzzleClientThrowException_log_ShouldDoNothing()
+    #[Test]
+    public function guzzleClientThrowException_log_ShouldDoNothing()
     {
         $this->client
             ->method('post')

@@ -6,6 +6,7 @@ use Kronos\Log\Builder\Strategy\SyslogStrategy;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Writer\SyslogWriter;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
@@ -27,7 +28,8 @@ class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy = new SyslogStrategy($this->factory);
     }
 
-    public function test_Application_buildFromArray_ShouldCreateSyslogWriterWithSettings()
+    #[Test]
+    public function application_buildFromArray_ShouldCreateSyslogWriterWithSettings()
     {
         $this->factory
             ->expects(self::once())
@@ -38,7 +40,8 @@ class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_Option_buildFromArray_ShouldCreateSyslogWriterWithOption()
+    #[Test]
+    public function option_buildFromArray_ShouldCreateSyslogWriterWithOption()
     {
         $this->factory
             ->expects(self::once())
@@ -50,7 +53,8 @@ class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_Facility_buildFromArray_ShouldCreateSyslogWriterWithFacility()
+    #[Test]
+    public function facility_buildFromArray_ShouldCreateSyslogWriterWithFacility()
     {
         $this->factory
             ->expects(self::once())
@@ -62,7 +66,8 @@ class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MinLevel_buildFromArray_ShouldSetMinLevel()
+    #[Test]
+    public function minLevel_buildFromArray_ShouldSetMinLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -74,7 +79,8 @@ class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
+    #[Test]
+    public function maxLevel_buildFromArray_ShouldSetMaxLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -86,7 +92,8 @@ class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_buildFromArray_ShouldReturnWriter()
+    #[Test]
+    public function buildFromArray_ShouldReturnWriter()
     {
         $settings = $this->givenRequiredSetting();
 
@@ -95,7 +102,8 @@ class SyslogStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->writer, $actualWriter);
     }
 
-    public function test_MissingApplication_buildFromArray_ShouldThrowRequiredSettingException()
+    #[Test]
+    public function missingApplication_buildFromArray_ShouldThrowRequiredSettingException()
     {
         $this->expectException(RequiredSetting::class);
         $this->expectExceptionMessage(SyslogStrategy::APPLICATION . ' setting is required');

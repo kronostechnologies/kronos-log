@@ -7,6 +7,7 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\FluentdStrategy;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Writer\FluentdWriter;
+use PHPUnit\Framework\Attributes\Test;
 
 class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
 {
@@ -17,7 +18,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy = new FluentdStrategy();
     }
 
-    public function test_settingsValid_buildFromArray_writerIsCreatedSuccessfully()
+    #[Test]
+    public function settingsValid_buildFromArray_writerIsCreatedSuccessfully()
     {
         $validParams = [
             'hostname' => 'fluentd',
@@ -29,7 +31,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(FluentdWriter::class, $retVal);
     }
 
-    public function test_hostnameNotSet_buildFromArray_throwsRequiredSettingException()
+    #[Test]
+    public function hostnameNotSet_buildFromArray_throwsRequiredSettingException()
     {
         $params = ['tag' => 'php.application'];
 
@@ -38,7 +41,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($params);
     }
 
-    public function test_tagNotSet_buildFromArray_throwsRequiredSettingException()
+    #[Test]
+    public function tagNotSet_buildFromArray_throwsRequiredSettingException()
     {
         $params = ['hostname' => 'fluentd'];
 
@@ -47,7 +51,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($params);
     }
 
-    public function test_hostnameSet_buildFromArray_hostnameIsSetInWriter()
+    #[Test]
+    public function hostnameSet_buildFromArray_hostnameIsSetInWriter()
     {
         $givenHostname = 'fluentd';
         $params = [
@@ -60,7 +65,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($givenHostname, $retVal->getHostname());
     }
 
-    public function test_tagSet_buildFromArray_hostnameIsSetInWriter()
+    #[Test]
+    public function tagSet_buildFromArray_hostnameIsSetInWriter()
     {
         $givenTag = 'fluentd';
         $params = [
@@ -73,7 +79,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($givenTag, $retVal->getTag());
     }
 
-    public function test_portSet_buildFromArray_portIsSetInWriter()
+    #[Test]
+    public function portSet_buildFromArray_portIsSetInWriter()
     {
         $givenPort = 24220;
         $params = [
@@ -87,7 +94,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($givenPort, $retVal->getPort());
     }
 
-    public function test_portUnset_buildFromArray_portIsSetToDefaults()
+    #[Test]
+    public function portUnset_buildFromArray_portIsSetToDefaults()
     {
         $params = [
             'hostname' => 'php.application',
@@ -99,7 +107,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(24224, $retVal->getPort());
     }
 
-    public function test_applicationSet_buildFromArray_applicationIsSetInWriter()
+    #[Test]
+    public function applicationSet_buildFromArray_applicationIsSetInWriter()
     {
         $givenApplication = 'testapp';
         $params = [
@@ -113,7 +122,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($givenApplication, $retVal->getApplication());
     }
 
-    public function test_applicationUnset_buildFromArray_applicationIsSetToNullInWriter()
+    #[Test]
+    public function applicationUnset_buildFromArray_applicationIsSetToNullInWriter()
     {
         $params = [
             'hostname' => 'php.application',
@@ -125,7 +135,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($retVal->getApplication());
     }
 
-    public function test_wrapContextInMetaUnset_buildFromArray_willWrapContextInMetaReturnsFalse()
+    #[Test]
+    public function wrapContextInMetaUnset_buildFromArray_willWrapContextInMetaReturnsFalse()
     {
         $params = [
             'hostname' => 'php.application',
@@ -137,7 +148,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($retVal->willWrapContextInMeta());
     }
 
-    public function test_wrapContextInMetaSetToFalse_buildFromArray_willWrapContextInMetaReturnsFalse()
+    #[Test]
+    public function wrapContextInMetaSetToFalse_buildFromArray_willWrapContextInMetaReturnsFalse()
     {
         $params = [
             'hostname' => 'php.application',
@@ -150,7 +162,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($retVal->willWrapContextInMeta());
     }
 
-    public function test_wrapContextInMetaSetToTrue_buildFromArray_willWrapContextInMetaReturnsTrue()
+    #[Test]
+    public function wrapContextInMetaSetToTrue_buildFromArray_willWrapContextInMetaReturnsTrue()
     {
         $params = [
             'hostname' => 'php.application',
@@ -163,7 +176,8 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($retVal->willWrapContextInMeta());
     }
 
-    public function test_fluentBitToTrue_buildFromArray_getFluentBitReturnsTrue()
+    #[Test]
+    public function fluentBitToTrue_buildFromArray_getFluentBitReturnsTrue()
     {
         $params = [
             'hostname' => 'php.application',

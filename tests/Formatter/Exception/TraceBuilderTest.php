@@ -5,6 +5,7 @@ namespace Kronos\Tests\Log\Formatter\Exception;
 use Kronos\Log\Formatter\Exception\LineAssembler;
 use Kronos\Log\Formatter\Exception\LineAssemblerBuilder;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Throwable;
 
@@ -31,7 +32,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder = new TraceBuilder($this->lineAssemblerBuilder);
     }
 
-    public function test_traceBuilder_includeArgs_shouldTellLineAssemblerBuilderToIncludeArgs()
+    #[Test]
+    public function traceBuilder_includeArgs_shouldTellLineAssemblerBuilderToIncludeArgs()
     {
         $this->lineAssemblerBuilder
             ->expects(self::once())
@@ -41,7 +43,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->includeArgs();
     }
 
-    public function test_traceBuilder_stripBasePath_shouldSendBaseBaseToLineAssemblerBuilder()
+    #[Test]
+    public function traceBuilder_stripBasePath_shouldSendBaseBaseToLineAssemblerBuilder()
     {
         $this->lineAssemblerBuilder
             ->expects(self::once())
@@ -51,7 +54,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->stripBasePath(self::PATH_TO_FILE);
     }
 
-    public function test_traceBuilder_shrinkPaths_shouldTellLineAssemblerBuilderToShrinkPaths()
+    #[Test]
+    public function traceBuilder_shrinkPaths_shouldTellLineAssemblerBuilderToShrinkPaths()
     {
         $this->lineAssemblerBuilder
             ->expects(self::once())
@@ -61,7 +65,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->shrinkPaths(true);
     }
 
-    public function test_traceBuilder_removeExtension_shouldTellLineAssemblerBuilderToRemoveExtension()
+    #[Test]
+    public function traceBuilder_removeExtension_shouldTellLineAssemblerBuilderToRemoveExtension()
     {
         $this->lineAssemblerBuilder
             ->expects(self::once())
@@ -71,7 +76,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->removeExtension(true);
     }
 
-    public function test_traceBuilder_shrinkNamespaces_shouldTellLineAssemblerBuilderToShrinkNamespaces()
+    #[Test]
+    public function traceBuilder_shrinkNamespaces_shouldTellLineAssemblerBuilderToShrinkNamespaces()
     {
         $this->lineAssemblerBuilder
             ->expects(self::once())
@@ -81,7 +87,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->shrinkNamespaces(true);
     }
 
-    public function test_exception_getTtraceAsString_shouldBuildLineAssemblerForEachStackItem(): void
+    #[Test]
+    public function exception_getTtraceAsString_shouldBuildLineAssemblerForEachStackItem(): void
     {
         $exception = $this->givenException();
         $this->lineAssemblerBuilder
@@ -91,7 +98,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->traceBuilder->getTraceAsString($exception);
     }
 
-    public function test_Exception_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithoutArguments()
+    #[Test]
+    public function exception_getTraceAsString_shouldReturnFormattedExceptionStackTraceWithoutArguments()
     {
         $exception = $this->givenException();
         $expectedString = '#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
@@ -105,7 +113,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowTopLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesFollowedByDots()
+    #[Test]
+    public function showTopLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesFollowedByDots()
     {
         $exception = $this->givenException();
         $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
@@ -118,7 +127,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowTopHigherOrEqualsToStackHeight_getTraceAsString_shouldReturnAllLinesFormatted()
+    #[Test]
+    public function showTopHigherOrEqualsToStackHeight_getTraceAsString_shouldReturnAllLinesFormatted()
     {
         $exception = $this->givenException();
         $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
@@ -133,7 +143,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowBottomLines_getTraceAsString_shouldReturnDotsFollowedFormattedRequestedBottomLines()
+    #[Test]
+    public function showBottomLines_getTraceAsString_shouldReturnDotsFollowedFormattedRequestedBottomLines()
     {
         $exception = $this->givenException();
         $expectedString = "...
@@ -146,7 +157,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowBottomHigherOrEqualsToStackHeight_getTraceAsString_shouldReturnAllLinesFormatted()
+    #[Test]
+    public function showBottomHigherOrEqualsToStackHeight_getTraceAsString_shouldReturnAllLinesFormatted()
     {
         $exception = $this->givenException();
         $expectedString = "#0 /path/to/file/TestClass.php(20): TestClass->testFunction()
@@ -161,7 +173,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_ShowTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines(
+    #[Test]
+    public function showTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines(
     )
     {
         $exception = $this->givenException();
@@ -176,7 +189,8 @@ class TraceBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedString, $actualString);
     }
 
-    public function test_OverlappingShowTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines(
+    #[Test]
+    public function overlappingShowTopAndBottomLines_getTraceAsString_shouldReturnFormattedRequestedTopLinesThenDotsAndBottomLines(
     )
     {
         $exception = $this->givenException();

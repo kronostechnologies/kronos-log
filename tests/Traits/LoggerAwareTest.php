@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log\Traits;
 
 use Kronos\Log\Logger;
 use Kronos\Log\Traits\LoggerAware;
+use PHPUnit\Framework\Attributes\Test;
 
 class LoggerAwareTest extends \PHPUnit\Framework\TestCase
 {
@@ -24,7 +25,8 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait = new TestableLoggerAware();
     }
 
-    public function test_TraitWithLogger_logEmergency_ShouldCallEmergency()
+    #[Test]
+    public function traitWithLogger_logEmergency_ShouldCallEmergency()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('emergency', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -33,14 +35,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logEmergency', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logEmergency_ShouldNotCallEmergency()
+    #[Test]
+    public function traitWithoutLogger_logEmergency_ShouldNotCallEmergency()
     {
         $this->loggerExpectsMethodNeverToBeCalled('emergency');
 
         $this->trait->callLogMethod('logEmergency', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logAlert_ShouldCallAlert()
+    #[Test]
+    public function traitWithLogger_logAlert_ShouldCallAlert()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('alert', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -49,14 +53,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logAlert', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logAlert_ShouldNotCallAlert()
+    #[Test]
+    public function traitWithoutLogger_logAlert_ShouldNotCallAlert()
     {
         $this->loggerExpectsMethodNeverToBeCalled('alert');
 
         $this->trait->callLogMethod('logAlert', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logCritical_ShouldCallCritical()
+    #[Test]
+    public function traitWithLogger_logCritical_ShouldCallCritical()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('critical', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -65,14 +71,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logCritical', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logCritical_ShouldNotCallCritical()
+    #[Test]
+    public function traitWithoutLogger_logCritical_ShouldNotCallCritical()
     {
         $this->loggerExpectsMethodNeverToBeCalled('critical');
 
         $this->trait->callLogMethod('logCritical', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logError_ShouldCallError()
+    #[Test]
+    public function traitWithLogger_logError_ShouldCallError()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('error', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -81,14 +89,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logError', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logError_ShouldNotCallError()
+    #[Test]
+    public function traitWithoutLogger_logError_ShouldNotCallError()
     {
         $this->loggerExpectsMethodNeverToBeCalled('error');
 
         $this->trait->callLogMethod('logError', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logWarning_ShouldCallWarning()
+    #[Test]
+    public function traitWithLogger_logWarning_ShouldCallWarning()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('warning', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -97,14 +107,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logWarning', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logWarning_ShouldNotCallWarning()
+    #[Test]
+    public function traitWithoutLogger_logWarning_ShouldNotCallWarning()
     {
         $this->loggerExpectsMethodNeverToBeCalled('warning');
 
         $this->trait->callLogMethod('logWarning', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logNotice_ShouldCallNotice()
+    #[Test]
+    public function traitWithLogger_logNotice_ShouldCallNotice()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('notice', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -113,14 +125,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logNotice', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logNotice_ShouldNotCallNotice()
+    #[Test]
+    public function traitWithoutLogger_logNotice_ShouldNotCallNotice()
     {
         $this->loggerExpectsMethodNeverToBeCalled('notice');
 
         $this->trait->callLogMethod('logNotice', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logInfo_ShouldCallInfo()
+    #[Test]
+    public function traitWithLogger_logInfo_ShouldCallInfo()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('info', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -129,14 +143,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logInfo', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logInfo_ShouldNotCallInfo()
+    #[Test]
+    public function traitWithoutLogger_logInfo_ShouldNotCallInfo()
     {
         $this->loggerExpectsMethodNeverToBeCalled('info');
 
         $this->trait->callLogMethod('logInfo', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logDebug_ShouldCallDebug()
+    #[Test]
+    public function traitWithLogger_logDebug_ShouldCallDebug()
     {
         $this->loggerExpectsMethodToBeCalledOnceWith('debug', self::A_MESSAGE,
             [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -145,14 +161,16 @@ class LoggerAwareTest extends \PHPUnit\Framework\TestCase
         $this->trait->callLogMethod('logDebug', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithoutLogger_logDebug_ShouldNotCallDebug()
+    #[Test]
+    public function traitWithoutLogger_logDebug_ShouldNotCallDebug()
     {
         $this->loggerExpectsMethodNeverToBeCalled('debug');
 
         $this->trait->callLogMethod('logDebug', self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_TraitWithLogger_logException_ShouldCallError()
+    #[Test]
+    public function traitWithLogger_logException_ShouldCallError()
     {
         $exception = new \Exception(self::EXCEPTION_MESSAGE);
         $this->trait->setLogger($this->logger);

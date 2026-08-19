@@ -7,6 +7,7 @@ use Kronos\Log\Builder\Strategy\LogDNAStrategy;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
@@ -49,7 +50,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy = new LogDNAStrategy($this->factory, $this->exceptionTraceHelper);
     }
 
-    public function test_Settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
+    #[Test]
+    public function settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
     {
         $settings = $this->givenRequiredSettings();
         $this->exceptionTraceHelper
@@ -60,7 +62,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_Settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
+    #[Test]
+    public function settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
     {
         $settings = $this->givenRequiredSettings();
         $this->exceptionTraceHelper
@@ -71,7 +74,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
+    #[Test]
+    public function exceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
     {
         $settings = $this->givenRequiredSettings();
         $exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
@@ -91,7 +95,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_NullExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
+    #[Test]
+    public function nullExceptionTraceBuilders_buildFromArray_ShouldCreateLogDNAWriter()
     {
         $settings = $this->givenRequiredSettings();
         $this->exceptionTraceHelper
@@ -108,7 +113,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MinLevel_buildFromArray_ShouldSetMinLevel()
+    #[Test]
+    public function minLevel_buildFromArray_ShouldSetMinLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -120,7 +126,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
+    #[Test]
+    public function maxLevel_buildFromArray_ShouldSetMaxLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -132,7 +139,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_IpAddress_buildFromArray_ShouldSetIpAddress()
+    #[Test]
+    public function ipAddress_buildFromArray_ShouldSetIpAddress()
     {
         $this->writer
             ->expects(self::once())
@@ -144,7 +152,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MacAddress_buildFromArray_ShouldSetMacAddress()
+    #[Test]
+    public function macAddress_buildFromArray_ShouldSetMacAddress()
     {
         $this->writer
             ->expects(self::once())
@@ -156,7 +165,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_buildFromArray_ShouldReturnWriter()
+    #[Test]
+    public function buildFromArray_ShouldReturnWriter()
     {
         $settings = $this->givenRequiredSettings();
 
@@ -165,7 +175,8 @@ class LogDNAStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->writer, $actualWriter);
     }
 
-    public function test_MissingIngestionKeySetting_buildFromArray_ShouldThrowRequiredSettingException()
+    #[Test]
+    public function missingIngestionKeySetting_buildFromArray_ShouldThrowRequiredSettingException()
     {
         $this->expectException(RequiredSetting::class);
         $this->expectExceptionMessage(LogDNAStrategy::INGESTION_KEY . ' setting is required');

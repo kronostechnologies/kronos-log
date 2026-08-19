@@ -6,6 +6,7 @@ use Fluent\Logger\FluentLogger;
 use Kronos\Log\Factory\FluentdFactory;
 use Kronos\Log\Writer\FluentdWriter;
 use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 
@@ -27,7 +28,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->factory->method('createFluentLogger')->willReturn($this->logger);
     }
 
-    public function test_uninitialized_log_CreatesLoggerWithHostname()
+    #[Test]
+    public function uninitialized_log_CreatesLoggerWithHostname()
     {
         $givenHostname = "localhost";
         $this->writer = new FluentdWriter($givenHostname, 24224, "test", null, false, $this->factory);
@@ -38,7 +40,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_uninitialized_log_CreatesLoggerWithPort()
+    #[Test]
+    public function uninitialized_log_CreatesLoggerWithPort()
     {
         $givenPort = 24224;
         $this->writer = new FluentdWriter("localhost", $givenPort, "test", null, false, $this->factory);
@@ -48,7 +51,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_uninitialized_log_CreatesLoggerWithFluentBitPacker()
+    #[Test]
+    public function uninitialized_log_CreatesLoggerWithFluentBitPacker()
     {
         $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory, null, true);
 
@@ -58,7 +62,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_uninitialized_logTwice_CreatesLoggerOnlyOnce()
+    #[Test]
+    public function uninitialized_logTwice_CreatesLoggerOnlyOnce()
     {
         $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
@@ -68,7 +73,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "second entry");
     }
 
-    public function test_log_PassesTag()
+    #[Test]
+    public function log_PassesTag()
     {
         $givenTag = "test";
         $this->writer = new FluentdWriter("localhost", 24224, $givenTag, null, false, $this->factory);
@@ -78,7 +84,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_log_MessageSetInContext()
+    #[Test]
+    public function log_MessageSetInContext()
     {
         $givenMessage = "message";
         $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
@@ -92,7 +99,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, $givenMessage);
     }
 
-    public function test_log_LevelSetInContext()
+    #[Test]
+    public function log_LevelSetInContext()
     {
         $givenLevel = LogLevel::INFO;
         $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
@@ -106,7 +114,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log($givenLevel, "test");
     }
 
-    public function test_ApplicationUnset_log_DoesNotContainApp()
+    #[Test]
+    public function applicationUnset_log_DoesNotContainApp()
     {
         $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
 
@@ -119,7 +128,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_ApplicationSet_log_ContainsApp()
+    #[Test]
+    public function applicationSet_log_ContainsApp()
     {
         $givenApp = "testapp";
         $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, false, $this->factory);
@@ -133,7 +143,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_DoNotWrapContextInMeta_log_ContainsAppInRoot()
+    #[Test]
+    public function doNotWrapContextInMeta_log_ContainsAppInRoot()
     {
         $givenApp = "testapp";
         $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, false, $this->factory);
@@ -147,7 +158,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_WrapContextInMeta_log_ContainsAppInRoot()
+    #[Test]
+    public function wrapContextInMeta_log_ContainsAppInRoot()
     {
         $givenApp = "testapp";
         $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, true, $this->factory);
@@ -161,7 +173,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_WrapContextInMeta_log_UnderlyingMetaDoesNotContainLevelOrMessage()
+    #[Test]
+    public function wrapContextInMeta_log_UnderlyingMetaDoesNotContainLevelOrMessage()
     {
         $givenApp = "testapp";
         $this->writer = new FluentdWriter("localhost", 24224, "test", $givenApp, true, $this->factory);
@@ -175,7 +188,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test");
     }
 
-    public function test_MessageInContext_log_MessageOverridesGivenContext()
+    #[Test]
+    public function messageInContext_log_MessageOverridesGivenContext()
     {
         $givenMessage = "a message";
         $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);
@@ -189,7 +203,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, $givenMessage, ['message' => '123']);
     }
 
-    public function test_CustomContext_log_ValueIsPosted()
+    #[Test]
+    public function customContext_log_ValueIsPosted()
     {
         $givenContextKey = "test";
         $givenContextVal = "something";
@@ -204,7 +219,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(LogLevel::INFO, "test", [$givenContextKey => $givenContextVal]);
     }
 
-    public function test_ExceptionWhenLogging_log_ReturnsFalse()
+    #[Test]
+    public function exceptionWhenLogging_log_ReturnsFalse()
     {
         $this->logger->method('post')->willThrowException(new \Exception("Connection error"));
         $this->writer = new FluentdWriter("localhost", 24224, "test", null, false, $this->factory);

@@ -17,6 +17,7 @@ use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\Exception\InvalidCustomWriter;
 use Kronos\Log\Exception\UnsupportedType;
 use Kronos\Log\Factory\StrategyFactory;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class StrategySelectorTest extends \PHPUnit\Framework\TestCase
@@ -38,7 +39,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->selector = new StrategySelector($this->factory);
     }
 
-    public function test_Console_getStrategyForType_ShouldCreateConsoleStrategyAndReturnIt()
+    #[Test]
+    public function console_getStrategyForType_ShouldCreateConsoleStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(ConsoleStrategy::class);
         $this->factory
@@ -51,7 +53,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
-    public function test_Fluentd_getStrategyForType_ShouldCreateFluentdStrategyAndReturnIt()
+    #[Test]
+    public function fluentd_getStrategyForType_ShouldCreateFluentdStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(FluentdStrategy::class);
         $this->factory
@@ -64,7 +67,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
-    public function test_File_getStrategyForType_ShouldCreateFileStrategyAndReturnIt()
+    #[Test]
+    public function file_getStrategyForType_ShouldCreateFileStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(FileStragegy::class);
         $this->factory
@@ -77,7 +81,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
-    public function test_LogDNA_getStrategyForType_ShouldCreateLogDNAStrategyAndReturnIt()
+    #[Test]
+    public function logDNA_getStrategyForType_ShouldCreateLogDNAStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(LogDNAStrategy::class);
         $this->factory
@@ -90,7 +95,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
-    public function test_Memory_getStrategyForType_ShouldCreateMemoryStrategyAndReturnIt()
+    #[Test]
+    public function memory_getStrategyForType_ShouldCreateMemoryStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(MemoryStrategy::class);
         $this->factory
@@ -103,7 +109,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
-    public function test_Sentry_getStrategyForType_ShouldCreateSentryStrategyAndReturnIt()
+    #[Test]
+    public function sentry_getStrategyForType_ShouldCreateSentryStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(SentryStrategy::class);
         $this->factory
@@ -116,7 +123,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
-    public function test_Syslog_getStrategyForType_ShouldCreateSyslogStrategyAndReturnIt()
+    #[Test]
+    public function syslog_getStrategyForType_ShouldCreateSyslogStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(SyslogStrategy::class);
         $this->factory
@@ -129,7 +137,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->strategy, $actualStrategy);
     }
 
-    public function test_TriggerError_getStrategyForType_ShouldCreateTriggerErrorStrategyAndReturnIt()
+    #[Test]
+    public function triggerError_getStrategyForType_ShouldCreateTriggerErrorStrategyAndReturnIt()
     {
         $this->strategy = $this->createMock(TriggerErrorStrategy::class);
         $this->factory
@@ -143,7 +152,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function test_UnknownType_getStrategyForType_ShouldCreateCustomWriter()
+    #[Test]
+    public function unknownType_getStrategyForType_ShouldCreateCustomWriter()
     {
         $customWriterStrategy = $this->createMock(self::CUSTOM_TYPE);
         $this->factory
@@ -154,7 +164,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->selector->getStrategyForType(self::CUSTOM_TYPE);
     }
 
-    public function test_CustomWriterStrategy_getStrategyForType_ShouldGetAndReturnStrategyForType()
+    #[Test]
+    public function customWriterStrategy_getStrategyForType_ShouldGetAndReturnStrategyForType()
     {
         $strategy = $this->createMock(Strategy::class);
         $customWriterStrategy = $this->createMock(self::CUSTOM_TYPE);
@@ -173,7 +184,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($strategy, $actualStrategy);
     }
 
-    public function test_CustomWriterThrowsException_getStrategyForType_ShouldThrowUnsupportedTypeException()
+    #[Test]
+    public function customWriterThrowsException_getStrategyForType_ShouldThrowUnsupportedTypeException()
     {
         $this->expectException(UnsupportedType::class);
         $this->createMock(self::CUSTOM_TYPE);
@@ -181,7 +193,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->selector->getStrategyForType(self::UNSUPPORTED_TYPE);
     }
 
-    public function test_NullType_getStrategyForType_ShouldThrowUnsupportedTypeException()
+    #[Test]
+    public function nullType_getStrategyForType_ShouldThrowUnsupportedTypeException()
     {
         $this->expectException(UnsupportedType::class);
 
@@ -192,7 +205,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         $this->selector->getStrategyForType(null);
     }
 
-    public function test_CustomWriterStrategyThrowsInvalidCustomWriter_getStrategyForType_ShouldRethrowSameException()
+    #[Test]
+    public function customWriterStrategyThrowsInvalidCustomWriter_getStrategyForType_ShouldRethrowSameException()
     {
         $invalidCustomWriter = new InvalidCustomWriter('invalid writer');
         $customWriterStrategy = $this->createMock(self::CUSTOM_TYPE);
@@ -214,7 +228,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_CustomWriterStrategyThrowsGenericException_getStrategyForType_ShouldThrowUnsupportedTypeExceptionWrappingIt()
+    #[Test]
+    public function customWriterStrategyThrowsGenericException_getStrategyForType_ShouldThrowUnsupportedTypeExceptionWrappingIt()
     {
         $previousException = new \RuntimeException('something went wrong');
         $customWriterStrategy = $this->createMock(self::CUSTOM_TYPE);
@@ -236,7 +251,8 @@ class StrategySelectorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function test_Construct_WithoutFactory_ShouldUseDefaultStrategyFactory()
+    #[Test]
+    public function construct_WithoutFactory_ShouldUseDefaultStrategyFactory()
     {
         $selector = new StrategySelector();
 

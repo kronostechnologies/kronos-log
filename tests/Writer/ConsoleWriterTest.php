@@ -11,6 +11,7 @@ use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Logger;
 use Kronos\Log\Writer\ConsoleWriter;
 use Kronos\Tests\Log\ExtendedTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 
@@ -44,7 +45,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->fileFactory = $this->getMockBuilder(FileAdaptorFactory::class)->disableOriginalConstructor()->getMock();
     }
 
-    public function test_NewConsole_Constructor_ShouldCreateAdaptorForStdoutAndStderr()
+    #[Test]
+    public function newConsole_Constructor_ShouldCreateAdaptorForStdoutAndStderr()
     {
         $this->fileFactory
             ->expects(self::exactly(2))
@@ -59,7 +61,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->writer = new ConsoleWriter($this->fileFactory);
     }
 
-    public function test_Console_LogWithLevelBelowError_ShouldWriteInterpolatedMessageToStdout()
+    #[Test]
+    public function console_LogWithLevelBelowError_ShouldWriteInterpolatedMessageToStdout()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout, self::INTERPOLATED_MESSAGE);
@@ -68,7 +71,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_Console_LogWarning_ShouldWriteInterpolatedMessageToStdoutInYellow()
+    #[Test]
+    public function console_LogWarning_ShouldWriteInterpolatedMessageToStdoutInYellow()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stdout, self::INTERPOLATED_MESSAGE, AnsiTextColor::YELLOW);
@@ -77,7 +81,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_Console_LogWithLevelAboveWarning_ShouldWriteInterpolatedMessageToStderrInWhiteOnRed()
+    #[Test]
+    public function console_LogWithLevelAboveWarning_ShouldWriteInterpolatedMessageToStderrInWhiteOnRed()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalled($this->stderr, self::INTERPOLATED_MESSAGE, AnsiTextColor::WHITE,
@@ -87,7 +92,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->writer->log(self::LOGLEVEL_ABOVE_WARNING, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_ConsolePrependingLogLevelAndDateTime_LogWithLevelBelowError_ShouldCallWriteWithMessagePrependedByDateTimeThenLogLevel(
+    #[Test]
+    public function consolePrependingLogLevelAndDateTime_LogWithLevelBelowError_ShouldCallWriteWithMessagePrependedByDateTimeThenLogLevel(
     )
     {
         $this->givenFactoryReturnFileAdaptors();
@@ -100,7 +106,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_Console_SetForceAnsiColorSupport_ShouldCallSetForceAnsiColorSupportOnStdoutAndStdError()
+    #[Test]
+    public function console_SetForceAnsiColorSupport_ShouldCallSetForceAnsiColorSupportOnStdoutAndStdError()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsSetForceAnsiColorSupportToBeCalled($this->stdout);
@@ -110,7 +117,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->writer->setForceAnsiColorSupport();
     }
 
-    public function test_Console_SetForceNoAnsiColorSupport_ShouldCallSetForceNoAnsiColorSupportOnStdoutAndStdError()
+    #[Test]
+    public function console_SetForceNoAnsiColorSupport_ShouldCallSetForceNoAnsiColorSupportOnStdoutAndStdError()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsSetForceNoAnsiColorSupportToBeCalled($this->stdout);
@@ -120,7 +128,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $this->writer->setForceNoAnsiColorSupport();
     }
 
-    public function test_ContextContainingExceptionAndLogLevelLowerThanError_Log_ShouldWriteExceptionWithoutStackTrace()
+    #[Test]
+    public function contextContainingExceptionAndLogLevelLowerThanError_Log_ShouldWriteExceptionWithoutStackTrace()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalledWithConsecutive($this->stdout, [
@@ -139,7 +148,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsErrorAndTraceBuilder_Log_ShouldWriteExceptionMessageAndStackTrace(
+    #[Test]
+    public function contextContainingExceptionAndLogLevelIsErrorAndTraceBuilder_Log_ShouldWriteExceptionMessageAndStackTrace(
     )
     {
         $this->givenFactoryReturnFileAdaptors();
@@ -164,7 +174,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsErrorAndNoTraceBuilder_Log_ShouldWriteExceptionMessage()
+    #[Test]
+    public function contextContainingExceptionAndLogLevelIsErrorAndNoTraceBuilder_Log_ShouldWriteExceptionMessage()
     {
         $this->givenFactoryReturnFileAdaptors();
         $this->expectsWriteToBeCalledWithConsecutive($this->stderr, [
@@ -183,7 +194,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsErrorAndPreviousExceptionTraceBuilder_Log_ShouldWriteMessageAndStacktraceForPreviousException(
+    #[Test]
+    public function contextContainingExceptionWithPreviousExceptionAndLogLevelIsErrorAndPreviousExceptionTraceBuilder_Log_ShouldWriteMessageAndStacktraceForPreviousException(
     )
     {
         $this->givenFactoryReturnFileAdaptors();
@@ -211,7 +223,8 @@ class ConsoleWriterTest extends ExtendedTestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteMessageForPreviousException(
+    #[Test]
+    public function contextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteMessageForPreviousException(
     )
     {
         $this->givenFactoryReturnFileAdaptors();

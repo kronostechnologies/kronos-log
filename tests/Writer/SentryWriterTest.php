@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log\Writer;
 
 use Kronos\Log\Writer\SentryWriter;
 use Kronos\Log\Logger;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
@@ -34,77 +35,88 @@ class SentryWriterTest extends TestCase
         $this->writer = new SentryWriterWithScopeDecorator($this->sentryClient);
     }
 
-    public function test_MessageAndContext_Log_SouldCallCaptureMessageWithInterpolatedMessage()
+    #[Test]
+    public function messageAndContext_Log_SouldCallCaptureMessageWithInterpolatedMessage()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::INTERPOLATED_MESSAGE, $this->anything());
 
         $this->writer->log(self::ANY_LEVEL, self::INTERPOLATABLE_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_DebugLevel_Log_ShouldCaptureMessageWithDebugLevel()
+    #[Test]
+    public function debugLevel_Log_ShouldCaptureMessageWithDebugLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith($this->anything(), Severity::DEBUG);
 
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE);
     }
 
-    public function test_InfoLevel_Log_ShouldCaptureMessageWithInfoLevel()
+    #[Test]
+    public function infoLevel_Log_ShouldCaptureMessageWithInfoLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::INFO);
 
         $this->writer->log(LogLevel::INFO, self::A_MESSAGE);
     }
 
-    public function test_NoticeLevel_Log_ShouldCaptureMessageWithInfoLevel()
+    #[Test]
+    public function noticeLevel_Log_ShouldCaptureMessageWithInfoLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::INFO);
 
         $this->writer->log(LogLevel::NOTICE, self::A_MESSAGE);
     }
 
-    public function test_WarningLevel_Log_ShouldCaptureMessageWithWarningLevel()
+    #[Test]
+    public function warningLevel_Log_ShouldCaptureMessageWithWarningLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::WARNING);
 
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE);
     }
 
-    public function test_ErrorLevel_Log_ShouldCaptureMessageWithErrorLevel()
+    #[Test]
+    public function errorLevel_Log_ShouldCaptureMessageWithErrorLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::ERROR);
 
         $this->writer->log(LogLevel::ERROR, self::A_MESSAGE);
     }
 
-    public function test_CriticalLevel_Log_ShouldCaptureMessageWithFatalLevel()
+    #[Test]
+    public function criticalLevel_Log_ShouldCaptureMessageWithFatalLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::FATAL);
 
         $this->writer->log(LogLevel::CRITICAL, self::A_MESSAGE);
     }
 
-    public function test_AlertLevel_Log_ShouldCaptureMessageWithFatalLevel()
+    #[Test]
+    public function alertLevel_Log_ShouldCaptureMessageWithFatalLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::FATAL);
 
         $this->writer->log(LogLevel::ALERT, self::A_MESSAGE);
     }
 
-    public function test_EmergencyLevel_Log_ShouldCaptureMessageWithFatalLevel()
+    #[Test]
+    public function emergencyLevel_Log_ShouldCaptureMessageWithFatalLevel()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::FATAL);
 
         $this->writer->log(LogLevel::EMERGENCY, self::A_MESSAGE);
     }
 
-    public function test_MessageAndContext_Log_ShouldCallCaptureMessageWithContextAsExtra()
+    #[Test]
+    public function messageAndContext_Log_ShouldCallCaptureMessageWithContextAsExtra()
     {
         $this->expectsCaptureMessageToBeCalledWith(self::A_MESSAGE, Severity::DEBUG);
 
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_ContextWithException_Log_ShouldCallCaptureException()
+    #[Test]
+    public function contextWithException_Log_ShouldCallCaptureException()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::debug(),
@@ -113,7 +125,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(self::ANY_LEVEL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndOtherKeys_Log_ShouldCaptureExceptionWithContextAsExtraWithoutException()
+    #[Test]
+    public function contextWithExceptionAndOtherKeys_Log_ShouldCaptureExceptionWithContextAsExtraWithoutException()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::debug(), [
@@ -125,7 +138,8 @@ class SentryWriterTest extends TestCase
             [Logger::EXCEPTION_CONTEXT => $exception, self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_ContextWithExceptionAndDebugLevel_Log_ShouldCaptureExceptionWithDebugLevel()
+    #[Test]
+    public function contextWithExceptionAndDebugLevel_Log_ShouldCaptureExceptionWithDebugLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($this->anything(), Severity::debug(), [
@@ -135,7 +149,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndInfoLevel_Log_ShouldCaptureExceptionWithInfoLevel()
+    #[Test]
+    public function contextWithExceptionAndInfoLevel_Log_ShouldCaptureExceptionWithInfoLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::info(), [
@@ -145,7 +160,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(LogLevel::INFO, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndNoticeLevel_Log_ShouldCaptureExceptionWithInfoLevel()
+    #[Test]
+    public function contextWithExceptionAndNoticeLevel_Log_ShouldCaptureExceptionWithInfoLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::info(), [
@@ -155,7 +171,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(LogLevel::NOTICE, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndWarningLevel_Log_ShouldCaptureExceptionWithWarningLevel()
+    #[Test]
+    public function contextWithExceptionAndWarningLevel_Log_ShouldCaptureExceptionWithWarningLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::warning(), [
@@ -165,7 +182,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndErrorLevel_Log_ShouldCaptureExceptionWithErrorLevel()
+    #[Test]
+    public function contextWithExceptionAndErrorLevel_Log_ShouldCaptureExceptionWithErrorLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::error(), [
@@ -175,7 +193,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(LogLevel::ERROR, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndCriticalLevel_Log_ShouldCaptureExceptionWithErrorLevel()
+    #[Test]
+    public function contextWithExceptionAndCriticalLevel_Log_ShouldCaptureExceptionWithErrorLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::fatal(), [
@@ -185,7 +204,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(LogLevel::CRITICAL, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndAlertLevel_Log_ShouldCaptureExceptionWithFatalLevel()
+    #[Test]
+    public function contextWithExceptionAndAlertLevel_Log_ShouldCaptureExceptionWithFatalLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::fatal(), [
@@ -195,7 +215,8 @@ class SentryWriterTest extends TestCase
         $this->writer->log(LogLevel::ALERT, self::A_MESSAGE, [Logger::EXCEPTION_CONTEXT => $exception]);
     }
 
-    public function test_ContextWithExceptionAndEmergencyLevel_Log_ShouldCaptureExceptionWithFatalLevel()
+    #[Test]
+    public function contextWithExceptionAndEmergencyLevel_Log_ShouldCaptureExceptionWithFatalLevel()
     {
         $exception = new \Exception(self::A_MESSAGE);
         $this->expectsCaptureExceptionToBeCalledWith($exception, Severity::fatal(), [

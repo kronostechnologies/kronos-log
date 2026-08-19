@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log\Writer;
 
 use Kronos\Log\Adaptor\SyslogAdaptor;
 use Kronos\Log\Writer\SyslogWriter;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LogLevel;
 
 class SyslogWriterTest extends \PHPUnit\Framework\TestCase
@@ -35,7 +36,8 @@ class SyslogWriterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function test_Writer_Log_ShouldCallAdaptorLogWithApplicationOptionAndFacility()
+    #[Test]
+    public function writer_Log_ShouldCallAdaptorLogWithApplicationOptionAndFacility()
     {
         $this->expectsAdaptorLogToBeCalledWith(
             self::APPLICATION,
@@ -48,7 +50,8 @@ class SyslogWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE);
     }
 
-    public function test_Writer_Log_ShouldInterpolateContextAndMessageSendToAdaptor()
+    #[Test]
+    public function writer_Log_ShouldInterpolateContextAndMessageSendToAdaptor()
     {
         $this->expectsAdaptorLogToBeCalledWith(
             $this->anything(),
@@ -61,63 +64,72 @@ class SyslogWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_Writer_LogEMERGENCY_ShouldTranslateTo_LOG_EMERG()
+    #[Test]
+    public function writer_LogEMERGENCY_ShouldTranslateTo_LOG_EMERG()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_EMERG);
 
         $this->writer->log(LogLevel::EMERGENCY, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogALERT_ShouldTranslateTo_LOG_ALERT()
+    #[Test]
+    public function writer_LogALERT_ShouldTranslateTo_LOG_ALERT()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_ALERT);
 
         $this->writer->log(LogLevel::ALERT, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogCRITICAL_ShouldTranslateTo_LOG_CRIT()
+    #[Test]
+    public function writer_LogCRITICAL_ShouldTranslateTo_LOG_CRIT()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_CRIT);
 
         $this->writer->log(LogLevel::CRITICAL, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogERROR_ShouldTranslateTo_LOG_ERR()
+    #[Test]
+    public function writer_LogERROR_ShouldTranslateTo_LOG_ERR()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_ERR);
 
         $this->writer->log(LogLevel::ERROR, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogWARNING_ShouldTranslateTo_LOG_WARNING()
+    #[Test]
+    public function writer_LogWARNING_ShouldTranslateTo_LOG_WARNING()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_WARNING);
 
         $this->writer->log(LogLevel::WARNING, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogNOTICE_ShouldTranslateTo_LOG_NOTICE()
+    #[Test]
+    public function writer_LogNOTICE_ShouldTranslateTo_LOG_NOTICE()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_NOTICE);
 
         $this->writer->log(LogLevel::NOTICE, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogINFO_ShouldTranslateTo_LOG_INFO()
+    #[Test]
+    public function writer_LogINFO_ShouldTranslateTo_LOG_INFO()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_INFO);
 
         $this->writer->log(LogLevel::INFO, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogDEBUG_ShouldTranslateTo_LOG_DEBUG()
+    #[Test]
+    public function writer_LogDEBUG_ShouldTranslateTo_LOG_DEBUG()
     {
         $this->expectsAdaptorLogToBeCalledWithPriority(LOG_DEBUG);
 
         $this->writer->log(LogLevel::DEBUG, self::A_MESSAGE);
     }
 
-    public function test_Writer_LogInvalidLevel_ShouldThrowAnInvalidLogLevelException()
+    #[Test]
+    public function writer_LogInvalidLevel_ShouldThrowAnInvalidLogLevelException()
     {
         $this->expectException(\Kronos\Log\Exception\InvalidLogLevel::class);
 

@@ -7,6 +7,7 @@ use Kronos\Log\Exception\InvalidSetting;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Writer\SentryWriter as SentryWriter;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Sentry\ClientInterface;
 
@@ -34,7 +35,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy = new SentryStrategy($this->factory);
     }
 
-    public function test_SentryClient_buildFromArray_ShouldCreateSentryWriter()
+    #[Test]
+    public function sentryClient_buildFromArray_ShouldCreateSentryWriter()
     {
         $this->factory
             ->expects(self::once())
@@ -45,7 +47,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_SentryClientConfiguration_buildFromArray_ShouldCreateSentryWriterAndSentryClient()
+    #[Test]
+    public function sentryClientConfiguration_buildFromArray_ShouldCreateSentryWriterAndSentryClient()
     {
         $this->factory
             ->expects(self::once())
@@ -61,7 +64,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MinLevel_buildFromArray_ShouldSetMinLevel()
+    #[Test]
+    public function minLevel_buildFromArray_ShouldSetMinLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -75,7 +79,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
+    #[Test]
+    public function maxLevel_buildFromArray_ShouldSetMaxLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -89,7 +94,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_buildFromArray_ShouldReturnWriter()
+    #[Test]
+    public function buildFromArray_ShouldReturnWriter()
     {
         $settings = [SentryStrategy::CLIENT => $this->sentryClient];
 
@@ -98,7 +104,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->writer, $actualWriter);
     }
 
-    public function test_ClientSettingNotSentryClient_buildFromArray_ShouldThrowInvalidSettingException()
+    #[Test]
+    public function clientSettingNotSentryClient_buildFromArray_ShouldThrowInvalidSettingException()
     {
         $notSentryClient = new \stdClass();
         $this->expectException(InvalidSetting::class);
@@ -111,7 +118,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MissingSentryOption_buildFromArray_ShouldCreateWriterAndSentryClientWithEmptyArrayOptions()
+    #[Test]
+    public function missingSentryOption_buildFromArray_ShouldCreateWriterAndSentryClientWithEmptyArrayOptions()
     {
         $this->factory
             ->expects(self::once())
@@ -126,7 +134,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_MissingClientAndKeySetting_buildFromArray_ShouldThrowRequiredSettingException()
+    #[Test]
+    public function missingClientAndKeySetting_buildFromArray_ShouldThrowRequiredSettingException()
     {
         $this->expectException(RequiredSetting::class);
         $this->expectExceptionMessage(SentryStrategy::CLIENT . ' setting or ' . SentryStrategy::KEY . ' setting must given');
@@ -140,7 +149,8 @@ class SentryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_KeySettingAndNoProjectId_buildFromArray_ShouldThrowRequiredSettingException()
+    #[Test]
+    public function keySettingAndNoProjectId_buildFromArray_ShouldThrowRequiredSettingException()
     {
         $this->expectException(RequiredSetting::class);
         $this->expectExceptionMessage(SentryStrategy::PROJECT_ID . ' setting is required with ' . SentryStrategy::KEY);

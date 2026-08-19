@@ -5,6 +5,7 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Factory\FormatterFactory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +26,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper = new ExceptionTraceHelper($this->factory);
     }
 
-    public function test_EmptySettings_getExceptionTraceBuilderForSettings_ShouldCreateAndReturnTraceBuilder()
+    #[Test]
+    public function emptySettings_getExceptionTraceBuilderForSettings_ShouldCreateAndReturnTraceBuilder()
     {
         $settings = [];
         $expectedTraceBuilder = $this->createMock(TraceBuilder::class);
@@ -44,7 +46,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->assertSame($expectedTraceBuilder, $actualTraceBuilder);
     }
 
-    public function test_ShowExceptionStackTraceSettingSetToFalse_getExceptionTraceBuilderForSettings_ShouldNotCreateTraceBuilderAndReturnNull(
+    #[Test]
+    public function showExceptionStackTraceSettingSetToFalse_getExceptionTraceBuilderForSettings_ShouldNotCreateTraceBuilderAndReturnNull(
     )
     {
         $settings = [
@@ -59,7 +62,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->assertNull($null);
     }
 
-    public function test_IncludeArgsSetToTrue_getExceptionTraceBuilderForSettings_ShouldSetIncludeArgs()
+    #[Test]
+    public function includeArgsSetToTrue_getExceptionTraceBuilderForSettings_ShouldSetIncludeArgs()
     {
         $settings = [
             ExceptionTraceHelper::INCLUDE_ARGS => true
@@ -72,7 +76,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_StripExceptionBasePath_getExceptionTraceBuilderForSettings_ShouldStripBasePath()
+    #[Test]
+    public function stripExceptionBasePath_getExceptionTraceBuilderForSettings_ShouldStripBasePath()
     {
         $settings = [
             ExceptionTraceHelper::STRIP_BASE_PATH => self::BASE_PATH
@@ -86,7 +91,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShrinkExceptionPathsSetToTrue_getExceptionTraceBuilderForSettings_ShouldShrinkPaths()
+    #[Test]
+    public function shrinkExceptionPathsSetToTrue_getExceptionTraceBuilderForSettings_ShouldShrinkPaths()
     {
         $settings = [
             ExceptionTraceHelper::SHRINK_PATHS => true
@@ -100,7 +106,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_RemoveExceptionFileExtensionSetToTrue_getExceptionTraceBuilderForSettings_ShouldRemoveExtension()
+    #[Test]
+    public function removeExceptionFileExtensionSetToTrue_getExceptionTraceBuilderForSettings_ShouldRemoveExtension()
     {
         $settings = [
             ExceptionTraceHelper::REMOVE_EXTENSION => true
@@ -114,7 +121,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShrinkExceptionNamespacesSetToTrue_getExceptionTraceBuilderForSettings_ShouldShrinkNamespaces()
+    #[Test]
+    public function shrinkExceptionNamespacesSetToTrue_getExceptionTraceBuilderForSettings_ShouldShrinkNamespaces()
     {
         $settings = [
             ExceptionTraceHelper::SHRINK_NAMESPACES => true
@@ -128,7 +136,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionTopLines_getExceptionTraceBuilderForSettings_ShouldSetShowTopLines()
+    #[Test]
+    public function showExceptionTopLines_getExceptionTraceBuilderForSettings_ShouldSetShowTopLines()
     {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_TOP_LINES => self::TOP_LINES
@@ -142,7 +151,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneTopLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines()
+    #[Test]
+    public function lowerThanOneTopLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines()
     {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_TOP_LINES => self::LOWER_THAN_ONE
@@ -155,7 +165,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionBottomLines_getExceptionTraceBuilderForSettings_ShouldSetShowBottomLines()
+    #[Test]
+    public function showExceptionBottomLines_getExceptionTraceBuilderForSettings_ShouldSetShowBottomLines()
     {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_BOTTOM_LINES => self::BOTTOM_LINES
@@ -169,7 +180,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneBottomLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines()
+    #[Test]
+    public function lowerThanOneBottomLines_getExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines()
     {
         $settings = [
             ExceptionTraceHelper::SHOW_EXCEPTION_BOTTOM_LINES => self::LOWER_THAN_ONE
@@ -182,7 +194,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_EmptySettings_getPreviousExceptionTraceBuilderForSettings_ShouldCreateAndReturnTraceBuilder()
+    #[Test]
+    public function emptySettings_getPreviousExceptionTraceBuilderForSettings_ShouldCreateAndReturnTraceBuilder()
     {
         $settings = [];
         $expectedTraceBuilder = $this->createMock(TraceBuilder::class);
@@ -201,7 +214,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->assertSame($expectedTraceBuilder, $actualTraceBuilder);
     }
 
-    public function test_ShowExceptionStackTraceSettingSetToFalse_getPreviousExceptionTraceBuilderForSettings_ShouldNotCreateTraceBuilderAndReturnNull(
+    #[Test]
+    public function showExceptionStackTraceSettingSetToFalse_getPreviousExceptionTraceBuilderForSettings_ShouldNotCreateTraceBuilderAndReturnNull(
     )
     {
         $settings = [
@@ -216,7 +230,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->assertNull($null);
     }
 
-    public function test_IncludeArgsSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldSetIncludeArgs()
+    #[Test]
+    public function includeArgsSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldSetIncludeArgs()
     {
         $settings = [
             ExceptionTraceHelper::INCLUDE_ARGS => true
@@ -229,7 +244,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_StripExceptionBasePath_getPreviousExceptionTraceBuilderForSettings_ShouldStripBasePath()
+    #[Test]
+    public function stripExceptionBasePath_getPreviousExceptionTraceBuilderForSettings_ShouldStripBasePath()
     {
         $settings = [
             ExceptionTraceHelper::STRIP_BASE_PATH => self::BASE_PATH
@@ -243,7 +259,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShrinkExceptionPathsSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldShrinkPaths()
+    #[Test]
+    public function shrinkExceptionPathsSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldShrinkPaths()
     {
         $settings = [
             ExceptionTraceHelper::SHRINK_PATHS => true
@@ -257,7 +274,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_RemoveExceptionFileExtensionSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldRemoveExtension()
+    #[Test]
+    public function removeExceptionFileExtensionSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldRemoveExtension()
     {
         $settings = [
             ExceptionTraceHelper::REMOVE_EXTENSION => true
@@ -271,7 +289,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShrinkExceptionNamespacesSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldShrinkNamespaces()
+    #[Test]
+    public function shrinkExceptionNamespacesSetToTrue_getPreviousExceptionTraceBuilderForSettings_ShouldShrinkNamespaces()
     {
         $settings = [
             ExceptionTraceHelper::SHRINK_NAMESPACES => true
@@ -285,7 +304,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowTopLines()
+    #[Test]
+    public function showExceptionTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowTopLines()
     {
         $settings = [
             ExceptionTraceHelper::SHOW_PREVIOUS_EXCEPTION_TOP_LINES => self::TOP_LINES
@@ -299,7 +319,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines()
+    #[Test]
+    public function lowerThanOneTopLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowTopLines()
     {
         $settings = [
             ExceptionTraceHelper::SHOW_PREVIOUS_EXCEPTION_TOP_LINES => self::LOWER_THAN_ONE
@@ -312,7 +333,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_ShowExceptionBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowBottomLines()
+    #[Test]
+    public function showExceptionBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldSetShowBottomLines()
     {
         $settings = [
             ExceptionTraceHelper::SHOW_PREVIOUS_EXCEPTION_BOTTOM_LINES => self::BOTTOM_LINES
@@ -326,7 +348,8 @@ class ExceptionTraceHelperTest extends TestCase
         $this->helper->getPreviousExceptionTraceBuilderForSettings($settings);
     }
 
-    public function test_LowerThanOneBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines(
+    #[Test]
+    public function lowerThanOneBottomLines_getPreviousExceptionTraceBuilderForSettings_ShouldNotSetShowBottomLines(
     )
     {
         $settings = [

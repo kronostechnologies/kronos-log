@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log\Traits;
 
 use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\Traits\LogLevelToSyslogPriority;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LogLevel;
 
 class LogLevelToSyslogPriorityTest extends \PHPUnit\Framework\TestCase
@@ -21,63 +22,72 @@ class LogLevelToSyslogPriorityTest extends \PHPUnit\Framework\TestCase
         $this->testableTrait = new TestableLogLevelToSyslogPriority();
     }
 
-    public function test_Emergecy_getSyslogPriorityForLogLevel_ShouldReturnLogEmerg()
+    #[Test]
+    public function emergecy_getSyslogPriorityForLogLevel_ShouldReturnLogEmerg()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::EMERGENCY);
 
         $this->assertEquals(LOG_EMERG, $priority);
     }
 
-    public function test_Alert_getSyslogPriorityForLogLevel_ShouldReturLogAlert()
+    #[Test]
+    public function alert_getSyslogPriorityForLogLevel_ShouldReturLogAlert()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::ALERT);
 
         $this->assertEquals(LOG_ALERT, $priority);
     }
 
-    public function test_Critical_getSyslogPriorityForLogLevel_ShouldReturnLogCrit()
+    #[Test]
+    public function critical_getSyslogPriorityForLogLevel_ShouldReturnLogCrit()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::CRITICAL);
 
         $this->assertEquals(LOG_CRIT, $priority);
     }
 
-    public function test_Error_getSyslogPriorityForLogLevel_ShouldReturnLogErr()
+    #[Test]
+    public function error_getSyslogPriorityForLogLevel_ShouldReturnLogErr()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::ERROR);
 
         $this->assertEquals(LOG_ERR, $priority);
     }
 
-    public function test_Warning_getSyslogPriorityForLogLevel_ShouldReturLogWarning()
+    #[Test]
+    public function warning_getSyslogPriorityForLogLevel_ShouldReturLogWarning()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::WARNING);
 
         $this->assertEquals(LOG_WARNING, $priority);
     }
 
-    public function test_Notice_getSyslogPriorityForLogLevel_ShouldReturnLogNotice()
+    #[Test]
+    public function notice_getSyslogPriorityForLogLevel_ShouldReturnLogNotice()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::NOTICE);
 
         $this->assertEquals(LOG_NOTICE, $priority);
     }
 
-    public function test_Info_getSyslogPriorityForLogLevel_ShouldReturLogInfo()
+    #[Test]
+    public function info_getSyslogPriorityForLogLevel_ShouldReturLogInfo()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::INFO);
 
         $this->assertEquals(LOG_INFO, $priority);
     }
 
-    public function test_Debug_getSyslogPriorityForLogLevel_ShouldReturnLogDebug()
+    #[Test]
+    public function debug_getSyslogPriorityForLogLevel_ShouldReturnLogDebug()
     {
         $priority = $this->testableTrait->getSyslogPriorityForLogLevelProxy(LogLevel::DEBUG);
 
         $this->assertEquals(LOG_DEBUG, $priority);
     }
 
-    public function test_LogInvalidLevel_getSyslogPriorityForLogLevel_ShouldThrowInvalidLogLevelException()
+    #[Test]
+    public function logInvalidLevel_getSyslogPriorityForLogLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
 

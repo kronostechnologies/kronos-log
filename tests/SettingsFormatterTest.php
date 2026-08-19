@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log;
 
 use Kronos\Log\Enumeration\WriterTypes;
 use Kronos\Log\SettingsFormatter;
+use PHPUnit\Framework\Attributes\Test;
 
 class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,7 +21,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
 
     const DEFAULT_SETTING_NAME = 'default setting name';
 
-    public function test_Settings_getFormattedSettings_ShouldReturnSettings()
+    #[Test]
+    public function settings_getFormattedSettings_ShouldReturnSettings()
     {
         $expectedSettings = [
             [
@@ -37,7 +39,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterWithActivationFlag_getFormattedSettings_ShouldRemoveWriterFromSettings()
+    #[Test]
+    public function writerWithActivationFlag_getFormattedSettings_ShouldRemoveWriterFromSettings()
     {
         $settings = [
             [
@@ -55,7 +58,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $actualSettings);
     }
 
-    public function test_WriterWithActivationFlagAndFlagSet_getFormattedSettings_ShouldKeepWriterInSettings()
+    #[Test]
+    public function writerWithActivationFlagAndFlagSet_getFormattedSettings_ShouldKeepWriterInSettings()
     {
         $expectedSettings = [
             [
@@ -74,7 +78,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterWithDeactivationFlag_getFormattedSettings_ShouldKeepWriterInSettings()
+    #[Test]
+    public function writerWithDeactivationFlag_getFormattedSettings_ShouldKeepWriterInSettings()
     {
         $expectedSettings = [
             [
@@ -92,7 +97,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterWithDeactivationFlagAndFlagSet_getFormattedSettings_ShouldRemoveWriterFromSettings()
+    #[Test]
+    public function writerWithDeactivationFlagAndFlagSet_getFormattedSettings_ShouldRemoveWriterFromSettings()
     {
         $settings = [
             [
@@ -111,7 +117,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $actualSettings);
     }
 
-    public function test_WriterWithBothActivationAndDeactivationFlagAndFlagsSet_getFormattedSettings_ShouldRemoveWriterFromSettings(
+    #[Test]
+    public function writerWithBothActivationAndDeactivationFlagAndFlagsSet_getFormattedSettings_ShouldRemoveWriterFromSettings(
     )
     {
         $expectedSettings = [
@@ -132,7 +139,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $actualSettings);
     }
 
-    public function test_GlobalChanges_getFormattedSettings_ShouldChangeSettingsForAllWriters()
+    #[Test]
+    public function globalChanges_getFormattedSettings_ShouldChangeSettingsForAllWriters()
     {
         $settings = [
             [
@@ -158,7 +166,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_WriterSpecificChanges_getFormattedSettings_ShouldChangeSettingsForSpecifiedWriters()
+    #[Test]
+    public function writerSpecificChanges_getFormattedSettings_ShouldChangeSettingsForSpecifiedWriters()
     {
         $settings = [
             [
@@ -184,7 +193,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_GlobalAndWriterSpecificChanges_getFormattedSettings_ShouldKeepSpecificValue()
+    #[Test]
+    public function globalAndWriterSpecificChanges_getFormattedSettings_ShouldKeepSpecificValue()
     {
         $settings = [
             [
@@ -205,7 +215,8 @@ class SettingsFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSettings, $actualSettings);
     }
 
-    public function test_DefaultSettings_getFormattedSettings_ShouldSetSettingIfNotSpeficied()
+    #[Test]
+    public function defaultSettings_getFormattedSettings_ShouldSetSettingIfNotSpeficied()
     {
         $settings = [
             [

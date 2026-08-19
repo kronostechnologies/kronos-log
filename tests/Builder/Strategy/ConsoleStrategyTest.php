@@ -6,6 +6,7 @@ use Kronos\Log\Builder\Strategy\ConsoleStrategy;
 use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
@@ -43,7 +44,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy = new ConsoleStrategy($this->factory, $this->exceptionTraceHelper);
     }
 
-    public function test_Settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
+    #[Test]
+    public function settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
     {
         $settings = [
             'some' => 'settings',
@@ -57,7 +59,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_Settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
+    #[Test]
+    public function settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
     {
         $settings = [
             'some' => 'settings',
@@ -71,7 +74,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateConsoleWriter()
+    #[Test]
+    public function exceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateConsoleWriter()
     {
         $exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->exceptionTraceHelper
@@ -89,7 +93,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([]);
     }
 
-    public function test_NullExceptionTraceBuilders_buildFromArray_ShouldCreateConsoleWriter()
+    #[Test]
+    public function nullExceptionTraceBuilders_buildFromArray_ShouldCreateConsoleWriter()
     {
         $this->exceptionTraceHelper
             ->method('getExceptionTraceBuilderForSettings')
@@ -105,7 +110,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([]);
     }
 
-    public function test_MinLevel_buildFromArray_ShouldSetMinLevel()
+    #[Test]
+    public function minLevel_buildFromArray_ShouldSetMinLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -115,7 +121,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([ConsoleStrategy::MIN_LEVEL => self::MIN_LEVEL]);
     }
 
-    public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
+    #[Test]
+    public function maxLevel_buildFromArray_ShouldSetMaxLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -125,7 +132,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([ConsoleStrategy::MAX_LEVEL => self::MAX_LEVEL]);
     }
 
-    public function test_ForceAnsiColor_buildFromArray_ShouldSetForceAnsiColor()
+    #[Test]
+    public function forceAnsiColor_buildFromArray_ShouldSetForceAnsiColor()
     {
         $this->writer
             ->expects(self::once())
@@ -135,7 +143,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([ConsoleStrategy::FORCE_ANSI_COLOR => true]);
     }
 
-    public function test_FalseForceAnsiColor_buildFromArray_ShouldNeverSetForceAnsiColor()
+    #[Test]
+    public function falseForceAnsiColor_buildFromArray_ShouldNeverSetForceAnsiColor()
     {
         $this->writer
             ->expects(self::never())
@@ -144,7 +153,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([ConsoleStrategy::FORCE_ANSI_COLOR => false]);
     }
 
-    public function test_ForceNoAnsiColor_buildFromArray_ShouldSetForceAnsiColor()
+    #[Test]
+    public function forceNoAnsiColor_buildFromArray_ShouldSetForceAnsiColor()
     {
         $this->writer
             ->expects(self::once())
@@ -154,7 +164,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([ConsoleStrategy::FORCE_NO_ANSI_COLOR => true]);
     }
 
-    public function test_FalseForceNoAnsiColor_buildFromArray_ShouldNeverSetForceNoAnsiColor()
+    #[Test]
+    public function falseForceNoAnsiColor_buildFromArray_ShouldNeverSetForceNoAnsiColor()
     {
         $this->writer
             ->expects(self::never())
@@ -163,7 +174,8 @@ class ConsoleStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([ConsoleStrategy::FORCE_NO_ANSI_COLOR => false]);
     }
 
-    public function test_buildFromArray_ShouldReturnWriter()
+    #[Test]
+    public function buildFromArray_ShouldReturnWriter()
     {
         $actualWriter = $this->strategy->buildFromArray([]);
 

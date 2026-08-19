@@ -7,6 +7,7 @@ use Kronos\Log\Builder\Strategy\FileStragegy;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FileStrategyTest extends \PHPUnit\Framework\TestCase
@@ -45,7 +46,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy = new FileStragegy($this->factory, $this->exceptionTraceHelper);
     }
 
-    public function test_Settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
+    #[Test]
+    public function settings_buildFromArray_ShouldGetExceptionTraceBuilderForSettings()
     {
         $settings = [
             FileStragegy::FILENAME => self::FILENAME_VALUE,
@@ -60,7 +62,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_Settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
+    #[Test]
+    public function settings_buildFromArray_ShouldGetPreviousExceptionTraceBuilderForSettings()
     {
         $settings = [
             FileStragegy::FILENAME => self::FILENAME_VALUE,
@@ -75,7 +78,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray($settings);
     }
 
-    public function test_ExceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateFileWriter()
+    #[Test]
+    public function exceptionAndPreviousExceptionTraceBuilders_buildFromArray_ShouldCreateFileWriter()
     {
         $exceptionTraceBuilder = $this->createMock(TraceBuilder::class);
         $this->exceptionTraceHelper
@@ -93,7 +97,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([FileStragegy::FILENAME => self::FILENAME_VALUE]);
     }
 
-    public function test_NullExceptionTraceBuilders_buildFromArray_ShouldCreateFileWriter()
+    #[Test]
+    public function nullExceptionTraceBuilders_buildFromArray_ShouldCreateFileWriter()
     {
         $this->exceptionTraceHelper
             ->method('getExceptionTraceBuilderForSettings')
@@ -109,7 +114,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([FileStragegy::FILENAME => self::FILENAME_VALUE]);
     }
 
-    public function test_NoFileName_buildFromArray_ShouldThrowRequiredException()
+    #[Test]
+    public function noFileName_buildFromArray_ShouldThrowRequiredException()
     {
         $this->expectException(RequiredSetting::class);
         $this->expectExceptionMessage(FileStragegy::FILENAME . ' setting is required');
@@ -117,7 +123,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([]);
     }
 
-    public function test_MinLevel_buildFromArray_ShouldSetMinLevel()
+    #[Test]
+    public function minLevel_buildFromArray_ShouldSetMinLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -127,7 +134,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([FileStragegy::FILENAME => self::FILENAME_VALUE, FileStragegy::MIN_LEVEL => self::MIN_LEVEL]);
     }
 
-    public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
+    #[Test]
+    public function maxLevel_buildFromArray_ShouldSetMaxLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -137,7 +145,8 @@ class FileStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([FileStragegy::FILENAME => self::FILENAME_VALUE, FileStragegy::MAX_LEVEL => self::MAX_LEVEL]);
     }
 
-    public function test_buildFromArray_ShouldReturnWriter()
+    #[Test]
+    public function buildFromArray_ShouldReturnWriter()
     {
         $actualWriter = $this->strategy->buildFromArray([FileStragegy::FILENAME => self::FILENAME_VALUE]);
 

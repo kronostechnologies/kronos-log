@@ -3,6 +3,7 @@
 namespace Kronos\Tests\Log\Writer;
 
 use Kronos\Log\Writer\MemoryWriter;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LogLevel;
 
 class MemoryWriterTest extends \PHPUnit\Framework\TestCase
@@ -21,7 +22,8 @@ class MemoryWriterTest extends \PHPUnit\Framework\TestCase
         $this->writer = new MemoryWriter();
     }
 
-    public function test_Writer_Log_WillAddInterpolatedMessageWithLogLevelToContent()
+    #[Test]
+    public function writer_Log_WillAddInterpolatedMessageWithLogLevelToContent()
     {
 
         $this->writer->log(self::INFO_LOG_LEVEL, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
@@ -29,7 +31,8 @@ class MemoryWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertContains(self::INTERPOLATED_MESSAGE_WITH_LOG_LEVEL, $this->writer->getLogs());
     }
 
-    public function test_Writer_LogTwice_WillAddTwiceToLogs()
+    #[Test]
+    public function writer_LogTwice_WillAddTwiceToLogs()
     {
 
         $this->writer->log(self::INFO_LOG_LEVEL, self::A_MESSAGE);

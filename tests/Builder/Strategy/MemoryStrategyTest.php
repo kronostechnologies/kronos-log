@@ -5,6 +5,7 @@ namespace Kronos\Tests\Log\Builder\Strategy;
 use Kronos\Log\Builder\Strategy\MemoryStrategy;
 use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Writer\MemoryWriter;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MemoryStrategyTest extends \PHPUnit\Framework\TestCase
@@ -25,7 +26,8 @@ class MemoryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy = new MemoryStrategy($this->factory);
     }
 
-    public function test_buildFromArray_ShouldCreateMemoryWriter()
+    #[Test]
+    public function buildFromArray_ShouldCreateMemoryWriter()
     {
         $this->factory
             ->expects(self::once())
@@ -34,7 +36,8 @@ class MemoryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([]);
     }
 
-    public function test_MinLevel_buildFromArray_ShouldSetMinLevel()
+    #[Test]
+    public function minLevel_buildFromArray_ShouldSetMinLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -44,7 +47,8 @@ class MemoryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([MemoryStrategy::MIN_LEVEL => self::MIN_LEVEL]);
     }
 
-    public function test_MaxLevel_buildFromArray_ShouldSetMaxLevel()
+    #[Test]
+    public function maxLevel_buildFromArray_ShouldSetMaxLevel()
     {
         $this->writer
             ->expects(self::once())
@@ -54,7 +58,8 @@ class MemoryStrategyTest extends \PHPUnit\Framework\TestCase
         $this->strategy->buildFromArray([MemoryStrategy::MAX_LEVEL => self::MAX_LEVEL]);
     }
 
-    public function test_buildFromArray_ShouldReturnWriter()
+    #[Test]
+    public function buildFromArray_ShouldReturnWriter()
     {
         $actualWriter = $this->strategy->buildFromArray([]);
 

@@ -7,6 +7,7 @@ use Kronos\Log\Builder;
 use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\LoggerFactory as LoggerFactory;
 use Kronos\Log\Logger;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class BuilderTest extends \PHPUnit\Framework\TestCase
@@ -61,7 +62,8 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder = new Builder($this->loggerFactory, $this->selector);
     }
 
-    public function test_buildFromArray_ShouldCreateLogger()
+    #[Test]
+    public function buildFromArray_ShouldCreateLogger()
     {
         $this->loggerFactory
             ->expects(self::once())
@@ -70,7 +72,8 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder->buildFromArray([['type' => self::ANY_WRITER_TYPE, 'settings' => []]]);
     }
 
-    public function test_SettingsForWriter_buildFromArray_ShouldCreateStrategy()
+    #[Test]
+    public function settingsForWriter_buildFromArray_ShouldCreateStrategy()
     {
         $this->selector
             ->expects(self::once())
@@ -80,7 +83,8 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder->buildFromArray([['type' => self::ANY_WRITER_TYPE, 'settings' => []]]);
     }
 
-    public function test_Strategy_buildFromArray_ShouldBuildWriterFromArray()
+    #[Test]
+    public function strategy_buildFromArray_ShouldBuildWriterFromArray()
     {
         $this->strategy
             ->expects(self::once())
@@ -90,7 +94,8 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder->buildFromArray([['type' => self::ANY_WRITER_TYPE, 'settings' => self::WRITER_SETTINGS]]);
     }
 
-    public function test_Writer_buildFromArray_ShouldAddWriter()
+    #[Test]
+    public function writer_buildFromArray_ShouldAddWriter()
     {
         $this->logger
             ->expects(self::once())
@@ -100,7 +105,8 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder->buildFromArray([['type' => self::ANY_WRITER_TYPE, 'settings' => self::WRITER_SETTINGS]]);
     }
 
-    public function test_AddedWriter_buildFromArray_ShouldReturnLogger()
+    #[Test]
+    public function addedWriter_buildFromArray_ShouldReturnLogger()
     {
         $actualLogger = $this->builder->buildFromArray([
             [
@@ -112,7 +118,8 @@ class BuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->logger, $actualLogger);
     }
 
-    public function test_NoWriterSettings_buildFromArray_ShouldThrowNoWriterException()
+    #[Test]
+    public function noWriterSettings_buildFromArray_ShouldThrowNoWriterException()
     {
         $this->expectException(NoWriter::class);
 

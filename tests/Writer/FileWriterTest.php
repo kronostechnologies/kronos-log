@@ -8,6 +8,7 @@ use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\FileWriter;
 use Kronos\Tests\Log\ExtendedTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LogLevel;
 use Kronos\Log\Logger;
@@ -44,7 +45,8 @@ class FileWriterTest extends ExtendedTestCase
         $this->factory = $this->createMock(FileAdaptorFactory::class);
     }
 
-    public function test_NewWriter_Constructor_ShouldCreateNewFile()
+    #[Test]
+    public function newWriter_Constructor_ShouldCreateNewFile()
     {
         $this->factory
             ->expects(self::once())
@@ -54,7 +56,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer = new FileWriter(self::A_FILENAME, $this->factory);
     }
 
-    public function test_WriteWithAdaptor_Log_ShouldCallWriteWithInterpolatedMessage()
+    #[Test]
+    public function writeWithAdaptor_Log_ShouldCallWriteWithInterpolatedMessage()
     {
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToByCalledOnceWith(self::INTERPOLATED_MESSAGE);
@@ -63,7 +66,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_WriterPrependingLogLevelAndDateTime_Log_ShouldCallWriteWithMessagePrependedByDateTimeThenLogLevel(
+    #[Test]
+    public function writerPrependingLogLevelAndDateTime_Log_ShouldCallWriteWithMessagePrependedByDateTimeThenLogLevel(
     )
     {
         $this->givenFactoryReturnAdaptor();
@@ -75,7 +79,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::CONTEXT_KEY => self::CONTEXT_VALUE]);
     }
 
-    public function test_ContextWithFakeException_Log_ShouldNotWriteException()
+    #[Test]
+    public function contextWithFakeException_Log_ShouldNotWriteException()
     {
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToByCalledOnceWith(self::INTERPOLATED_MESSAGE);
@@ -88,7 +93,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelLowerThanError_Log_ShouldWriteExceptionWithoutStackTrace()
+    #[Test]
+    public function contextContainingExceptionAndLogLevelLowerThanError_Log_ShouldWriteExceptionWithoutStackTrace()
     {
         $this->givenFactoryReturnAdaptor();
         $this->expectsWriteToBeCalledWithConsecutive([
@@ -105,7 +111,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(self::LOGLEVEL_BELOW_ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionAndLogLevelIsErrorAndNoTraceBuilder_Log_ShouldWriteExceptionMessage()
+    #[Test]
+    public function contextContainingExceptionAndLogLevelIsErrorAndNoTraceBuilder_Log_ShouldWriteExceptionMessage()
     {
         $this->givenFactoryReturnAdaptor();
         $exception = new \Exception(self::EXCEPTION_MESSAGE);
@@ -123,7 +130,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsErrorAndPreviouxExceptionTraceBuilder_Log_ShouldWriteMessageAndStacktraceForPreviousException(
+    #[Test]
+    public function contextContainingExceptionWithPreviousExceptionAndLogLevelIsErrorAndPreviouxExceptionTraceBuilder_Log_ShouldWriteMessageAndStacktraceForPreviousException(
     )
     {
         $this->givenFactoryReturnAdaptor();
@@ -151,7 +159,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_ContextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteMessageForPreviousException(
+    #[Test]
+    public function contextContainingExceptionWithPreviousExceptionAndLogLevelIsError_Log_ShouldWriteMessageForPreviousException(
     )
     {
         $this->givenFactoryReturnAdaptor();
@@ -174,7 +183,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(LogLevel::ERROR, self::A_MESSAGE, $context);
     }
 
-    public function test_Writer_SetContextStringify_ShouldExcludeExceptionKey()
+    #[Test]
+    public function writer_SetContextStringify_ShouldExcludeExceptionKey()
     {
         $this->givenFactoryReturnAdaptor();
         $context_stringifier = $this->createMock(ContextStringifier::class);
@@ -187,7 +197,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->setContextStringifier($context_stringifier);
     }
 
-    public function test_WriterWithContextStringifier_Log_ShouldWriteStringifiedVersionOfContext()
+    #[Test]
+    public function writerWithContextStringifier_Log_ShouldWriteStringifiedVersionOfContext()
     {
         $this->givenFactoryReturnAdaptor();
         $context = [
@@ -206,7 +217,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $context);
     }
 
-    public function test_EmptyArrayContextWithStringifier_Log_WontWriteAnything()
+    #[Test]
+    public function emptyArrayContextWithStringifier_Log_WontWriteAnything()
     {
         $this->givenFactoryReturnAdaptor();
         $given_context = [];
@@ -220,7 +232,8 @@ class FileWriterTest extends ExtendedTestCase
         $writer->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, $given_context);
     }
 
-    public function test_PopulatedContextWithStringifier_Log_WillWrite()
+    #[Test]
+    public function populatedContextWithStringifier_Log_WillWrite()
     {
         $this->givenFactoryReturnAdaptor();
         $given_context = [
