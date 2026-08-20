@@ -1,9 +1,9 @@
 <?php
 
-namespace Kronos\Tests\Log\Builder\Strategy;
+namespace Kronos\Tests\Log\Factory\Writer;
 
-use Kronos\Log\Builder\Strategy\ExceptionTraceHelper;
 use Kronos\Log\Factory\FormatterFactory;
+use Kronos\Log\Factory\Writer\ExceptionTraceHelper;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;

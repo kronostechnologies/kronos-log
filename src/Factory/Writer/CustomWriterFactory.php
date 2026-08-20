@@ -1,27 +1,26 @@
 <?php
 
-namespace Kronos\Log\Builder\Strategy;
+namespace Kronos\Log\Factory\Writer;
 
 use Kronos\Log\Exception\InvalidCustomWriter;
-use Kronos\Log\Builder\Strategy;
 
-class CustomWriterStrategy
+class CustomWriterFactory
 {
     /**
      * @param class-string $classname
      * @throws InvalidCustomWriter
      */
-    public function getStrategyForClassname(string $classname): Strategy
+    public function getStrategyForClassname(string $classname): WriterFactory
     {
         if (class_exists($classname)) {
             $reflection = new \ReflectionClass($classname);
-            if ($reflection->implementsInterface(Strategy::class)) {
+            if ($reflection->implementsInterface(WriterFactory::class)) {
                 $instance = $reflection->newInstance();
-                /** @var Strategy $instance */
+                /** @var WriterFactory $instance */
                 return $instance;
             }
 
-            throw new InvalidCustomWriter("$classname must implement " . Strategy::class);
+            throw new InvalidCustomWriter("$classname must implement " . WriterFactory::class);
         }
 
         throw new InvalidCustomWriter("$classname class does not exists");

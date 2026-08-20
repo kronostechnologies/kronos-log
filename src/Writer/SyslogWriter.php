@@ -16,21 +16,21 @@ class SyslogWriter extends AbstractWriter
     const int DEFAULT_OPTION = LOG_ODELAY;
     const int DEFAULT_FACILITY = LOG_LOCAL0;
 
-    private SyslogAdaptor $syslog_adaptor;
     private $application;
     private $option;
     private $facility;
+    private SyslogAdaptor $syslog_adaptor;
 
     public function __construct(
-        SyslogAdaptor $syslog_adaptor,
         $application,
         $option = self::DEFAULT_OPTION,
-        $facility = self::DEFAULT_FACILITY
+        $facility = self::DEFAULT_FACILITY,
+        ?SyslogAdaptor $syslog_adaptor = null,
     ) {
-        $this->syslog_adaptor = $syslog_adaptor;
         $this->application = $application;
         $this->option = $option;
         $this->facility = $facility;
+        $this->syslog_adaptor = $syslog_adaptor ??  new SyslogAdaptor();
     }
 
     #[Override]

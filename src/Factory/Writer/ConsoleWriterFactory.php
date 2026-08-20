@@ -1,23 +1,31 @@
 <?php
 
-namespace Kronos\Log\Builder\Strategy;
+namespace Kronos\Log\Factory\Writer;
 
-use Kronos\Log\Factory\WriterFactory;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\ConsoleWriter;
 use Override;
 
-class ConsoleStrategy extends AbstractWriterStrategy
+class ConsoleWriterFactory extends AbstractWriterFactory
 {
     const string FORCE_ANSI_COLOR = 'forceAnsiColor';
     const string FORCE_NO_ANSI_COLOR = 'forceNoAnsiColor';
 
-    private WriterFactory $factory;
     private ExceptionTraceHelper $exceptionTraceHelper;
 
-    public function __construct(?WriterFactory $factory = null, ?ExceptionTraceHelper $exceptionTraceHelper = null)
+    public function __construct(?ExceptionTraceHelper $exceptionTraceHelper = null)
     {
-        $this->factory = $factory ?: new WriterFactory();
         $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
+    }
+
+    public function create(
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null
+    ): ConsoleWriter {
+        $writer = new ConsoleWriter($exceptionTraceBuilder, $previousExceptionTraceBuilder);
+        $writer->setPrependDateTime();
+        $writer->setPrependLogLevel();
+        return $writer;
     }
 
     /**
@@ -26,12 +34,12 @@ class ConsoleStrategy extends AbstractWriterStrategy
      * @return ConsoleWriter
      */
     #[Override]
-    public function buildFromArray(array $settings)
+    public function createFromArray(array $settings): ConsoleWriter
     {
         $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
         $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
 
-        $writer = $this->factory->createConsoleWriter($exceptionTraceBuilder, $previousExceptionTraceBuilder);
+        $writer = $this->create($exceptionTraceBuilder, $previousExceptionTraceBuilder);
 
         $this->setCommonSettings($writer, $settings);
 

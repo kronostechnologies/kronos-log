@@ -70,9 +70,15 @@ class LogLocatorLogger implements LoggerInterface
     }
 
     #[Override]
-    public function exception(string $message, Throwable $exception, array $context = array()): void
+    public function exception(string|Stringable $message, Throwable $exception, array $context = array()): void
     {
         LogLocator::getLogger()->exception($message, $exception, $context);
+    }
+
+    #[Override]
+    public function exceptionWarning(string|Stringable $message, Throwable $exception, array $context = array()): void
+    {
+        LogLocator::getLogger()->exceptionWarning($message, $exception, $context);
     }
 
     #[Override]

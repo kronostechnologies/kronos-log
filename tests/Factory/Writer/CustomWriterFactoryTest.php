@@ -1,30 +1,31 @@
 <?php
 
-namespace Kronos\Tests\Log\Builder\Strategy;
+namespace Kronos\Tests\Log\Factory\Writer;
 
-use Kronos\Log\Builder\Strategy\CustomWriterStrategy;
-use Kronos\Log\Builder\Strategy;
 use Kronos\Log\Exception\InvalidCustomWriter;
+use Kronos\Log\Factory\Writer\CustomWriterFactory;
+use Kronos\Log\Factory\Writer\WriterFactory;
+use Kronos\Log\Writer\MemoryWriter;
 use PHPUnit\Framework\Attributes\Test;
 
-class CustomWriterStrategyTest extends \PHPUnit\Framework\TestCase
+class CustomWriterFactoryTest extends \PHPUnit\Framework\TestCase
 {
 
     #[Test]
     public function classname_getStrategyFromClassname_ShouldReturnClassnameInstance()
     {
-        $customWriter = new CustomWriterStrategy();
+        $customWriter = new CustomWriterFactory();
 
-        $strategy = $customWriter->getStrategyForClassname(ValidCustomStrategy::class);
+        $factory = $customWriter->getStrategyForClassname(ValidCustomWriterFactory::class);
 
-        $this->assertInstanceOf(ValidCustomStrategy::class, $strategy);
+        $this->assertInstanceOf(ValidCustomWriterFactory::class, $factory);
     }
 
     #[Test]
     public function unknownClass_getStrategyFromClassname_ShouldThrowThrowInvalidCustomWriterException()
     {
         $this->expectException(InvalidCustomWriter::class);
-        $customWriter = new CustomWriterStrategy();
+        $customWriter = new CustomWriterFactory();
 
         $customWriter->getStrategyForClassname('\Invalid\Strategy\Classname');
     }
@@ -33,19 +34,19 @@ class CustomWriterStrategyTest extends \PHPUnit\Framework\TestCase
     public function nonBuilderStrategyClass_getStrategyFromClassname_ShouldThrowInvalidCustomWriterException()
     {
         $this->expectException(InvalidCustomWriter::class);
-        $customWriter = new CustomWriterStrategy();
+        $customWriter = new CustomWriterFactory();
 
         $customWriter->getStrategyForClassname(NonBuildStrategyClass::class);
     }
 }
 
 
-class ValidCustomStrategy implements Strategy
+class ValidCustomWriterFactory implements WriterFactory
 {
 
-    public function buildFromArray(array $settings)
+    public function createFromArray(array $settings): \Kronos\Log\WriterInterface
     {
-
+        return new MemoryWriter();
     }
 
 }

@@ -1,24 +1,20 @@
 <?php
 
-namespace Kronos\Log\Builder\Strategy;
+namespace Kronos\Log\Factory\Writer;
 
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\WriterFactory;
 use Kronos\Log\Writer\SyslogWriter;
 use Override;
 
-class SyslogStrategy extends AbstractWriterStrategy
+class SyslogWriterFactory extends AbstractWriterFactory
 {
-
     const string APPLICATION = 'application';
     const string OPTION = 'option';
     const string FACILITY = 'facility';
 
-    private WriterFactory $factory;
-
-    public function __construct(?WriterFactory $factory = null)
+    public function create($application, $option = LOG_ODELAY, $facility = LOG_LOCAL0): SyslogWriter
     {
-        $this->factory = is_null($factory) ? new WriterFactory() : $factory;
+        return new SyslogWriter($application, $option, $facility);
     }
 
     /**
@@ -27,13 +23,13 @@ class SyslogStrategy extends AbstractWriterStrategy
      * @throws RequiredSetting
      */
     #[Override]
-    public function buildFromArray(array $settings)
+    public function createFromArray(array $settings): SyslogWriter
     {
         if (!isset($settings[self::APPLICATION])) {
             throw new RequiredSetting(self::APPLICATION . ' setting is required');
         }
 
-        $writer = $this->factory->createSyslogWriter(
+        $writer = $this->create(
             $settings[self::APPLICATION],
             $this->getOption($settings),
             $this->getFacility($settings)

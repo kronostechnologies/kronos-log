@@ -1,6 +1,6 @@
 <?php
 
-namespace Kronos\Log\Builder\Strategy;
+namespace Kronos\Log\Factory\Writer;
 
 use Kronos\Log\Factory\FormatterFactory;
 

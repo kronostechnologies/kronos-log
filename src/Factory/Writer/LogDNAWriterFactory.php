@@ -1,12 +1,13 @@
 <?php
 
-namespace Kronos\Log\Builder\Strategy;
+namespace Kronos\Log\Factory\Writer;
 
 use Kronos\Log\Exception\RequiredSetting;
-use Kronos\Log\Factory\WriterFactory As WriterFactory;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
+use Kronos\Log\Writer\LogDNAWriter;
 use Override;
 
-class LogDNAStrategy extends AbstractWriterStrategy
+class LogDNAWriterFactory extends AbstractWriterFactory
 {
     const string HOSTNAME = 'hostname';
     const string APPLICATION = 'application';
@@ -15,30 +16,51 @@ class LogDNAStrategy extends AbstractWriterStrategy
     const string IP_ADDRESS = 'ip';
     const string MAC_ADDRESS = 'mac';
 
-    private WriterFactory $factory;
     private ExceptionTraceHelper $exceptionTraceHelper;
 
-    public function __construct(?WriterFactory $factory = null, ?ExceptionTraceHelper $exceptionTraceHelper = null)
+    public function __construct(?ExceptionTraceHelper $exceptionTraceHelper = null)
     {
-        $this->factory = is_null($factory) ? new WriterFactory() : $factory;
         $this->exceptionTraceHelper = $exceptionTraceHelper ?: new ExceptionTraceHelper();
+    }
+
+    public function create(
+        $hostname,
+        $application,
+        $ingestionKey,
+        ?TraceBuilder $exceptionTraceBuilder = null,
+        ?TraceBuilder $previousExceptionTraceBuilder = null
+    ): LogDNAWriter {
+        return new LogDNAWriter(
+            $hostname,
+            $application,
+            $ingestionKey,
+            [],
+            null,
+            $exceptionTraceBuilder,
+            $previousExceptionTraceBuilder
+        );
     }
 
     /**
      * @param array $settings
-     * @return \Kronos\Log\Writer\LogDNAWriter
+     * @return LogDNAWriter
      * @throws RequiredSetting
      */
     #[Override]
-    public function buildFromArray(array $settings)
+    public function createFromArray(array $settings): LogDNAWriter
     {
         $this->checkRequiredSettings($settings);
 
         $exceptionTraceBuilder = $this->exceptionTraceHelper->getExceptionTraceBuilderForSettings($settings);
         $previousExceptionTraceBuilder = $this->exceptionTraceHelper->getPreviousExceptionTraceBuilderForSettings($settings);
 
-        $writer = $this->factory->createLogDNAWriter($this->getHostName($settings), $settings[self::APPLICATION],
-            $settings[self::INGESTION_KEY], $exceptionTraceBuilder, $previousExceptionTraceBuilder);
+        $writer = $this->create(
+            $this->getHostName($settings),
+            $settings[self::APPLICATION],
+            $settings[self::INGESTION_KEY],
+            $exceptionTraceBuilder,
+            $previousExceptionTraceBuilder
+        );
 
         $this->setCommonSettings($writer, $settings);
 

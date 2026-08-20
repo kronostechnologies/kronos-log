@@ -29,10 +29,10 @@ class SyslogWriterTest extends \PHPUnit\Framework\TestCase
         $this->syslogAdaptor = $this->createMock(SyslogAdaptor::class);
 
         $this->writer = new SyslogWriter(
-            $this->syslogAdaptor,
             self::APPLICATION,
             self::SYSLOG_OPTION,
-            self::SYSLOG_FACILITY
+            self::SYSLOG_FACILITY,
+            $this->syslogAdaptor,
         );
     }
 

@@ -5,6 +5,7 @@ namespace Kronos\Log;
 use Override;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 use Psr\Log\LogLevel;
+use Stringable;
 use Throwable;
 
 class LoggerDecorator implements LoggerInterface
@@ -97,9 +98,16 @@ class LoggerDecorator implements LoggerInterface
     }
 
     #[Override]
-    public function exception(string $message, Throwable $exception, array $context = array()): void
+    public function exception(string|Stringable $message, Throwable $exception, array $context = array()): void
     {
         $context[Logger::EXCEPTION_CONTEXT] = $exception;
         $this->error($message, $context);
+    }
+
+    #[Override]
+    public function exceptionWarning(string|Stringable $message, Throwable $exception, array $context = array()): void
+    {
+        $context[Logger::EXCEPTION_CONTEXT] = $exception;
+        $this->warning($message, $context);
     }
 }

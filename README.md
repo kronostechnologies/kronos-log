@@ -89,7 +89,7 @@ $settings = [
 	]
 ];
 
-$builder = new \Kronos\Log\Builder();
-$logger = $builder->buildFromArray($settings);
+$builder = new \Kronos\Log\LoggerFactory();
+$logger = $builder->createFromArray($settings);
 
 ```

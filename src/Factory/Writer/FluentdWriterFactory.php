@@ -1,16 +1,15 @@
 <?php
 
 
-namespace Kronos\Log\Builder\Strategy;
+namespace Kronos\Log\Factory\Writer;
 
 
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Writer\FluentdWriter;
-use Kronos\Log\WriterInterface;
 use Override;
 
-class FluentdStrategy extends AbstractWriterStrategy
+class FluentdWriterFactory extends AbstractWriterFactory
 {
     const string APPLICATION = 'application';
     const string TAG = 'tag';
@@ -28,12 +27,10 @@ class FluentdStrategy extends AbstractWriterStrategy
 
 
     /**
-     * @param array $settings
-     * @return WriterInterface|FluentdWriter
      * @throws RequiredSetting
      */
     #[Override]
-    public function buildFromArray(array $settings)
+    public function createFromArray(array $settings): FluentdWriter
     {
         $this->checkRequiredSettings($settings);
 

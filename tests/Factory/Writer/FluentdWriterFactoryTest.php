@@ -1,21 +1,21 @@
 <?php
 
 
-namespace Kronos\Tests\Log\Builder\Strategy;
+namespace Kronos\Tests\Log\Factory\Writer;
 
 
-use Kronos\Log\Builder\Strategy\FluentdStrategy;
 use Kronos\Log\Exception\RequiredSetting;
+use Kronos\Log\Factory\Writer\FluentdWriterFactory;
 use Kronos\Log\Writer\FluentdWriter;
 use PHPUnit\Framework\Attributes\Test;
 
-class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
+class FluentdWriterFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    protected FluentdStrategy $strategy;
+    protected FluentdWriterFactory $factory;
 
     public function setUp(): void
     {
-        $this->strategy = new FluentdStrategy();
+        $this->factory = new FluentdWriterFactory();
     }
 
     #[Test]
@@ -26,7 +26,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'tag' => 'php.application',
         ];
 
-        $retVal = $this->strategy->buildFromArray($validParams);
+        $retVal = $this->factory->createFromArray($validParams);
 
         $this->assertInstanceOf(FluentdWriter::class, $retVal);
     }
@@ -38,7 +38,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException(RequiredSetting::class);
 
-        $this->strategy->buildFromArray($params);
+        $this->factory->createFromArray($params);
     }
 
     #[Test]
@@ -48,7 +48,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException(RequiredSetting::class);
 
-        $this->strategy->buildFromArray($params);
+        $this->factory->createFromArray($params);
     }
 
     #[Test]
@@ -60,7 +60,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'tag' => 'php.application'
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertSame($givenHostname, $retVal->getHostname());
     }
@@ -74,7 +74,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'tag' => $givenTag
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertSame($givenTag, $retVal->getTag());
     }
@@ -89,7 +89,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'port' => $givenPort
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertSame($givenPort, $retVal->getPort());
     }
@@ -102,7 +102,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'tag' => 'php.application',
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertSame(24224, $retVal->getPort());
     }
@@ -117,7 +117,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'application' => $givenApplication,
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertSame($givenApplication, $retVal->getApplication());
     }
@@ -130,7 +130,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'tag' => 'php.application',
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertNull($retVal->getApplication());
     }
@@ -143,7 +143,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'tag' => 'php.application',
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertFalse($retVal->willWrapContextInMeta());
     }
@@ -157,7 +157,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'wrapContextInMeta' => 'false',
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertFalse($retVal->willWrapContextInMeta());
     }
@@ -171,7 +171,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'wrapContextInMeta' => 'true',
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertTrue($retVal->willWrapContextInMeta());
     }
@@ -185,7 +185,7 @@ class FluentdStrategyTest extends \PHPUnit\Framework\TestCase
             'fluentBit' => true
         ];
 
-        $retVal = $this->strategy->buildFromArray($params);
+        $retVal = $this->factory->createFromArray($params);
 
         $this->assertTrue($retVal->getFluentBit());
     }

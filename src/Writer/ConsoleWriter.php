@@ -31,9 +31,9 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
     private ?TraceBuilder $previousExceptionTraceBuilder;
 
     public function __construct(
-        ?FileAdaptorFactory $factory = null,
         ?TraceBuilder $exceptionTraceBuilder = null,
-        ?TraceBuilder $previousExceptionTraceBuilder = null
+        ?TraceBuilder $previousExceptionTraceBuilder = null,
+        ?FileAdaptorFactory $factory = null,
     ) {
         $factory = $factory ?: new FileAdaptorFactory();
         $this->stdout = $factory->createTTYAdaptor(self::STDOUT);

@@ -23,13 +23,9 @@ class FileWriter extends \Kronos\Log\AbstractWriter
     const string CONTEXT_TITLE_LINE = 'Context:';
 
     private FileAdaptor $fileAdaptor;
-
     private ?ContextStringifier $contextStringifier = null;
-
     private ?TraceBuilder $exceptionTraceBuilder;
-
     private ?TraceBuilder $previousExceptionTraceBuilder;
-
     private FileAdaptorFactory $factory;
 
     public function __construct(
@@ -38,7 +34,7 @@ class FileWriter extends \Kronos\Log\AbstractWriter
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null
     ) {
-        $this->factory = is_null($factory) ? new FileAdaptorFactory() : $factory;
+        $this->factory = $factory ?? new FileAdaptorFactory();
         $this->fileAdaptor = $this->factory->createFileAdaptor($filename);
         $this->exceptionTraceBuilder = $exceptionTraceBuilder;
         $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
