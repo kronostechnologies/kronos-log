@@ -2,6 +2,7 @@
 
 namespace Kronos\Log\Writer;
 
+use Kronos\Log\AbstractWriter;
 use Kronos\Log\Adaptor\FileAdaptor;
 use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Formatter\ContextStringifier;
@@ -11,9 +12,10 @@ use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
 use Override;
 use Psr\Log\LogLevel;
+use Stringable;
 use Throwable;
 
-class FileWriter extends \Kronos\Log\AbstractWriter
+class FileWriter extends AbstractWriter
 {
     use PrependDateTime;
     use PrependLogLevel;
@@ -40,34 +42,21 @@ class FileWriter extends \Kronos\Log\AbstractWriter
         $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
     }
 
-    /**
-     * @param ContextStringifier $contextStringifier
-     */
-    public function setContextStringifier($contextStringifier)
+    public function setContextStringifier(ContextStringifier $contextStringifier): void
     {
         $this->contextStringifier = $contextStringifier;
         $this->contextStringifier->excludeKey(Logger::EXCEPTION_CONTEXT);
     }
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @param array $context
-     */
     #[Override]
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         $this->writeMessage($level, $message, $context);
         $this->writeExceptionIfGiven($message, $level, $context);
         $this->writeContextIfStringifierGiven($context);
     }
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @param array $context
-     */
-    private function writeMessage($level, $message, array $context = [])
+    private function writeMessage(string $level, string | Stringable $message, array $context = []): void
     {
         $interpolated_message = $this->interpolate($message, $context);
         $message_with_loglevel = $this->prependLogLevel($level, $interpolated_message);
@@ -75,10 +64,7 @@ class FileWriter extends \Kronos\Log\AbstractWriter
         $this->fileAdaptor->write($message_with_datetime);
     }
 
-    /**
-     * @param array $context
-     */
-    private function writeContextIfStringifierGiven(array $context = [])
+    private function writeContextIfStringifierGiven(array $context = []): void
     {
         if ($this->contextStringifier && !empty($context)) {
             $this->fileAdaptor->write(self::CONTEXT_TITLE_LINE);
@@ -86,28 +72,20 @@ class FileWriter extends \Kronos\Log\AbstractWriter
         }
     }
 
-    /**
-     * @param $message
-     * @param $level
-     * @param array $context
-     */
-    private function writeExceptionIfGiven($message, $level, array $context)
+    private function writeExceptionIfGiven(string | Stringable $message, string $level, array $context): void
     {
-        if (isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof Throwable) {
-            /** @var Throwable $exception */
-            $exception = $context[Logger::EXCEPTION_CONTEXT];
+        $exception = $context[Logger::EXCEPTION_CONTEXT] ?? null;
+        if ($exception instanceof Throwable) {
             $this->writeException($message, $level, $exception);
         }
     }
 
-    /**
-     * @param $message
-     * @param $level
-     * @param Throwable $exception
-     * @param int $depth
-     */
-    private function writeException($message, $level, Throwable $exception, $depth = 0)
-    {
+    private function writeException(
+        string | Stringable $message,
+        string $level,
+        Throwable $exception,
+        int $depth = 0
+    ): void {
         if ($message != $exception->getMessage()) {
             $this->writeExceptionTitle($exception, $depth);
         }
@@ -132,11 +110,8 @@ class FileWriter extends \Kronos\Log\AbstractWriter
         }
     }
 
-    /**
-     * @param Throwable $exception
-     * @param $depth
-     */
-    private function writeExceptionTitle(Throwable $exception, $depth)
+
+    private function writeExceptionTitle(Throwable $exception, int $depth): void
     {
         $title = ($depth === 0 ? self::EXCEPTION_TITLE_LINE : self::PREVIOUS_EXCEPTION_TITLE_LINE);
 

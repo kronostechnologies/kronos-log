@@ -2,13 +2,14 @@
 
 namespace Kronos\Log\Writer;
 
+use GuzzleHttp\Client;
 use Kronos\Log\AbstractWriter;
 use Kronos\Log\Factory\GuzzleFactory;
 use Kronos\Log\Formatter\ContextStringifier;
-use Kronos\Log\Factory;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
 use Override;
+use Stringable;
 
 class LogDNAWriter extends AbstractWriter
 {
@@ -21,62 +22,21 @@ class LogDNAWriter extends AbstractWriter
     const string METADATA_USER = 'user';
     const string METADATA_EXCEPTION = 'exception';
 
-    /**
-     * @var string
-     */
-    private $hostname;
+    private string $hostname;
+    private ?string $application;
+    private ?string $ip = null;
+    private ?string $mac = null;
 
-    /**
-     * @var string
-     */
-    private $application;
+    private Client $guzzleClient;
+    private ?TraceBuilder $exceptionTraceBuilder;
+    private ?TraceBuilder $previousExceptionTraceBuilder;
+    private ContextStringifier $contextStringifier;
 
-    /**
-     * @var string
-     */
-    private $ip;
-
-    /**
-     * @var string
-     */
-    private $mac;
-
-    /**
-     * @var \GuzzleHttp\Client
-     */
-    private $guzzleClient;
-
-    /**
-     * @var TraceBuilder|null
-     */
-    private $exceptionTraceBuilder;
-
-    /**
-     * @var TraceBuilder|null
-     */
-    private $previousExceptionTraceBuilder;
-
-    /**
-     * @var ContextStringifier
-     */
-    private $contextStringifier;
-
-    /**
-     * LogDNA constructor.
-     * @param $hostname
-     * @param $application
-     * @param $ingestionKey
-     * @param array $guzzleOptions
-     * @param GuzzleFactory|null $guzzleFactory
-     * @param TraceBuilder|null $exceptionTraceBuilder
-     * @param TraceBuilder|null $previousExceptionTraceBuilder
-     * @param ContextStringifier|null $contextStringifier
-     */
     public function __construct(
-        $hostname,
-        $application,
-        $ingestionKey,
-        $guzzleOptions = [],
+        string $hostname,
+        ?string $application,
+        string $ingestionKey,
+        array $guzzleOptions = [],
         ?GuzzleFactory $guzzleFactory = null,
         ?TraceBuilder $exceptionTraceBuilder = null,
         ?TraceBuilder $previousExceptionTraceBuilder = null,
@@ -90,30 +50,18 @@ class LogDNAWriter extends AbstractWriter
         $this->createGuzzleClient($ingestionKey, $guzzleOptions, $guzzleFactory);
     }
 
-    /**
-     * @param string $ip
-     */
-    public function setIpAddress($ip)
+    public function setIpAddress(?string $ip): void
     {
         $this->ip = $ip;
     }
 
-    /**
-     * @param string $mac
-     */
-    public function setMacAddress($mac)
+    public function setMacAddress(?string $mac): void
     {
         $this->mac = $mac;
     }
 
-
-    /**
-     * @param string $level LogLevel valid string
-     * @param string $message
-     * @param array $context
-     */
     #[Override]
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         try {
             $metadata = $this->processMetadata($context);
@@ -140,10 +88,7 @@ class LogDNAWriter extends AbstractWriter
         }
     }
 
-    /**
-     * @return string
-     */
-    private function buildUri()
+    private function buildUri(): string
     {
         $uri = self::INGEST_URI . '?hostname=' . urlencode($this->hostname) . '&now=' . time();
         if ($this->ip) {
@@ -156,11 +101,7 @@ class LogDNAWriter extends AbstractWriter
         return $uri;
     }
 
-    /**
-     * @param $context
-     * @return array whatever $metadata is
-     */
-    private function processMetadata(array $context = [])
+    private function processMetadata(array $context = []): array
     {
         $exception_context = $this->replaceException($context);
 
@@ -171,10 +112,9 @@ class LogDNAWriter extends AbstractWriter
         return $metadata;
     }
 
-    private function createGuzzleClient($ingestionKey, $guzzleOptions, ?GuzzleFactory $guzzleFactory = null)
+    private function createGuzzleClient($ingestionKey, $guzzleOptions, ?GuzzleFactory $guzzleFactory = null): void
     {
         $factory = $guzzleFactory ?: new GuzzleFactory();
-
         $baseOptions = [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -185,7 +125,6 @@ class LogDNAWriter extends AbstractWriter
         ];
 
         $options = $this->recursiveMerge($baseOptions, $guzzleOptions);
-
         $this->guzzleClient = $factory->createClient($options);
     }
 
@@ -214,20 +153,14 @@ class LogDNAWriter extends AbstractWriter
         return $result;
     }
 
-    /**
-     * @return TraceBuilder|null
-     */
     #[Override]
-    public function getExceptionTraceBuilder()
+    public function getExceptionTraceBuilder(): ?TraceBuilder
     {
         return $this->exceptionTraceBuilder;
     }
 
-    /**
-     * @return TraceBuilder|null
-     */
     #[Override]
-    public function getPreviousExceptionTraceBuilder()
+    public function getPreviousExceptionTraceBuilder(): ?TraceBuilder
     {
         return $this->previousExceptionTraceBuilder;
     }

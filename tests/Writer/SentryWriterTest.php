@@ -14,6 +14,7 @@ use Sentry\State\Scope;
 use Sentry\Tracing\PropagationContext;
 use Sentry\Tracing\SpanId;
 use Sentry\Tracing\TraceId;
+use Stringable;
 
 class SentryWriterTest extends TestCase
 {
@@ -260,7 +261,7 @@ class SentryWriterWithScopeDecorator extends SentryWriter
     const SPAN_ID = "3d1bf6350d09fb80";
     const TRACE_ID = "141bb800f59d073b7a075b1eed7d5372";
 
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         parent::log($level, $message, $context);
     }

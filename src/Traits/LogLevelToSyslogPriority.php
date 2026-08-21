@@ -7,7 +7,10 @@ use Psr\Log\LogLevel;
 
 trait LogLevelToSyslogPriority
 {
-    private $logLevelMap = [
+    /**
+     * @var int[]
+     */
+    private array $logLevelMap = [
         LogLevel::EMERGENCY => LOG_EMERG,
         LogLevel::ALERT => LOG_ALERT,
         LogLevel::CRITICAL => LOG_CRIT,
@@ -19,11 +22,9 @@ trait LogLevelToSyslogPriority
     ];
 
     /**
-     * @param $level
-     * @return mixed
      * @throws InvalidLogLevel
      */
-    protected function getSyslogPriorityForLogLevel($level)
+    protected function getSyslogPriorityForLogLevel(string $level): int
     {
         if (isset($this->logLevelMap[$level])) {
             return $this->logLevelMap[$level];

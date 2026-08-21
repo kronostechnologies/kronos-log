@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Kronos\Log\Writer;
-
 
 use Fluent\Logger\FluentLogger;
 use Kronos\Log\AbstractWriter;
@@ -12,84 +10,33 @@ use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Traits\ExceptionTraceBuilderAwareTrait;
 use Override;
+use Stringable;
 
 class FluentdWriter extends AbstractWriter
 {
     use ExceptionTraceBuilderAwareTrait;
 
-    /**
-     * @var string
-     */
-    protected $hostname;
+    protected string $hostname;
+    protected int $port;
+    protected string $tag;
+    protected ?string $application;
+    protected ?FluentLogger $logger = null;
+    protected FluentdFactory $factory;
+    protected bool $wrapContextInMeta;
+    private ?TraceBuilder $exceptionTraceBuilder = null;
+    private ?TraceBuilder $previousExceptionTraceBuilder = null;
+    private ContextStringifier $contextStringifier;
+    private bool $fluentBit;
 
-    /**
-     * @var int
-     */
-    protected $port;
-
-    /**
-     * @var string
-     */
-    protected $tag;
-
-    /**
-     * @var string|null
-     */
-    protected $application;
-
-    /**
-     * @var FluentLogger|null
-     */
-    protected $logger;
-
-    /**
-     * @var FluentdFactory
-     */
-    protected $factory;
-
-    /**
-     * @var bool
-     */
-    protected $wrapContextInMeta;
-
-    /**
-     * @var TraceBuilder|null
-     */
-    private $exceptionTraceBuilder;
-
-    /**
-     * @var TraceBuilder|null
-     */
-    private $previousExceptionTraceBuilder;
-
-    /**
-     * @var ContextStringifier
-     */
-    private $contextStringifier;
-
-    /**
-     * @var bool
-     */
-    private $fluentBit;
-
-    /**
-     * @param string $hostname
-     * @param int $port
-     * @param $tag
-     * @param null|string $application
-     * @param bool $wrapContextInMeta
-     * @param FluentdFactory|null $factory
-     * @param ContextStringifier|null $contextStringifier
-     */
     public function __construct(
-        $hostname,
-        $port,
-        $tag,
-        $application,
-        $wrapContextInMeta,
+        string $hostname,
+        int $port,
+        string $tag,
+        ?string $application,
+        bool $wrapContextInMeta,
         ?FluentdFactory $factory = null,
         ?ContextStringifier $contextStringifier = null,
-        $fluentBit = false
+        bool $fluentBit = false
     ) {
         $this->hostname = $hostname;
         $this->port = $port;
@@ -102,7 +49,7 @@ class FluentdWriter extends AbstractWriter
     }
 
     #[Override]
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         try {
             $logger = $this->initializeLogger();
@@ -115,16 +62,13 @@ class FluentdWriter extends AbstractWriter
             $data['message'] = $this->interpolate($message, $context);
 
             $logger->post($this->tag, $data);
-
-            return true;
         } catch (\Exception $ex) {
             trigger_error('An error occurred while writing with the Fluentd writer: ' . $ex->getMessage(),
                 E_USER_WARNING);
-            return false;
         }
     }
 
-    private function processContext(array $context)
+    private function processContext(array $context): array
     {
         $context = $this->replaceException($context);
         $context = $this->contextStringifier->stringifyArray($context);
@@ -137,10 +81,7 @@ class FluentdWriter extends AbstractWriter
         }
     }
 
-    /**
-     * @return FluentLogger
-     */
-    protected function initializeLogger()
+    protected function initializeLogger(): FluentLogger
     {
         if ($this->logger === null) {
             $packer = null;
@@ -153,110 +94,70 @@ class FluentdWriter extends AbstractWriter
         return $this->logger;
     }
 
-    /**
-     * @return string
-     */
-    public function getHostname()
+    public function getHostname(): string
     {
         return $this->hostname;
     }
 
-    /**
-     * @return int
-     */
-    public function getPort()
+    public function getPort(): int
     {
         return $this->port;
     }
 
-    /**
-     * @return string
-     */
-    public function getTag()
+    public function getTag(): string
     {
         return $this->tag;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getApplication()
+    public function getApplication(): ?string
     {
         return $this->application;
     }
 
-    /**
-     * @return bool
-     */
-    public function willWrapContextInMeta()
+    public function willWrapContextInMeta(): bool
     {
         return $this->wrapContextInMeta;
     }
 
-    /**
-     * @return bool
-     */
-    public function getFluentBit()
+    public function getFluentBit(): bool
     {
         return $this->fluentBit;
     }
 
-    /**
-     * @param bool $value
-     */
-    public function setFluentBit($value)
+    public function setFluentBit(bool $value): void
     {
         $this->fluentBit = $value;
     }
 
-    /**
-     * @return ContextStringifier
-     */
-    public function getContextStringifier()
+    public function getContextStringifier(): ContextStringifier
     {
         return $this->contextStringifier;
     }
 
-    /**
-     * @param ContextStringifier $contextStringifier
-     */
-    public function setContextStringifier(ContextStringifier $contextStringifier)
+    public function setContextStringifier(ContextStringifier $contextStringifier): void
     {
         $this->contextStringifier = $contextStringifier;
     }
 
-    /**
-     * @return TraceBuilder|null
-     */
     #[Override]
-    public function getExceptionTraceBuilder()
+    public function getExceptionTraceBuilder(): ?TraceBuilder
     {
         return $this->exceptionTraceBuilder;
     }
 
-    /**
-     * @param TraceBuilder|null $exceptionTraceBuilder
-     */
-    public function setExceptionTraceBuilder($exceptionTraceBuilder)
+    public function setExceptionTraceBuilder(?TraceBuilder $exceptionTraceBuilder): void
     {
         $this->exceptionTraceBuilder = $exceptionTraceBuilder;
     }
 
-    /**
-     * @return TraceBuilder|null
-     */
     #[Override]
-    public function getPreviousExceptionTraceBuilder()
+    public function getPreviousExceptionTraceBuilder(): ?TraceBuilder
     {
         return $this->previousExceptionTraceBuilder;
     }
 
-    /**
-     * @param TraceBuilder $previousExceptionTraceBuilder
-     */
-    public function setPreviousExceptionTraceBuilder($previousExceptionTraceBuilder)
+    public function setPreviousExceptionTraceBuilder(?TraceBuilder $previousExceptionTraceBuilder): void
     {
         $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
     }
-
 }

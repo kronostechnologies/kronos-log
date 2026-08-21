@@ -2,35 +2,27 @@
 
 namespace Kronos\Log\Writer;
 
+use Kronos\Log\AbstractWriter;
+use Kronos\Log\Traits\PrependLogLevel;
 use Override;
+use Stringable;
 
-class MemoryWriter extends \Kronos\Log\AbstractWriter
+class MemoryWriter extends AbstractWriter
 {
-
-    use \Kronos\Log\Traits\PrependLogLevel;
+    use PrependLogLevel;
 
     /**
      * Contains all logged messages.
-     * @var array
      */
-    private $_logs = [];
+    private array $_logs = [];
 
-    /**
-     * Memory constructor.
-     */
     public function __construct()
     {
         $this->setPrependLogLevel();
     }
 
-    /**
-     * Logs a message to the $_content array.
-     * @param string $level
-     * @param string $message
-     * @param array $context
-     */
     #[Override]
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         $interpolated_message = $this->interpolate($message, $context);
         $this->_logs[] = $this->prependLogLevel($level, $interpolated_message);
@@ -38,9 +30,8 @@ class MemoryWriter extends \Kronos\Log\AbstractWriter
 
     /**
      * Returns all logged messages.
-     * @return array
      */
-    public function getLogs()
+    public function getLogs(): array
     {
         return $this->_logs;
     }

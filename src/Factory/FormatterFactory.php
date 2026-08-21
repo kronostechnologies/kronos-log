@@ -9,14 +9,6 @@ class FormatterFactory
 {
 
     /**
-     * @return ContextStringifier
-     */
-    public function createContextStringifier()
-    {
-        return new ContextStringifier();
-    }
-
-    /**
      * @return TraceBuilder
      */
     public function createExceptionTraceBuilder()

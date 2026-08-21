@@ -12,7 +12,7 @@ class SyslogWriterFactory extends AbstractWriterFactory
     const string OPTION = 'option';
     const string FACILITY = 'facility';
 
-    public function create($application, $option = LOG_ODELAY, $facility = LOG_LOCAL0): SyslogWriter
+    public function create(string $application, int $option = LOG_ODELAY, int $facility = LOG_LOCAL0): SyslogWriter
     {
         return new SyslogWriter($application, $option, $facility);
     }

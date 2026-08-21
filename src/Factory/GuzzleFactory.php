@@ -2,15 +2,12 @@
 
 namespace Kronos\Log\Factory;
 
+use GuzzleHttp\Client;
+
 class GuzzleFactory
 {
-
-    /**
-     * @param array $options
-     * @return \GuzzleHttp\Client
-     */
-    public function createClient(array $options = [])
+    public function createClient(array $options = []): Client
     {
-        return new \GuzzleHttp\Client($options);
+        return new Client($options);
     }
 }

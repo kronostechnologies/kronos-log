@@ -3,6 +3,7 @@
 namespace Kronos\Log;
 
 use Override;
+use Stringable;
 use Throwable;
 
 class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
@@ -58,7 +59,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
     }
 
     #[Override]
-    public function log($level, string|\Stringable $message, array $context = array()): void
+    public function log($level, string | Stringable $message, array $context = array()): void
     {
         foreach ($this->writers as $writer) {
             if ($writer->canLogLevel($level)) {
@@ -75,7 +76,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
      * Log error with exception context
      */
     #[Override]
-    public function exception(string|\Stringable $message, Throwable $exception, array $context = array()): void
+    public function exception(string | Stringable $message, Throwable $exception, array $context = array()): void
     {
         $context[self::EXCEPTION_CONTEXT] = $exception;
         $this->error($message, $context);
@@ -85,7 +86,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
      * Log warning with exception context
      */
     #[Override]
-    public function exceptionWarning(string|\Stringable $message, Throwable $exception, array $context = array()): void
+    public function exceptionWarning(string | Stringable $message, Throwable $exception, array $context = array()): void
     {
         $context[self::EXCEPTION_CONTEXT] = $exception;
         $this->warning($message, $context);

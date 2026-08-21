@@ -42,8 +42,6 @@ class LogDNAWriterFactory extends AbstractWriterFactory
     }
 
     /**
-     * @param array $settings
-     * @return LogDNAWriter
      * @throws RequiredSetting
      */
     #[Override]
@@ -99,12 +97,9 @@ class LogDNAWriterFactory extends AbstractWriterFactory
     /**
      * Obtains the hostname from the settings array
      * if not set, we use the server hostname instead.
-     *
-     * @param $settings
-     * @return string
      * @throws RequiredSetting
      */
-    private function getHostName($settings)
+    private function getHostName($settings): string
     {
         if (isset($settings[self::HOSTNAME]) && $settings[self::HOSTNAME]) {
             return $settings[self::HOSTNAME];

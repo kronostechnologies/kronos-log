@@ -231,10 +231,8 @@ class FluentdWriterTest extends \PHPUnit\Framework\TestCase
         }, E_USER_WARNING);
 
         try {
-            $retVal = $this->writer->log(LogLevel::INFO, "Anything");
-
+            $this->writer->log(LogLevel::INFO, "Anything");
             $this->assertTrue($h);
-            $this->assertFalse($retVal);
         } finally {
             restore_error_handler();
         }

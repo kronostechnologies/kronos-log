@@ -5,16 +5,13 @@ namespace Kronos\Log\Writer;
 
 
 use Fluent\Logger\FluentLogger;
-use \Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
+use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use Override;
 
 class FluentbitWriter extends FluentdWriter
 {
-    /**
-     * @return FluentLogger
-     */
     #[Override]
-    protected function initializeLogger()
+    protected function initializeLogger(): FluentLogger
     {
         if ($this->logger === null) {
             $this->logger = $this->factory->createFluentLogger($this->hostname, $this->port, [], new FluentBitJsonPacker());

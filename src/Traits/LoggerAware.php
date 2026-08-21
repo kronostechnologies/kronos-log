@@ -3,6 +3,7 @@
 namespace Kronos\Log\Traits;
 
 use Kronos\Log\Logger;
+use Stringable;
 use Throwable;
 use Psr\Log\LoggerAwareTrait;
 
@@ -12,11 +13,8 @@ trait LoggerAware
 
     /**
      * System is unusable.
-     *
-     * @param string $message
-     * @param array $context
      */
-    protected function logEmergency($message, array $context = array())
+    protected function logEmergency(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->emergency($message, $context);
@@ -28,11 +26,8 @@ trait LoggerAware
      *
      * Example: Entire website down, database unavailable, etc. This should
      * trigger the SMS alerts and wake you up.
-     *
-     * @param string $message
-     * @param array $context
      */
-    protected function logAlert($message, array $context = array())
+    protected function logAlert(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->alert($message, $context);
@@ -43,11 +38,8 @@ trait LoggerAware
      * Critical conditions.
      *
      * Example: Application component unavailable, unexpected exception.
-     *
-     * @param string $message
-     * @param array $context
      */
-    protected function logCritical($message, array $context = array())
+    protected function logCritical(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->critical($message, $context);
@@ -57,12 +49,8 @@ trait LoggerAware
     /**
      * Runtime errors that do not require immediate action but should typically
      * be logged and monitored.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
      */
-    protected function logError($message, array $context = array())
+    protected function logError(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->error($message, $context);
@@ -74,11 +62,8 @@ trait LoggerAware
      *
      * Example: Use of deprecated APIs, poor use of an API, undesirable things
      * that are not necessarily wrong.
-     *
-     * @param string $message
-     * @param array $context
      */
-    protected function logWarning($message, array $context = array())
+    protected function logWarning(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->warning($message, $context);
@@ -87,12 +72,8 @@ trait LoggerAware
 
     /**
      * Normal but significant events.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
      */
-    protected function logNotice($message, array $context = array())
+    protected function logNotice(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->notice($message, $context);
@@ -103,11 +84,8 @@ trait LoggerAware
      * Interesting events.
      *
      * Example: User logs in, SQL logs.
-     *
-     * @param string $message
-     * @param array $context
      */
-    protected function logInfo($message, array $context = array())
+    protected function logInfo(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->info($message, $context);
@@ -116,30 +94,36 @@ trait LoggerAware
 
     /**
      * Detailed debug information.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
      */
-    protected function logDebug($message, array $context = array())
+    protected function logDebug(string | Stringable $message, array $context = array()): void
     {
         if ($this->logger) {
             $this->logger->debug($message, $context);
         }
     }
 
-
     /**
-     * Log Error with exception context
-     * @param string $message
-     * @param Throwable $exception
-     * @param array $context
+     * Log error with exception context
      */
-    protected function logException($message, Throwable $exception, array $context = array())
+    protected function logException(string | Stringable $message, Throwable $exception, array $context = array()): void
     {
         if ($this->logger) {
             $context[Logger::EXCEPTION_CONTEXT] = $exception;
             $this->logger->error($message, $context);
+        }
+    }
+
+    /**
+     * Log warning with exception context
+     */
+    protected function logExceptionWarning(
+        string | Stringable $message,
+        Throwable $exception,
+        array $context = array()
+    ): void {
+        if ($this->logger) {
+            $context[Logger::EXCEPTION_CONTEXT] = $exception;
+            $this->logger->warning($message, $context);
         }
     }
 }

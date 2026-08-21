@@ -2,6 +2,7 @@
 
 namespace Kronos\Log\Writer;
 
+use Kronos\Log\AbstractWriter;
 use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Adaptor\TTYAdaptor;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
@@ -11,11 +12,11 @@ use Kronos\Log\Traits\PrependLogLevel;
 use Kronos\Log\Logger;
 use Override;
 use Psr\Log\LogLevel;
-use Exception;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
+use Stringable;
 use Throwable;
 
-class ConsoleWriter extends \Kronos\Log\AbstractWriter
+class ConsoleWriter extends AbstractWriter
 {
     use PrependLogLevel;
     use PrependDateTime;
@@ -43,14 +44,8 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
         $this->previousExceptionTraceBuilder = $previousExceptionTraceBuilder;
     }
 
-    /**
-     * @param string $level
-     * @param string $message
-     * @param array $context
-     * @throws Exception
-     */
     #[Override]
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         $interpolated_message = $this->interpolate($message, $context);
         $message_with_loglevel = $this->prependLogLevel($level, $interpolated_message);
@@ -65,19 +60,13 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
         $this->writeExceptionIfGiven($message, $level, $context);
     }
 
-    /**
-     * @param bool $force
-     */
-    public function setForceAnsiColorSupport($force = true)
+    public function setForceAnsiColorSupport(bool $force = true): void
     {
         $this->stdout->setForceAnsiColorSupport($force);
         $this->stderr->setForceAnsiColorSupport($force);
     }
 
-    /**
-     * @param bool $force
-     */
-    public function setForceNoAnsiColorSupport($force = true)
+    public function setForceNoAnsiColorSupport(bool $force = true): void
     {
         $this->stdout->setForceNoAnsiColorSupport($force);
         $this->stderr->setForceNoAnsiColorSupport($force);
@@ -85,33 +74,23 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
 
     private function getLevelTextColor($level): ?string
     {
-        return ($level == LogLevel::WARNING ? AnsiTextColor::YELLOW : null);
+        return $level == LogLevel::WARNING ? AnsiTextColor::YELLOW : null;
     }
 
-    /**
-     * @param $message
-     * @param string $level
-     * @param array $context
-     * @throws Exception
-     */
-    private function writeExceptionIfGiven($message, $level, array $context)
+    private function writeExceptionIfGiven(string | Stringable $message, string $level, array $context): void
     {
-        if (isset($context[Logger::EXCEPTION_CONTEXT]) && $context[Logger::EXCEPTION_CONTEXT] instanceof Throwable) {
-            /** @var Throwable $exception */
-            $exception = $context[Logger::EXCEPTION_CONTEXT];
+        $exception = $context[Logger::EXCEPTION_CONTEXT] ?? null;
+        if ($exception instanceof Throwable) {
             $this->writeException($message, $level, $exception);
         }
     }
 
-    /**
-     * @param $message
-     * @param string $level
-     * @param Throwable $exception
-     * @param int $depth
-     * @throws Exception
-     */
-    private function writeException($message, $level, Throwable $exception, $depth = 0)
-    {
+    private function writeException(
+        string | Stringable $message,
+        string $level,
+        Throwable $exception,
+        int $depth = 0
+    ): void {
         if ($message != $exception->getMessage()) {
             $this->writeExceptionTitle($exception, $depth);
         }
@@ -136,12 +115,7 @@ class ConsoleWriter extends \Kronos\Log\AbstractWriter
         }
     }
 
-    /**
-     * @param Throwable $exception
-     * @param $depth
-     * @throws Exception
-     */
-    private function writeExceptionTitle(Throwable $exception, $depth)
+    private function writeExceptionTitle(Throwable $exception, int $depth): void
     {
         $title = ($depth === 0 ? self::EXCEPTION_TITLE_LINE : self::PREVIOUS_EXCEPTION_TITLE_LINE);
 

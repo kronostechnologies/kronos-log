@@ -2,11 +2,12 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\AbstractWriter,
-    Kronos\Log\Traits\PrependContext,
-    Kronos\Log\Traits\LogLevelToSyslogPriority;
+use Kronos\Log\AbstractWriter;
+use Kronos\Log\Traits\PrependContext;
+use Kronos\Log\Traits\LogLevelToSyslogPriority;
 use Kronos\Log\Adaptor\SyslogAdaptor;
 use Override;
+use Stringable;
 
 class SyslogWriter extends AbstractWriter
 {
@@ -16,25 +17,25 @@ class SyslogWriter extends AbstractWriter
     const int DEFAULT_OPTION = LOG_ODELAY;
     const int DEFAULT_FACILITY = LOG_LOCAL0;
 
-    private $application;
-    private $option;
-    private $facility;
+    private string $application;
+    private int $option;
+    private int $facility;
     private SyslogAdaptor $syslog_adaptor;
 
     public function __construct(
-        $application,
-        $option = self::DEFAULT_OPTION,
-        $facility = self::DEFAULT_FACILITY,
+        string $application,
+        int $option = self::DEFAULT_OPTION,
+        int $facility = self::DEFAULT_FACILITY,
         ?SyslogAdaptor $syslog_adaptor = null,
     ) {
         $this->application = $application;
         $this->option = $option;
         $this->facility = $facility;
-        $this->syslog_adaptor = $syslog_adaptor ??  new SyslogAdaptor();
+        $this->syslog_adaptor = $syslog_adaptor ?? new SyslogAdaptor();
     }
 
     #[Override]
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         $interpolated_message = $this->interpolate($message, $context);
         $prepended_message = $this->prependContext($interpolated_message, $context);
@@ -47,5 +48,4 @@ class SyslogWriter extends AbstractWriter
             $prepended_message
         );
     }
-
 }

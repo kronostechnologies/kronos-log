@@ -10,22 +10,17 @@ use Psr\Log\LogLevel;
 use Sentry\ClientInterface;
 use Sentry\Severity;
 use Sentry\State\Scope;
+use Stringable;
 
 class SentryWriter extends AbstractWriter
 {
-    /**
-     * Sentry constructor.
-     */
     public function __construct(
         private readonly ?ClientInterface $sentryClient
     ) {
     }
 
-    /**
-     * @throws InvalidLogLevel
-     */
     #[Override]
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
         $level = $this->getSentryLevelFromLogLevel($level);
         if ($this->hasExceptionInContext($context)) {
@@ -40,7 +35,7 @@ class SentryWriter extends AbstractWriter
         return isset($context[Logger::EXCEPTION_CONTEXT]);
     }
 
-    private function captureMessage($level, $message, $context)
+    private function captureMessage(Severity $level, string | Stringable $message, array $context): void
     {
         $interpolatedMessage = $this->interpolate($message, $context);
         $sentryScope = $this->getSentryScope($level, $context);
@@ -50,7 +45,7 @@ class SentryWriter extends AbstractWriter
         }
     }
 
-    private function captureException($level, $message, $context)
+    private function captureException(Severity $level, string | Stringable $message, array $context): void
     {
         $exception = $context[Logger::EXCEPTION_CONTEXT];
         unset($context[Logger::EXCEPTION_CONTEXT]);
@@ -82,22 +77,13 @@ class SentryWriter extends AbstractWriter
      */
     private function getSentryLevelFromLogLevel($level): Severity
     {
-        switch ($level) {
-            case LogLevel::DEBUG:
-                return Severity::debug();
-            case LogLevel::WARNING:
-                return Severity::warning();
-            case LogLevel::ERROR:
-                return Severity::error();
-            case LogLevel::CRITICAL:
-            case LogLevel::ALERT:
-            case LogLevel::EMERGENCY:
-                return Severity::fatal();
-            case LogLevel::INFO:
-            case LogLevel::NOTICE:
-                return Severity::info();
-            default:
-                throw new InvalidLogLevel($level);
-        }
+        return match ($level) {
+            LogLevel::DEBUG => Severity::debug(),
+            LogLevel::WARNING => Severity::warning(),
+            LogLevel::ERROR => Severity::error(),
+            LogLevel::CRITICAL, LogLevel::ALERT, LogLevel::EMERGENCY => Severity::fatal(),
+            LogLevel::INFO, LogLevel::NOTICE => Severity::info(),
+            default => throw new InvalidLogLevel($level),
+        };
     }
 }
