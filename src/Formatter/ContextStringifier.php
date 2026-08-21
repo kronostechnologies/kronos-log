@@ -9,10 +9,8 @@ class ContextStringifier
 
     /**
      * Transform context array to a printable string
-     * @param array $context
-     * @return string
      */
-    public function stringify(array $context)
+    public function stringify(array $context): string
     {
         $string = '';
 
@@ -28,10 +26,8 @@ class ContextStringifier
 
     /**
      * Transform context values and objects to strings recursively
-     * @param array $context
-     * @return array
      */
-    public function stringifyArray(array $context)
+    public function stringifyArray(array $context): array
     {
         $stringifiedArray = [];
 
@@ -67,7 +63,7 @@ class ContextStringifier
         }
     }
 
-    private function stringifyObject($value)
+    private function stringifyObject($value): string
     {
         if (method_exists($value, '__toString')) {
             return (string)$value;
@@ -76,7 +72,7 @@ class ContextStringifier
         }
     }
 
-    public function excludeKey($key)
+    public function excludeKey($key): void
     {
         $this->excluded_keys[] = $key;
     }

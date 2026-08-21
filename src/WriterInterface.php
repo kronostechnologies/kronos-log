@@ -2,14 +2,22 @@
 
 namespace Kronos\Log;
 
+use Kronos\Log\Exception\InvalidLogLevel;
+use Stringable;
+
 interface WriterInterface
 {
+    /**
+     * @throws InvalidLogLevel
+     */
+    public function canLogLevel(string $level): bool;
 
-    public function canLogLevel($level);
+    public function setCanLog(bool $can_log): void;
 
-    public function setCanLog($can_log);
+    public function canLog(): bool;
 
-    public function canLog();
-
-    public function log($level, $message, array $context = []);
+    /**
+     * @throws InvalidLogLevel
+     */
+    public function log(string $level, string | Stringable $message, array $context = []): void;
 }

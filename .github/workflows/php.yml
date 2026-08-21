@@ -14,5 +14,5 @@ jobs:
     secrets: inherit
     with:
       checks: phpunit,psalm
-      php-version: '8.4'
+      php-version: '8.5'
       extensions: pcov

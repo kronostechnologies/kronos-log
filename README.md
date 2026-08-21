@@ -14,7 +14,7 @@ use Kronos\Log;
 
 $logger = new Log\Logger();
 
-$debug = new Log\Writer\File('/var/log/debug.log', new Kronos\Log\Adaptor\FileFactory());
+$debug = new Log\Writer\FileWriter('/var/log/debug.log', new Kronos\Log\Adaptor\FileAdaptorFactory());
 $logger->addWriter($debug);
 
 ...
@@ -33,11 +33,11 @@ use Kronos\Log;
 $logger = new Log\Logger();
 $logger->addContext('user', $current_user);
 
-$debug = new Log\Writer\File('/var/log/debug.log');
+$debug = new Log\Writer\FileWriter('/var/log/debug.log');
 $debug->setMaxLevel(\Psr\Log\LogLevel::WARNING);
 $logger->addWriter($debug);
 
-$syslog = new Log\Writer\Syslog('application-name');
+$syslog = new Log\Writer\SyslogWriter(new Log\Adaptor\SyslogAdaptor(), 'application-name');
 $syslog->setMinLevel(\Psr\Log\LogLevel::ERROR);
 $logger->addWriter($syslog);
 
@@ -64,13 +64,13 @@ You can use the builder to quickly create a fully configured logger.
 
 $settings = [
 	[
-		'type' => \Kronos\Log\Enumeration\WriterTypes::FILE,
+		'type' => \Kronos\Log\Enumeration\WriterTypes::FILE->value,
 		'settings' => [
 			'filename' => '/var/log/debug.log'
 		]
 	],
 	[
-		'type' => \Kronos\Log\Enumeration\WriterTypes::SENTRY,
+		'type' => \Kronos\Log\Enumeration\WriterTypes::SENTRY->value,
 		'settings' => [
 			'minLevel' => \Psr\Log\LogLevel::ERROR,
 			'key' => 'kronos',
@@ -79,7 +79,7 @@ $settings = [
 		]
 	],
 	[
-		'type' => \Kronos\Log\Enumeration\WriterTypes::LOGDNA,
+		'type' => \Kronos\Log\Enumeration\WriterTypes::LOGDNA->value,
 		'settings' => [
 			'minLevel' => \Psr\Log\LogLevel::INFO,
 			'hostname' => gethostname(),
@@ -89,7 +89,7 @@ $settings = [
 	]
 ];
 
-$builder = new \Kronos\Log\Builder();
-$logger = $builder->buildFromArray($settings);
+$builder = new \Kronos\Log\LoggerFactory();
+$logger = $builder->createFromArray($settings);
 
 ```

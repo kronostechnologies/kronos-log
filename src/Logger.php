@@ -3,20 +3,21 @@
 namespace Kronos\Log;
 
 use Override;
+use Stringable;
 use Throwable;
 
 class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
 
-    const EXCEPTION_CONTEXT = 'exception';
-    const WRITER_PATH = "\Kronos\Log\Writer\\";
+    const string EXCEPTION_CONTEXT = 'exception';
+    const string WRITER_PATH = "\Kronos\Log\Writer\\";
 
-    private $context = [];
+    private array $context = [];
 
     /**
      * @var WriterInterface[]
      */
-    private $writers = [];
+    private array $writers = [];
 
     /**
      * @param WriterInterface $writer
@@ -24,6 +25,14 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
     public function addWriter(WriterInterface $writer): void
     {
         $this->writers[] = $writer;
+    }
+
+    /**
+     * @return WriterInterface[]
+     */
+    public function getWriters(): array
+    {
+        return $this->writers;
     }
 
     #[Override]
@@ -38,7 +47,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
         $this->context = array_merge($this->context, $context);
     }
 
-    public function setWriterCanLog($writer_name, $can_log = true): void
+    public function setWriterCanLog(string $writer_name, bool $can_log = true): void
     {
         /** @var class-string $writerClassName */
         $writerClassName = self::WRITER_PATH . ucfirst($writer_name);
@@ -50,7 +59,7 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
     }
 
     #[Override]
-    public function log($level, $message, array $context = array()): void
+    public function log($level, string | Stringable $message, array $context = array()): void
     {
         foreach ($this->writers as $writer) {
             if ($writer->canLogLevel($level)) {
@@ -64,12 +73,22 @@ class Logger extends \Psr\Log\AbstractLogger implements LoggerInterface
     }
 
     /**
-     * Log Error with exception context
+     * Log error with exception context
      */
     #[Override]
-    public function exception(string $message, Throwable $exception, array $context = array()): void
+    public function exception(string | Stringable $message, Throwable $exception, array $context = array()): void
     {
         $context[self::EXCEPTION_CONTEXT] = $exception;
         $this->error($message, $context);
+    }
+
+    /**
+     * Log warning with exception context
+     */
+    #[Override]
+    public function exceptionWarning(string | Stringable $message, Throwable $exception, array $context = array()): void
+    {
+        $context[self::EXCEPTION_CONTEXT] = $exception;
+        $this->warning($message, $context);
     }
 }

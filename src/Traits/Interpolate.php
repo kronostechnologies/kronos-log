@@ -4,7 +4,7 @@ namespace Kronos\Log\Traits;
 
 trait Interpolate
 {
-    public function interpolate($message, array $context = [])
+    public function interpolate($message, array $context = []): string
     {
         $translation = [];
         $placeholders = $this->getPlaceholders($message);
@@ -19,7 +19,7 @@ trait Interpolate
         return strtr($message, $translation);
     }
 
-    private function getPlaceholders($message)
+    private function getPlaceholders($message): array
     {
         $keys = [];
         preg_match_all('/(\{([a-zA-Z0-9._]+)\})/', $message, $matches, PREG_SET_ORDER);
@@ -31,16 +31,11 @@ trait Interpolate
 
     private function getContextForPlaceholderKey($context, $placeholder)
     {
-        return isset($context[$placeholder]) ? $context[$placeholder] : null;
+        return $context[$placeholder] ?? null;
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
-    private function canBeInterpolated($value)
+    private function canBeInterpolated($value): bool
     {
         return !is_null($value) && !is_array($value) && (!is_object($value) || method_exists($value, '__toString'));
     }
-
 }

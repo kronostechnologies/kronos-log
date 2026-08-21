@@ -9,20 +9,14 @@ use Psr\Log\LogLevel;
 
 abstract class AbstractWriter implements WriterInterface
 {
-
     use Interpolate;
 
-    protected $min_level = LogLevel::DEBUG;
-    protected $max_level = LogLevel::EMERGENCY;
-    protected $can_log = true;
+    protected string $min_level = LogLevel::DEBUG;
+    protected string $max_level = LogLevel::EMERGENCY;
+    protected bool $can_log = true;
 
-    /**
-     * @param string $level
-     * @return bool
-     * @throws InvalidLogLevel
-     */
     #[Override]
-    public function canLogLevel($level): bool
+    public function canLogLevel(string $level): bool
     {
         $this->validateLogLevel($level);
 
@@ -36,19 +30,17 @@ abstract class AbstractWriter implements WriterInterface
     }
 
     /**
-     * @param string $level
      * @throws InvalidLogLevel
      */
-    protected function validateLogLevel($level)
+    protected function validateLogLevel(string $level): void
     {
-        LogLevelHelper::validateLogLevel((string)$level);
+        LogLevelHelper::validateLogLevel($level);
     }
 
     /**
-     * @param string $level
      * @throws InvalidLogLevel
      */
-    public function setMinLevel($level)
+    public function setMinLevel(string $level): void
     {
         $this->validateLogLevel($level);
 
@@ -60,20 +52,19 @@ abstract class AbstractWriter implements WriterInterface
      * @param string $compared_level
      * @return bool
      */
-    protected function isLevelLower($base_level, $compared_level): bool
+    protected function isLevelLower(string $base_level, string $compared_level): bool
     {
-        return LogLevelHelper::isLower((string)$base_level, (string)$compared_level);
+        return LogLevelHelper::isLower($base_level, $compared_level);
     }
 
     /**
      * @param string $level
      * @throws InvalidLogLevel
      */
-    public function setMaxLevel($level)
+    public function setMaxLevel(string $level): void
     {
         $this->validateLogLevel($level);
-
-        $this->max_level = (string)$level;
+        $this->max_level = $level;
     }
 
     #[Override]
@@ -86,9 +77,9 @@ abstract class AbstractWriter implements WriterInterface
      * @param bool $can_log
      */
     #[Override]
-    public function setCanLog($can_log = true)
+    public function setCanLog(bool $can_log = true): void
     {
-        $this->can_log = (bool)$can_log;
+        $this->can_log = $can_log;
     }
 
     /**
@@ -96,7 +87,7 @@ abstract class AbstractWriter implements WriterInterface
      * @param string $compared_level
      * @return bool
      */
-    protected function isLevelHigher($base_level, $compared_level): bool
+    protected function isLevelHigher(string $base_level, string $compared_level): bool
     {
         return LogLevelHelper::isHigher($base_level, $compared_level);
     }

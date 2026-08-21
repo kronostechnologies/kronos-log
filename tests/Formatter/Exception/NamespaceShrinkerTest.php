@@ -3,11 +3,13 @@
 namespace Kronos\Tests\Log\Formatter\Exception;
 
 use Kronos\Log\Formatter\Exception\NamespaceShrinker;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class NamespaceShrinkerTest extends TestCase
 {
-    public function test_namespacedClassName_shrink_shouldReturnShrunkName(): void
+    #[Test]
+    public function namespacedClassName_shrink_shouldReturnShrunkName(): void
     {
         $namespacedClassName = __CLASS__;
         $parts = explode('\\', $namespacedClassName);
@@ -22,7 +24,8 @@ class NamespaceShrinkerTest extends TestCase
         self::assertEquals($expectedShrunkName, $actualShrunkName);
     }
 
-    public function test_PreNamespaceClassNameWithUnderscores_shrink_shouldReturnShrunkName(): void
+    #[Test]
+    public function preNamespaceClassNameWithUnderscores_shrink_shouldReturnShrunkName(): void
     {
         $namespacedClassName = 'Pre_Namespace_Era_ClassName';
         $parts = explode('_', $namespacedClassName);
@@ -37,7 +40,8 @@ class NamespaceShrinkerTest extends TestCase
         self::assertEquals($expectedShrunkName, $actualShrunkName);
     }
 
-    public function test_customSeparator_shrinkUsingSeparator_shouldReturnShrunkName(): void
+    #[Test]
+    public function customSeparator_shrinkUsingSeparator_shouldReturnShrunkName(): void
     {
         $separator = '/';
         $parts = ['clearly', 'not', 'a', 'file', 'path'];
@@ -53,7 +57,8 @@ class NamespaceShrinkerTest extends TestCase
         self::assertEquals($expectedShrunkName, $actualShrunkName);
     }
 
-    public function test_SimpleClassName_shrink_shouldReturnOriginalName(): void
+    #[Test]
+    public function simpleClassName_shrink_shouldReturnOriginalName(): void
     {
         $simpleClassName = 'ClassName';
         $shrinker = new NamespaceShrinker();

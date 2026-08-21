@@ -3,6 +3,7 @@
 namespace Kronos\Tests\Log\Traits;
 
 use Kronos\Log\Traits\PrependContext;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class PrependContextTest extends TestCase
@@ -20,14 +21,16 @@ class PrependContextTest extends TestCase
 
     private $context_prepender;
 
-    public function test_NewPrependContext_PrependContext_ShouldReturnMessageUnchanged()
+    #[Test]
+    public function newPrependContext_PrependContext_ShouldReturnMessageUnchanged()
     {
         $returned_message = $this->prependContext(self::A_MESSAGE, []);
 
         $this->assertEquals(self::A_MESSAGE, $returned_message);
     }
 
-    public function test_ContextKeyToPrepend_PrependContext_ShouldReturnMessagePrependedWithValue()
+    #[Test]
+    public function contextKeyToPrepend_PrependContext_ShouldReturnMessagePrependedWithValue()
     {
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE
@@ -39,7 +42,8 @@ class PrependContextTest extends TestCase
         $this->assertEquals(self::CONTEXT_VALUE . ' ' . self::A_MESSAGE, $returned_message);
     }
 
-    public function test_UnknownContextKeyToPrepend_PrependContext_ShouldReturnMessageUnchanged()
+    #[Test]
+    public function unknownContextKeyToPrepend_PrependContext_ShouldReturnMessageUnchanged()
     {
         $context = [
             self::CONTEXT_KEY => self::CONTEXT_VALUE
@@ -51,7 +55,8 @@ class PrependContextTest extends TestCase
         $this->assertEquals(self::A_MESSAGE, $returned_message);
     }
 
-    public function test_MoreThanOneKeyToPrepend_PrependContext_ShouldPrependThemInOrder()
+    #[Test]
+    public function moreThanOneKeyToPrepend_PrependContext_ShouldPrependThemInOrder()
     {
         $context = [
             self::FIRST_KEY => self::FIRST_VALUE,

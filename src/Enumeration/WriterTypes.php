@@ -2,16 +2,14 @@
 
 namespace Kronos\Log\Enumeration;
 
-use Kronos\Log\Enumeration;
-
-class WriterTypes extends Enumeration
+enum WriterTypes: string
 {
-    const CONSOLE = 'console';
-    const FILE = 'file';
-    const FLUENTD = 'fluentd';
-    const LOGDNA = 'logdna';
-    const MEMORY = 'memory';
-    const SENTRY = 'sentry';
-    const SYSLOG = 'syslog';
-    const TRIGGER_ERROR = 'trigger_error';
+    case CONSOLE = 'console';
+    case FILE = 'file';
+    case FLUENTD = 'fluentd';
+    case LOGDNA = 'logdna';
+    case MEMORY = 'memory';
+    case SENTRY = 'sentry';
+    case SYSLOG = 'syslog';
+    case TRIGGER_ERROR = 'trigger_error';
 }

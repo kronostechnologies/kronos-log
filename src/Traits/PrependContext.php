@@ -2,24 +2,26 @@
 
 namespace Kronos\Log\Traits;
 
+use Stringable;
+
 trait PrependContext
 {
 
-    private $prepended_keys = [];
+    private array $prepended_keys = [];
 
-    public function addContextKeyToPrepend($key)
+    public function addContextKeyToPrepend(string $key): void
     {
         $this->prepended_keys[] = $key;
     }
 
-    public function prependContext($message, $context)
+    public function prependContext(string | Stringable $message, array $context): string
     {
         foreach (array_reverse($this->prepended_keys) as $key) {
             if (isset($context[$key])) {
-                $message = (string)$context[$key] . ' ' . $message;
+                $message = (string)$context[$key] . ' ' . (string)$message;
             }
         }
 
-        return $message;
+        return (string)$message;
     }
 }

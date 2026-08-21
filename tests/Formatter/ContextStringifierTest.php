@@ -3,6 +3,7 @@
 namespace Kronos\Tests\Log\Formatter;
 
 use Kronos\Log\Formatter\ContextStringifier;
+use PHPUnit\Framework\Attributes\Test;
 
 class ContextStringifierTest extends \PHPUnit\Framework\TestCase
 {
@@ -26,7 +27,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->context_stringifier = new ContextStringifier();
     }
 
-    public function test_EmptyContext_Stringify_ShouldReturnEmptyString()
+    #[Test]
+    public function emptyContext_Stringify_ShouldReturnEmptyString()
     {
         $context = [];
 
@@ -35,7 +37,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('', $stringifiedContext);
     }
 
-    public function test_ContextWithValue_Stringify_ShouldReturnKeyAndValue()
+    #[Test]
+    public function contextWithValue_Stringify_ShouldReturnKeyAndValue()
     {
         $context = [self::KEY => self::VALUE];
 
@@ -44,7 +47,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(self::KEY . ': ' . self::VALUE, $stringifiedContext);
     }
 
-    public function test_ContextWithArrayValue_Stringify_ShouldReturnPrintedArray()
+    #[Test]
+    public function contextWithArrayValue_Stringify_ShouldReturnPrintedArray()
     {
         $array_value = [1, 2, 3];
         $context = [self::KEY => $array_value];
@@ -54,7 +58,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(self::KEY . ': ' . print_r($array_value, true), $stringifiedContext);
     }
 
-    public function test_ContextWithObjectWithoutToString_Stringify_ShouldReturnPrintedObject()
+    #[Test]
+    public function contextWithObjectWithoutToString_Stringify_ShouldReturnPrintedObject()
     {
         $object = new ObjectWithoutToString();
         $object->property = self::A_STRING;
@@ -65,7 +70,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(self::KEY . ': ' . print_r($object, true), $stringifiedContext);
     }
 
-    public function test_ContextWithObjectWithToString_Stringify_ShouldReturnObjectAsString()
+    #[Test]
+    public function contextWithObjectWithToString_Stringify_ShouldReturnObjectAsString()
     {
         $object = new ObjectWithToString();
         $object->property = self::A_STRING;
@@ -76,7 +82,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(self::KEY . ': ' . $object->__toString(), $stringifiedContext);
     }
 
-    public function test_ContextWithMoreThanOneKey_Stringify_ShouldReturnBothValuesJoinedByEOL()
+    #[Test]
+    public function contextWithMoreThanOneKey_Stringify_ShouldReturnBothValuesJoinedByEOL()
     {
         $context = [
             self::FIRST_KEY => self::FIRST_VALUE,
@@ -89,7 +96,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_string, $stringifiedContext);
     }
 
-    public function test_ExcludeKey_Stringify_ShouldNotStringifyContextKey()
+    #[Test]
+    public function excludeKey_Stringify_ShouldNotStringifyContextKey()
     {
         $context = [
             self::FIRST_KEY => self::FIRST_VALUE,
@@ -103,7 +111,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_string, $stringifiedContext);
     }
 
-    public function test_EmptyContext_stringifyArray_ShouldReturnEmptyArray()
+    #[Test]
+    public function emptyContext_stringifyArray_ShouldReturnEmptyArray()
     {
         $context = [];
 
@@ -112,7 +121,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertSame([], $stringifiedContext);
     }
 
-    public function test_IntegerValue_stringifyArray_ShouldReturnStringValue()
+    #[Test]
+    public function integerValue_stringifyArray_ShouldReturnStringValue()
     {
         $context = ['integer' => 123];
 
@@ -122,7 +132,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertIsString($stringifiedContext['integer']);
     }
 
-    public function test_ObjectWithToStringValue_stringifyArray_ShouldReturnStringValue()
+    #[Test]
+    public function objectWithToStringValue_stringifyArray_ShouldReturnStringValue()
     {
         $object = new ObjectWithToString();
         $object->property = 'property';
@@ -133,7 +144,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($object->__toString(), $stringifiedContext['object']);
     }
 
-    public function test_ObjectWithoutToStringValue_stringifyArray_ShouldReturnStringValue()
+    #[Test]
+    public function objectWithoutToStringValue_stringifyArray_ShouldReturnStringValue()
     {
         $object = new ObjectWithoutToString();
         $object->property = 'property';
@@ -144,7 +156,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(print_r($object, true), $stringifiedContext['object']);
     }
 
-    public function test_ArrayValue_stringifyArray_ShouldStringifyArrayValues()
+    #[Test]
+    public function arrayValue_stringifyArray_ShouldStringifyArrayValues()
     {
         $objectWithToString = new ObjectWithToString();
         $objectWithToString->property = 'property';
@@ -183,7 +196,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
             $stringifiedContext['array']['nested array']['nested objectWithoutToString']);
     }
 
-    public function test_EmptyNestedArray_stringifyArray_ShouldRemoveEmptyArray()
+    #[Test]
+    public function emptyNestedArray_stringifyArray_ShouldRemoveEmptyArray()
     {
         $context = [
             'nested empty array' => []
@@ -194,7 +208,8 @@ class ContextStringifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $stringifiedContext);
     }
 
-    public function test_ExcludeKey_stringifyArray_ShouldRecursivelyRemoveMatchingKeys()
+    #[Test]
+    public function excludeKey_stringifyArray_ShouldRecursivelyRemoveMatchingKeys()
     {
         $context = [
             'key' => 'value',

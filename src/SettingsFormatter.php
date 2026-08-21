@@ -36,11 +36,11 @@ class SettingsFormatter
      */
     private $defaults = [];
 
-    const WRITER_TYPE = 'type';
-    const WRITER_SETTINGS = 'settings';
-    const TO_DELETE = 'to_delete';
-    const ACTIVATE_WITH_FLAG = 'activateWithFlag';
-    const DEACTIVATE_WITH_FLAG = 'deactivateWithFlag';
+    const string WRITER_TYPE = 'type';
+    const string WRITER_SETTINGS = 'settings';
+    const string TO_DELETE = 'to_delete';
+    const string ACTIVATE_WITH_FLAG = 'activateWithFlag';
+    const string DEACTIVATE_WITH_FLAG = 'deactivateWithFlag';
 
     /**
      * SettingsFormatter constructor.
