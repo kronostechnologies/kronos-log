@@ -2,24 +2,23 @@
 
 namespace Kronos\Log\Traits;
 
+use Stringable;
+
 trait PrependDateTime
 {
-    private $prepend_datetime = false;
+    private bool $prependDatetime = false;
 
-    /**
-     * @param boolean $prepend_datetime
-     */
-    public function setPrependDateTime($prepend_datetime = true)
+    public function setPrependDateTime(bool $prependDatetime = true): void
     {
-        $this->prepend_datetime = $prepend_datetime;
+        $this->prependDatetime = $prependDatetime;
     }
 
-    public function prependDateTime($message)
+    public function prependDateTime(string | Stringable $message): string
     {
-        if ($this->prepend_datetime) {
-            return '[' . date('Y-m-d H:i:s') . ']' . $message;
+        if ($this->prependDatetime) {
+            return '[' . date('Y-m-d H:i:s') . ']' . (string)$message;
         } else {
-            return $message;
+            return (string)$message;
         }
     }
 }

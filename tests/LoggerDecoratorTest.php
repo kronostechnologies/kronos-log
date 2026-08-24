@@ -4,6 +4,7 @@ use Kronos\Log\Logger;
 use Kronos\Log\LoggerDecorator;
 use Kronos\Log\LoggerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
@@ -16,7 +17,8 @@ class LoggerDecoratorTest extends TestCase
      */
     private $delegate;
 
-    public function test_shouldLogWhenMessageLevelIsHigherThanLogger(): void
+    #[Test]
+    public function shouldLogWhenMessageLevelIsHigherThanLogger(): void
     {
         $decorator = $this->givenDecoratorForPsrLoggerInterface();
         $decorator->setLevel(LogLevel::INFO);
@@ -30,7 +32,8 @@ class LoggerDecoratorTest extends TestCase
     }
 
     #[DataProvider('provideLowerLogLevels')]
-    public function test_shouldNotLogWhenLoggerLevelIsHigherThanMessage($loggerLevel, $levelOfMessage): void
+    #[Test]
+    public function shouldNotLogWhenLoggerLevelIsHigherThanMessage($loggerLevel, $levelOfMessage): void
     {
         $decorator = $this->givenDecoratorForPsrLoggerInterface();
         $decorator->setLevel($loggerLevel);
@@ -40,7 +43,8 @@ class LoggerDecoratorTest extends TestCase
         $decorator->log($levelOfMessage, 'a message');
     }
 
-    public function test_loggerInterface_addContext_addContextToDelegate(): void
+    #[Test]
+    public function loggerInterface_addContext_addContextToDelegate(): void
     {
         $decorator = $this->givenDecoratorForLoggerInterface();
 
@@ -51,7 +55,8 @@ class LoggerDecoratorTest extends TestCase
         $decorator->addContext("key", "value");
     }
 
-    public function test_psrLoggerInterface_addContext_addContextToDelegate(): void
+    #[Test]
+    public function psrLoggerInterface_addContext_addContextToDelegate(): void
     {
         $decorator = $this->givenDecoratorForPsrLoggerInterface();
 
@@ -60,7 +65,8 @@ class LoggerDecoratorTest extends TestCase
         self::assertTrue(true, "Did not call non-existing method");
     }
 
-    public function test_loggerInterface_addContextArray_addContextToDelegate(): void
+    #[Test]
+    public function loggerInterface_addContextArray_addContextToDelegate(): void
     {
         $decorator = $this->givenDecoratorForLoggerInterface();
 
@@ -71,7 +77,8 @@ class LoggerDecoratorTest extends TestCase
         $decorator->addContextArray(["key" => "value"]);
     }
 
-    public function test_psrLoggerInterface_addContextArray_addContextToDelegate(): void
+    #[Test]
+    public function psrLoggerInterface_addContextArray_addContextToDelegate(): void
     {
         $decorator = $this->givenDecoratorForPsrLoggerInterface();
 
@@ -80,7 +87,8 @@ class LoggerDecoratorTest extends TestCase
         self::assertTrue(true, "Did not call non-existing method");
     }
 
-    public function test_loggerInterface_exception_logErrorWithExceptionContext(): void
+    #[Test]
+    public function loggerInterface_exception_logErrorWithExceptionContext(): void
     {
         $decorator = $this->givenDecoratorForLoggerInterface();
         $exception = new \RuntimeException("Eception message");

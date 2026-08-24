@@ -2,24 +2,23 @@
 
 namespace Kronos\Log\Traits;
 
+use Stringable;
+
 trait PrependLogLevel
 {
-    private $prepend_log_level = false;
+    private bool $prepend_log_level = false;
 
-    /**
-     * @param boolean $prepend_log_level
-     */
-    public function setPrependLogLevel($prepend_log_level = true)
+    public function setPrependLogLevel(bool $prepend_log_level = true): void
     {
         $this->prepend_log_level = $prepend_log_level;
     }
 
-    public function prependLogLevel($level, $message)
+    public function prependLogLevel(string $level, string | Stringable $message): string
     {
         if ($this->prepend_log_level) {
-            return strtoupper($level) . ' : ' . $message;
+            return strtoupper($level) . ' : ' . (string)$message;
         } else {
-            return $message;
+            return (string)$message;
         }
     }
 }

@@ -6,6 +6,7 @@ use Kronos\Log\Formatter\Exception\Factory;
 use Kronos\Log\Formatter\Exception\LineAssembler;
 use Kronos\Log\Formatter\Exception\LineAssemblerBuilder;
 use Kronos\Log\Formatter\Exception\NamespaceShrinker;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +45,8 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder = new LineAssemblerBuilder($this->factory);
     }
 
-    public function test_builder_buildAssembler_shouldCreateNamespaceShrinker(): void
+    #[Test]
+    public function builder_buildAssembler_shouldCreateNamespaceShrinker(): void
     {
         $this->factory
             ->expects(self::once())
@@ -53,7 +55,8 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder->buildAssembler();
     }
 
-    public function test_namespaceShrinker_buildAssembler_shouldCreateAndReturnLineAssembler(): void
+    #[Test]
+    public function namespaceShrinker_buildAssembler_shouldCreateAndReturnLineAssembler(): void
     {
         $this->factory
             ->expects(self::once())
@@ -69,7 +72,8 @@ class LineAssemblerBuilderTest extends TestCase
         $this->assertSame($this->lineAssembler, $actualAssembler);
     }
 
-    public function test_includeArgs_buildAssembler_shouldIncludeArgsOnLineAssembler(): void
+    #[Test]
+    public function includeArgs_buildAssembler_shouldIncludeArgsOnLineAssembler(): void
     {
         $this->givenLineAssembler();
         $this->lineAssembler
@@ -81,7 +85,8 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder->buildAssembler();
     }
 
-    public function test_stripBasePath_buildAssembler_shouldStripBasePathOnLineAssembler(): void
+    #[Test]
+    public function stripBasePath_buildAssembler_shouldStripBasePathOnLineAssembler(): void
     {
         $this->givenLineAssembler();
         $this->lineAssembler
@@ -93,7 +98,8 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder->buildAssembler();
     }
 
-    public function test_shrinkPath_buildAssembler_shouldShrinkPathOnLineAssembler(): void
+    #[Test]
+    public function shrinkPath_buildAssembler_shouldShrinkPathOnLineAssembler(): void
     {
         $this->givenLineAssembler();
         $this->lineAssembler
@@ -105,7 +111,8 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder->buildAssembler();
     }
 
-    public function test_removeExtension_buildAssembler_shouldRemoveExtensionOnLineAssembler(): void
+    #[Test]
+    public function removeExtension_buildAssembler_shouldRemoveExtensionOnLineAssembler(): void
     {
         $this->givenLineAssembler();
         $this->lineAssembler
@@ -117,7 +124,8 @@ class LineAssemblerBuilderTest extends TestCase
         $this->builder->buildAssembler();
     }
 
-    public function test_shrinkNamespaces_buildAssembler_shouldShrinkNamespacesOnLineAssembler(): void
+    #[Test]
+    public function shrinkNamespaces_buildAssembler_shouldShrinkNamespacesOnLineAssembler(): void
     {
         $this->givenLineAssembler();
         $this->lineAssembler

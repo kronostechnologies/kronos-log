@@ -4,8 +4,8 @@ namespace Kronos\Log\Formatter\Exception;
 
 class NamespaceShrinker
 {
-    private const NAMESPACE_SEPARATOR = '\\';
-    private const UNDERSCORE_SEPARATOR = '_';
+    private const string NAMESPACE_SEPARATOR = '\\';
+    private const string UNDERSCORE_SEPARATOR = '_';
 
     public function shrink(string $fqn): string
     {

@@ -3,7 +3,8 @@
 namespace Kronos\Tests\Log;
 
 use Kronos\Log\Logger;
-use Kronos\Log\WriterInterface;
+use Kronos\Log\Writer\WriterInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
@@ -29,7 +30,8 @@ class LoggerTest extends TestCase
         $this->logger->addWriter($this->writer);
     }
 
-    public function test_LoggerWithWriter_Log_ShouldAskWriteCanLogLevel(): void
+    #[Test]
+    public function loggerWithWriter_Log_ShouldAskWriteCanLogLevel(): void
     {
         $this->writer
             ->expects(self::once())
@@ -39,7 +41,8 @@ class LoggerTest extends TestCase
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE);
     }
 
-    public function test_LoggerWithWriterThatCanLog_Log_ShouldTellWriterToLog(): void
+    #[Test]
+    public function loggerWithWriterThatCanLog_Log_ShouldTellWriterToLog(): void
     {
         $this->givenWriterCanLog();
         $this->expectsWriterLogToBeCalledWith(self::ANY_LOG_LEVEL, self::A_MESSAGE,
@@ -48,7 +51,8 @@ class LoggerTest extends TestCase
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
     }
 
-    public function test_LoggerWithWritterThatCannotLog_Log_ShouldNotCallLogOnWriter(): void
+    #[Test]
+    public function loggerWithWritterThatCannotLog_Log_ShouldNotCallLogOnWriter(): void
     {
         $this->writer->method('canLogLevel')->willReturn(false);
         $this->writer->expects(self::never())->method('log');
@@ -56,7 +60,8 @@ class LoggerTest extends TestCase
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE);
     }
 
-    public function test_LoggerWithContextAndWriter_Log_ShouldAddGivenContext(): void
+    #[Test]
+    public function loggerWithContextAndWriter_Log_ShouldAddGivenContext(): void
     {
         $this->givenWriterCanLog();
         $this->logger->addContext(self::ANOTHER_CONTEXT_KEY, self::ANOTHER_CONTEXT_VALUE);
@@ -72,7 +77,8 @@ class LoggerTest extends TestCase
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
     }
 
-    public function test_LoggerContextArrayAndWriter_Log_ShouldAddGivenContext(): void
+    #[Test]
+    public function loggerContextArrayAndWriter_Log_ShouldAddGivenContext(): void
     {
         $this->givenWriterCanLog();
         $this->logger->addContextArray([self::ANOTHER_CONTEXT_KEY => self::ANOTHER_CONTEXT_VALUE]);
@@ -88,7 +94,8 @@ class LoggerTest extends TestCase
         $this->logger->log(self::ANY_LOG_LEVEL, self::A_MESSAGE, [self::A_CONTEXT_KEY => self::A_CONTEXT_VALUE]);
     }
 
-    public function test_WriterThrowException_Log_ShouldCatchExceptionAndTriggerError(): void
+    #[Test]
+    public function writerThrowException_Log_ShouldCatchExceptionAndTriggerError(): void
     {
         $errorHandled = 0;
         $handledTriggedError = false;
@@ -115,7 +122,8 @@ class LoggerTest extends TestCase
         }
     }
 
-    public function test_exception_logExceptionWithContext(): void
+    #[Test]
+    public function exception_logExceptionWithContext(): void
     {
         $this->givenWriterCanLog();
         $exception = new \RuntimeException("Eception message");

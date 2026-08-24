@@ -3,12 +3,14 @@
 use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\LogLevelHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
 class LogLevelHelperTest extends TestCase
 {
-    public function test_isLower_shouldReturnFalseWhenLevelIsEqual(): void
+    #[Test]
+    public function isLower_shouldReturnFalseWhenLevelIsEqual(): void
     {
         $isLower = LogLevelHelper::isLower(LogLevel::DEBUG, LogLevel::DEBUG);
 
@@ -16,14 +18,16 @@ class LogLevelHelperTest extends TestCase
     }
 
     #[DataProvider('provideLevels')]
-    public function test_isLower_shouldReturnFalseWhenLevelIsHigher($baseLevel, $toCompare): void
+    #[Test]
+    public function isLower_shouldReturnFalseWhenLevelIsHigher($baseLevel, $toCompare): void
     {
         $isLower = LogLevelHelper::isLower($baseLevel, $toCompare);
 
         self::assertFalse($isLower);
     }
 
-    public function test_validateLogLevel_shouldThrowInvalidLogLevelWhenLevelIsUnknown(): void
+    #[Test]
+    public function validateLogLevel_shouldThrowInvalidLogLevelWhenLevelIsUnknown(): void
     {
         self::expectException(InvalidLogLevel::class);
 

@@ -3,35 +3,36 @@
 namespace Kronos\Tests\Log;
 
 use Kronos\Log\Exception\InvalidLogLevel;
-use \Psr\Log\LogLevel;
+use PHPUnit\Framework\Attributes\Test;
+use Psr\Log\LogLevel;
+use Stringable;
 
 class AbstractWriterTest extends \PHPUnit\Framework\TestCase
 {
 
-    const ANY_LEVEL = LogLevel::INFO;
-    const INVALID_LOG_LEVEL = 'invalid';
+    const string ANY_LEVEL = LogLevel::INFO;
+    const string INVALID_LOG_LEVEL = 'invalid';
 
-    const LOWER_LEVEL = LogLevel::NOTICE;
-    const HIGHER_LEVEL = LogLevel::CRITICAL;
+    const string LOWER_LEVEL = LogLevel::NOTICE;
+    const string HIGHER_LEVEL = LogLevel::CRITICAL;
 
-    /**
-     * @var TestableWriter;
-     */
-    private $writer;
+    private TestableWriter $writer;
 
     public function setUp(): void
     {
         $this->writer = new TestableWriter();
     }
 
-    public function test_NewWriter_CanLogLevel_ShouldReturnTrue()
+    #[Test]
+    public function newWriter_CanLogLevel_ShouldReturnTrue()
     {
         $canLog = $this->writer->canLogLevel(self::ANY_LEVEL);
 
         $this->assertTrue($canLog);
     }
 
-    public function test_Writer_CanLogLevel_WhenCanLogIsFalse_ShouldReturnFalse()
+    #[Test]
+    public function writer_CanLogLevel_WhenCanLogIsFalse_ShouldReturnFalse()
     {
         $this->writer->setCanLog(false);
 
@@ -40,14 +41,16 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($canLog);
     }
 
-    public function test_NewWriter_CanLogLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
+    #[Test]
+    public function newWriter_CanLogLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
 
         $this->writer->canLogLevel(self::INVALID_LOG_LEVEL);
     }
 
-    public function test_WriterWithMinLevel_CanLogLevelWithLowerLevel_ShouldReturnFalse()
+    #[Test]
+    public function writerWithMinLevel_CanLogLevelWithLowerLevel_ShouldReturnFalse()
     {
         $this->writer->setMinLevel(self::HIGHER_LEVEL);
 
@@ -56,7 +59,8 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($canLog);
     }
 
-    public function test_WriterWithMinLevel_CanLogLevelWithHigerLevel_ShouldReturnTrue()
+    #[Test]
+    public function writerWithMinLevel_CanLogLevelWithHigerLevel_ShouldReturnTrue()
     {
         $this->writer->setMinLevel(self::LOWER_LEVEL);
 
@@ -65,14 +69,16 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($canLog);
     }
 
-    public function test_NewWriter_SetMinLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
+    #[Test]
+    public function newWriter_SetMinLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
 
         $this->writer->setMinLevel(self::INVALID_LOG_LEVEL);
     }
 
-    public function test_WriterWithMaxLevel_CanLogLevelWithHigherLevel_SouldReturnFalse()
+    #[Test]
+    public function writerWithMaxLevel_CanLogLevelWithHigherLevel_SouldReturnFalse()
     {
         $this->writer->setMaxLevel(self::LOWER_LEVEL);
 
@@ -81,7 +87,8 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($canLog);
     }
 
-    public function test_WriterWithMaxLevel_CanLogLevelWithLowerLevel_SouldReturnTrue()
+    #[Test]
+    public function writerWithMaxLevel_CanLogLevelWithLowerLevel_SouldReturnTrue()
     {
         $this->writer->setMaxLevel(self::HIGHER_LEVEL);
 
@@ -90,7 +97,8 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($canLog);
     }
 
-    public function test_NewWriter_SetMaxLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
+    #[Test]
+    public function newWriter_SetMaxLevelWithInvalidLevel_ShouldThrowInvalidLogLevelException()
     {
         $this->expectException(InvalidLogLevel::class);
 
@@ -98,9 +106,9 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class TestableWriter extends \Kronos\Log\AbstractWriter
+class TestableWriter extends \Kronos\Log\Writer\AbstractWriter
 {
-    public function log($level, $message, array $context = [])
+    public function log(string $level, string | Stringable $message, array $context = []): void
     {
     }
 }

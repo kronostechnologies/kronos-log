@@ -1,24 +1,15 @@
 <?php
 
-
 namespace Kronos\Log\Traits;
-
 
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Throwable;
 
 trait ExceptionTraceBuilderAwareTrait
 {
+    abstract function getExceptionTraceBuilder(): ?TraceBuilder;
 
-    /**
-     * @return TraceBuilder|null
-     */
-    abstract function getExceptionTraceBuilder();
-
-    /**
-     * @return TraceBuilder|null
-     */
-    abstract function getPreviousExceptionTraceBuilder();
+    abstract function getPreviousExceptionTraceBuilder(): ?TraceBuilder;
 
     /**
      * @param array $context
@@ -32,7 +23,6 @@ trait ExceptionTraceBuilderAwareTrait
 
         return $context;
     }
-
 
     protected function getExceptionContext(Throwable $exception): array
     {

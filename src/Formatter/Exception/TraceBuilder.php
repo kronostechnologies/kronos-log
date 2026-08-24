@@ -10,37 +10,14 @@ use Throwable;
  */
 class TraceBuilder
 {
-    const LINE_SKIP = '...';
+    const string LINE_SKIP = '...';
 
-    /**
-     * @var bool
-     */
-    private $showTopLines = false;
-
-    /**
-     * @var int
-     */
-    private $topLines = 0;
-
-    /**
-     * @var bool
-     */
-    private $showBottomLines = false;
-
-    /**
-     * @var integer
-     */
-    private $bottomLines = 0;
-
-    /**
-     * @var array
-     */
-    private $acceptedRange;
-
-    /**
-     * @var bool
-     */
-    private $includeArgs = false;
+    private bool $showTopLines = false;
+    private int $topLines = 0;
+    private bool $showBottomLines = false;
+    private int $bottomLines = 0;
+    private array $acceptedRange = [];
+    private bool $includeArgs = false;
 
     private LineAssemblerBuilder $lineAssemblerBuilder;
 
@@ -90,10 +67,7 @@ class TraceBuilder
         $this->topLines = $lines;
     }
 
-    /**
-     * @param int $lines
-     */
-    public function showBottomLines($lines)
+    public function showBottomLines(int $lines): void
     {
         $this->showBottomLines = true;
         $this->bottomLines = $lines;

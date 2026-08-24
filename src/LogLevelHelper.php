@@ -7,7 +7,7 @@ use Psr\Log\LogLevel;
 
 class LogLevelHelper
 {
-    public const levelPriorities = [
+    public const array levelPriorities = [
         LogLevel::EMERGENCY => 7,
         LogLevel::ALERT => 6,
         LogLevel::CRITICAL => 5,

@@ -74,7 +74,7 @@ class LineAssembler
      */
     private $args = [];
 
-    const ARRAY_TYPE = 'Array';
+    const string ARRAY_TYPE = 'Array';
 
     /**
      * LineAssembler constructor.

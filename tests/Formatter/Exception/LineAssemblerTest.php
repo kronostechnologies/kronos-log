@@ -4,6 +4,7 @@ namespace Kronos\Tests\Log\Formatter\Exception;
 
 use Kronos\Log\Formatter\Exception\LineAssembler;
 use Kronos\Log\Formatter\Exception\NamespaceShrinker;
+use PHPUnit\Framework\Attributes\Test;
 
 class LineAssemblerTest extends \PHPUnit\Framework\TestCase
 {
@@ -40,7 +41,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->lineAssembler = new LineAssembler($this->namespaceShrinker);
     }
 
-    public function test_givenACompleteSetOfExceptionTraceElements_buildExceptionString_shouldReturnAFormattedLineWithAllElements(
+    #[Test]
+    public function givenACompleteSetOfExceptionTraceElements_buildExceptionString_shouldReturnAFormattedLineWithAllElements(
     )
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
@@ -57,7 +59,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
             $line);
     }
 
-    public function test_allTraceElementsAndIncludeArgs_buildExceptionString_shouldReturnAFormattedLineWithAllElementsWithArgs(
+    #[Test]
+    public function allTraceElementsAndIncludeArgs_buildExceptionString_shouldReturnAFormattedLineWithAllElementsWithArgs(
     )
     {
         $this->lineAssembler->includeArgs();
@@ -75,7 +78,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
             $line);
     }
 
-    public function test_givenASetOfExceptionTraceElementWithoutArgs_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoArguments(
+    #[Test]
+    public function givenASetOfExceptionTraceElementWithoutArgs_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoArguments(
     )
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
@@ -91,7 +95,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
             $line);
     }
 
-    public function test_givenASetOfExceptionTraceElementWithoutArgsAndFunction_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoFunctionOrType(
+    #[Test]
+    public function givenASetOfExceptionTraceElementWithoutArgsAndFunction_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoFunctionOrType(
     )
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
@@ -105,7 +110,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
             $line);
     }
 
-    public function test_classAndShrinkNamespaces_buildExceptionString_shouldReturnShrunkClassname()
+    #[Test]
+    public function classAndShrinkNamespaces_buildExceptionString_shouldReturnShrunkClassname()
     {
         $this->namespaceShrinker
             ->expects(self::once())
@@ -124,7 +130,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
             $line);
     }
 
-    public function test_givenASetOfExceptionTraceElementWithLineNbAndFileAndLine_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoClass(
+    #[Test]
+    public function givenASetOfExceptionTraceElementWithLineNbAndFileAndLine_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoClass(
     )
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
@@ -135,7 +142,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::A_FILE_PATH . '(' . self::A_LINE . '): ', $line);
     }
 
-    public function test_givenASetOfExceptionTraceElementWithLineNbAndFile_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoLineNb(
+    #[Test]
+    public function givenASetOfExceptionTraceElementWithLineNbAndFile_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoLineNb(
     )
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
@@ -146,7 +154,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::A_FILE_PATH, $line);
     }
 
-    public function test_givenASetOfExceptionTraceElementWithOnlyLineNb_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoFile(
+    #[Test]
+    public function givenASetOfExceptionTraceElementWithOnlyLineNb_buildExceptionString_shouldReturnAFormattedLineWithAllElementsAndNoFile(
     )
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
@@ -156,14 +165,16 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('#' . self::A_LINE_NB . ' ', $line);
     }
 
-    public function test_givenNoExceptionTraceElement_buildExceptionString_shouldReturnAnEmptyLine()
+    #[Test]
+    public function givenNoExceptionTraceElement_buildExceptionString_shouldReturnAnEmptyLine()
     {
         $line = $this->lineAssembler->buildExceptionString();
 
         $this->assertEquals(self::EMPTY_LINE, $line);
     }
 
-    public function test_stripBasePath_buildExceptionString_shouldStripBathPathFromFile()
+    #[Test]
+    public function stripBasePath_buildExceptionString_shouldStripBathPathFromFile()
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
         $this->lineAssembler->setFile(self::BASE_PATH . self::A_FILE_PATH);
@@ -174,7 +185,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::A_FILE_PATH, $line);
     }
 
-    public function test_shrinkPaths_buildExceptionString_shouldShrinkPathFromFile()
+    #[Test]
+    public function shrinkPaths_buildExceptionString_shouldShrinkPathFromFile()
     {
         $this->namespaceShrinker
             ->expects(self::once())
@@ -190,7 +202,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::SHRUNK_PATH, $line);
     }
 
-    public function test_nonMatchingBasePath_buildExceptionString_shouldNotStripBathPathFromFile()
+    #[Test]
+    public function nonMatchingBasePath_buildExceptionString_shouldNotStripBathPathFromFile()
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
         $this->lineAssembler->setFile(self::BASE_PATH . self::A_FILE_PATH);
@@ -201,7 +214,8 @@ class LineAssemblerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('#' . self::A_LINE_NB . ' ' . self::BASE_PATH . self::A_FILE_PATH, $line);
     }
 
-    public function test_removeExtension_buildExceptionString_shouldRemoteFileExtension()
+    #[Test]
+    public function removeExtension_buildExceptionString_shouldRemoteFileExtension()
     {
         $this->lineAssembler->setLineNb(self::A_LINE_NB);
         $this->lineAssembler->setFile(self::FILE_WITHOUT_EXTENSION . self::EXTENSION);

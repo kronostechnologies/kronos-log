@@ -2,7 +2,7 @@
 
 namespace Kronos\Log;
 
-use Kronos\Log\Writer\TriggerError;
+use Kronos\Log\Writer\TriggerErrorWriter;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 
 class LogLocator
@@ -43,7 +43,7 @@ class LogLocator
     public static function createDefaultLogger(): Logger
     {
         $logger = new Logger();
-        $logger->addWriter(new TriggerError());
+        $logger->addWriter(new TriggerErrorWriter());
         return $logger;
     }
 }
