@@ -3,7 +3,6 @@
 namespace Kronos\Log\Writer;
 
 use GuzzleHttp\Client;
-use Kronos\Log\AbstractWriter;
 use Kronos\Log\Factory\GuzzleFactory;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;

@@ -2,6 +2,7 @@
 
 namespace Kronos\Log;
 
+use Kronos\Log\Writer\WriterInterface;
 use Override;
 use Stringable;
 use Throwable;

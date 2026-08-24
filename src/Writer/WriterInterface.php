@@ -1,6 +1,6 @@
 <?php
 
-namespace Kronos\Log;
+namespace Kronos\Log\Writer;
 
 use Kronos\Log\Exception\InvalidLogLevel;
 use Stringable;

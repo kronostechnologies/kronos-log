@@ -3,7 +3,7 @@
 namespace Kronos\Tests\Log;
 
 use Kronos\Log\Logger;
-use Kronos\Log\WriterInterface;
+use Kronos\Log\Writer\WriterInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

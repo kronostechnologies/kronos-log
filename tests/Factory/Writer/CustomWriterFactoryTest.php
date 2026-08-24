@@ -44,7 +44,7 @@ class CustomWriterFactoryTest extends \PHPUnit\Framework\TestCase
 class ValidCustomWriterFactory implements WriterFactory
 {
 
-    public function createFromArray(array $settings): \Kronos\Log\WriterInterface
+    public function createFromArray(array $settings): \Kronos\Log\Writer\WriterInterface
     {
         return new MemoryWriter();
     }

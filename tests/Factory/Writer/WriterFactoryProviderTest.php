@@ -158,7 +158,7 @@ class NotInstantiableWriterFactory implements WriterFactory
         throw new \RuntimeException('Cannot be instantiated');
     }
 
-    public function createFromArray(array $settings): \Kronos\Log\WriterInterface
+    public function createFromArray(array $settings): \Kronos\Log\Writer\WriterInterface
     {
         throw new \LogicException('Not implemented');
     }

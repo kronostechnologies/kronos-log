@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Factory\Writer;
 
-use Kronos\Log\WriterInterface;
+use Kronos\Log\Writer\WriterInterface;
 
 interface WriterFactory
 {

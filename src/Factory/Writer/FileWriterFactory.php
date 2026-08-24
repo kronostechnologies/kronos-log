@@ -7,7 +7,6 @@ use Kronos\Log\Exception\RequiredSetting;
 use Kronos\Log\Formatter\ContextStringifier;
 use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Kronos\Log\Writer\FileWriter;
-use Kronos\Log\WriterInterface;
 use Override;
 
 class FileWriterFactory extends AbstractWriterFactory

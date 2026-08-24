@@ -3,8 +3,8 @@
 namespace Kronos\Tests\Log;
 
 use Kronos\Log\Exception\InvalidLogLevel;
-use \Psr\Log\LogLevel;
 use PHPUnit\Framework\Attributes\Test;
+use Psr\Log\LogLevel;
 use Stringable;
 
 class AbstractWriterTest extends \PHPUnit\Framework\TestCase
@@ -106,7 +106,7 @@ class AbstractWriterTest extends \PHPUnit\Framework\TestCase
     }
 }
 
-class TestableWriter extends \Kronos\Log\AbstractWriter
+class TestableWriter extends \Kronos\Log\Writer\AbstractWriter
 {
     public function log(string $level, string | Stringable $message, array $context = []): void
     {

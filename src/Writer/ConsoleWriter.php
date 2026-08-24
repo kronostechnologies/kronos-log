@@ -2,17 +2,16 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\AbstractWriter;
 use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Adaptor\TTYAdaptor;
 use Kronos\Log\Enumeration\AnsiBackgroundColor;
 use Kronos\Log\Enumeration\AnsiTextColor;
+use Kronos\Log\Formatter\Exception\TraceBuilder;
+use Kronos\Log\Logger;
 use Kronos\Log\Traits\PrependDateTime;
 use Kronos\Log\Traits\PrependLogLevel;
-use Kronos\Log\Logger;
 use Override;
 use Psr\Log\LogLevel;
-use Kronos\Log\Formatter\Exception\TraceBuilder;
 use Stringable;
 use Throwable;
 

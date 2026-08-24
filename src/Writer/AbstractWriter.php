@@ -1,8 +1,9 @@
 <?php
 
-namespace Kronos\Log;
+namespace Kronos\Log\Writer;
 
 use Kronos\Log\Exception\InvalidLogLevel;
+use Kronos\Log\LogLevelHelper;
 use Kronos\Log\Traits\Interpolate;
 use Override;
 use Psr\Log\LogLevel;

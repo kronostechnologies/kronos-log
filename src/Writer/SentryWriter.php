@@ -2,7 +2,6 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\AbstractWriter;
 use Kronos\Log\Exception\InvalidLogLevel;
 use Kronos\Log\Logger;
 use Override;

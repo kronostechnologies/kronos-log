@@ -3,7 +3,6 @@
 namespace Kronos\Log\Writer;
 
 use Fluent\Logger\FluentLogger;
-use Kronos\Log\AbstractWriter;
 use Kronos\Log\Factory\Fluentd\FluentBitJsonPacker;
 use Kronos\Log\Factory\FluentdFactory;
 use Kronos\Log\Formatter\ContextStringifier;

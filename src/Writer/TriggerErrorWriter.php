@@ -2,7 +2,6 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\AbstractWriter;
 use Override;
 use Psr\Log\LogLevel;
 use Stringable;

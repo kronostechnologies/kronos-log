@@ -2,11 +2,11 @@
 
 namespace Kronos\Tests\Log;
 
-use Kronos\Log\AbstractWriter;
 use Kronos\Log\Exception\NoWriter;
 use Kronos\Log\Factory\Writer\WriterFactory;
 use Kronos\Log\Factory\Writer\WriterFactoryProvider;
 use Kronos\Log\LoggerFactory;
+use Kronos\Log\Writer\AbstractWriter;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

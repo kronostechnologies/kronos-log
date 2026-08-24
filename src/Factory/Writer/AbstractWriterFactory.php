@@ -2,7 +2,7 @@
 
 namespace Kronos\Log\Factory\Writer;
 
-use Kronos\Log\AbstractWriter;
+use Kronos\Log\Writer\AbstractWriter;
 
 abstract class AbstractWriterFactory implements WriterFactory
 {

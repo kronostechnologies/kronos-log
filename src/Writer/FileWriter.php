@@ -2,7 +2,6 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\AbstractWriter;
 use Kronos\Log\Adaptor\FileAdaptor;
 use Kronos\Log\Adaptor\FileAdaptorFactory;
 use Kronos\Log\Formatter\ContextStringifier;

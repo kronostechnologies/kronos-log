@@ -2,10 +2,9 @@
 
 namespace Kronos\Log\Writer;
 
-use Kronos\Log\AbstractWriter;
-use Kronos\Log\Traits\PrependContext;
-use Kronos\Log\Traits\LogLevelToSyslogPriority;
 use Kronos\Log\Adaptor\SyslogAdaptor;
+use Kronos\Log\Traits\LogLevelToSyslogPriority;
+use Kronos\Log\Traits\PrependContext;
 use Override;
 use Stringable;
 
