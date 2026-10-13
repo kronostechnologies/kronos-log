@@ -11,7 +11,7 @@
             "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kronostechnologies/fluent-logger-php.git",
+                "url": "git@github.com:kronostechnologies/fluent-logger-php.git",
                 "reference": "e9a137eafa07740407d147d54e1f84e68b12b87e"
             },
             "dist": {
@@ -60,9 +60,6 @@
                 "log",
                 "logging"
             ],
-            "support": {
-                "source": "https://github.com/kronostechnologies/fluent-logger-php/tree/v1.0.0"
-            },
             "time": "2025-08-15T18:52:24+00:00"
         },
         {
