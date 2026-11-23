@@ -193,7 +193,7 @@ class LineAssembler
 
             if ($this->removeExtension) {
                 $pathinfo = pathinfo($file);
-                $file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
+                $file = ($pathinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pathinfo['filename'];
             }
 
             if ($this->shrinkPaths && $this->namespaceShrinker) {
