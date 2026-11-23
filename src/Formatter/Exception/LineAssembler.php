@@ -193,6 +193,9 @@ class LineAssembler
 
             if ($this->removeExtension) {
                 $pathinfo = pathinfo($file);
+                if (!isset($pathinfo['dirname'])) {
+                    throw new \UnexpectedValueException("Unable to determine directory of file '$file'");
+                }
                 $file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
             }
 
