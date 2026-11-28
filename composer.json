@@ -38,7 +38,7 @@
     "fluent/logger": "Required for Fluentd writer"
   },
   "require-dev": {
-    "guzzlehttp/guzzle": "7.16.1",
+    "guzzlehttp/guzzle": "8.5.4",
     "phpunit/phpunit": "13.1.14",
     "vimeo/psalm": "7.17.0",
     "dealerdirect/phpcodesniffer-composer-installer": "1.2.1",
